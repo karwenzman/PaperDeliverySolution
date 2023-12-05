@@ -6,7 +6,22 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Newspaper3.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Newspaper3.ico" />
+    <None Remove="Newspaper3.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Newspaper3.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Newspaper3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PaperDeliveryLibrary\PaperDeliveryLibrary.csproj" />
