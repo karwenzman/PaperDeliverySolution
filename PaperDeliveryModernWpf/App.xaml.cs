@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PaperDeliveryLibrary.ProjectOptions;
 using PaperDeliveryModernWpf.ViewModels;
 using PaperDeliveryModernWpf.Views;
 using Serilog;
@@ -13,15 +15,22 @@ public partial class App : Application
 
     public App()
     {
+        // Enables Serilog to read configuration from appsettings.json and environment variables.
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", false, true)
+            .AddEnvironmentVariables()
+            .Build();
+
+        // All the configuration for Serilog is done in appsettings.json.
         Log.Logger = new LoggerConfiguration()
-            .Enrich.FromLogContext()
-            .WriteTo.File("LogFiles/apploggings.txt")
+            .ReadFrom.Configuration(configuration)
             .CreateLogger();
 
         AppHost = Host.CreateDefaultBuilder()
             .ConfigureServices((context, services) =>
             {
                 services.AddLogging();
+                services.AddOptions<ApplicationOptions>().Bind(context.Configuration.GetSection(nameof(ApplicationOptions)));
 
                 services.AddSingleton<ShellView>();
                 services.AddSingleton<IShellViewModel, ShellViewModel>();
@@ -43,7 +52,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            Log.Logger.Error("Unexpected Exception: {error}", ex);
+            Log.Logger.Fatal("Unexpected Exception: {error}", ex);
         }
 
         base.OnStartup(e);
