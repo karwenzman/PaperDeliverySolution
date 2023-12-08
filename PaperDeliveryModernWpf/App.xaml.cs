@@ -48,7 +48,7 @@ public partial class App : Application
 
         try
         {
-            // TODO - Where is the app, if the exception is thrown? It does not stop the app.
+            // TODO - Where is the app, if the exception is thrown? It does not stop the app. => Issue #2
             //throw new Exception();
             var mainWindow = AppHost.Services.GetRequiredService<ShellView>();
             mainWindow.Show();
