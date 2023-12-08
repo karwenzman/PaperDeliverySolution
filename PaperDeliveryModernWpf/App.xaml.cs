@@ -26,6 +26,7 @@ public partial class App : Application
             .ReadFrom.Configuration(configuration)
             .CreateLogger();
 
+        // Dependency injection.
         AppHost = Host.CreateDefaultBuilder()
             .ConfigureServices((context, services) =>
             {
@@ -47,12 +48,14 @@ public partial class App : Application
 
         try
         {
+            // TODO - Where is the app, if the exception is thrown? It does not stop the app.
+            //throw new Exception();
             var mainWindow = AppHost.Services.GetRequiredService<ShellView>();
             mainWindow.Show();
         }
         catch (Exception ex)
         {
-            Log.Logger.Fatal("Unexpected Exception: {error}", ex);
+            Log.Logger.Fatal("Unexpected exception, while starting the application: {error}", ex);
         }
 
         base.OnStartup(e);
