@@ -30,6 +30,7 @@
   <ItemGroup>
     <Folder Include="Dependencies\" />
     <Folder Include="Styles\" />
+    <Folder Include="Views\" />
   </ItemGroup>
 
   <ItemGroup>
