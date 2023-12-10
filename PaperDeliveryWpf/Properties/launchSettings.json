@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "PaperDeliveryWpf": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

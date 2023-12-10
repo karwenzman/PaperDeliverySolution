@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PaperDeliveryLibrary.Models;
 using PaperDeliveryLibrary.ProjectOptions;
 using PaperDeliveryModernWpf.ViewModels;
 using PaperDeliveryModernWpf.Views;
@@ -32,7 +33,7 @@ public partial class App : Application
             {
                 services.AddLogging();
                 services.AddOptions<ApplicationOptions>().Bind(context.Configuration.GetSection(nameof(ApplicationOptions)));
-
+                services.AddSingleton<IUserModel, UserModel>();
                 services.AddSingleton<ShellView>();
                 services.AddSingleton<IShellViewModel, ShellViewModel>();
             })
