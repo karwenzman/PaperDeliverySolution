@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace PaperDeliveryModernWpf.ViewModels;
 
-public class HomeViewModel
+public class HomeViewModel : ViewModelBase
 {
 }

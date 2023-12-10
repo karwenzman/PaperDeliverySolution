@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PaperDeliveryModernWpf.Views"        
         xmlns:Menu="clr-namespace:PaperDeliveryModernWpf.Utilities"
+        xmlns:viewmodels="clr-namespace:PaperDeliveryModernWpf.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:ShellViewModel}"
         mc:Ignorable="d"
         Title="ShellView" 
         Height="450" Width="800"
@@ -31,19 +32,13 @@
                     <Menu:Btn Style="{StaticResource BtnStyle}"
                               Command="{Binding HomeCommand}"
                               IsChecked="True">
-
                         <Grid>
-
-                            <Image Source="../Images/img_home.png"
-                                   Style="{StaticResource Image_Style}" />
-
-                            <TextBlock Text="Home"
-                                       Style="{StaticResource Text_Style}" />
-
+                            <Image Source="../Images/img_home.png" Style="{StaticResource Image_Style}" />
+                            <TextBlock Text="Home" Style="{StaticResource Text_Style}" />
                         </Grid>
-
                     </Menu:Btn>
-
+                    <!-- Test binding to a property in shellviewmodel-->
+                    <TextBlock Text="{Binding DeveloperName}" Style="{StaticResource Text_Style}" MinWidth="40"/>
                 </StackPanel>
 
             </Grid>
