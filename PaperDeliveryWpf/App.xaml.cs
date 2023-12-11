@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PaperDeliveryLibrary.Models;
 using PaperDeliveryLibrary.ProjectOptions;
 using PaperDeliveryWpf.ViewModels;
 using PaperDeliveryWpf.Views;
@@ -33,8 +34,16 @@ namespace PaperDeliveryWpf
                     services.AddLogging();
                     services.AddOptions<ApplicationOptions>().Bind(context.Configuration.GetSection(nameof(ApplicationOptions)));
 
+                    services.AddSingleton<IUserModel, UserModel>();
+
                     services.AddSingleton<ShellView>();
                     services.AddSingleton<IShellViewModel, ShellViewModel>();
+                    services.AddTransient<IShellBodyViewModel, ShellBodyViewModel>();
+                    services.AddTransient<IShellFooterViewModel, ShellFooterViewModel>();
+                    services.AddTransient<IShellHeaderViewModel, ShellHeaderViewModel>();
+                    services.AddTransient<ILoginViewModel, LoginViewModel>();
+                    services.AddTransient<IHomeLoggedInViewModel, HomeLoggedInViewModel>();
+                    services.AddTransient<IHomeLoggedOutViewModel, HomeLoggedOutViewModel>();
                 })
                 .UseSerilog()
                 .Build();

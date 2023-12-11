@@ -13,16 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace PaperDeliveryWpf.UserControls
+namespace PaperDeliveryWpf.UserControls;
+
+public partial class Login : UserControl
 {
-    /// <summary>
-    /// Interaktionslogik für Login.xaml
-    /// </summary>
-    public partial class Login : UserControl
+    public Login()
     {
-        public Login()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

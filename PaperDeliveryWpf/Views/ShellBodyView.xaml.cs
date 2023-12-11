@@ -1,28 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows.Controls;
 
-namespace PaperDeliveryWpf.Views
+namespace PaperDeliveryWpf.Views;
+
+public partial class ShellBodyView : UserControl
 {
-    /// <summary>
-    /// Interaktionslogik für ShellBodyView.xaml
-    /// </summary>
-    public partial class ShellBodyView : UserControl
+    public ShellBodyView()
     {
-        public ShellBodyView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

@@ -7,8 +7,11 @@ namespace PaperDeliveryWpf.Views;
 
 public partial class ShellView : Window
 {
+    // Constructor injection.
     private readonly ILogger<ShellView> _logger;
     private readonly IServiceProvider _serviceProvider;
+
+    // Service provider.
     private readonly IShellViewModel _viewModel;
 
     public ShellView(ILogger<ShellView> logger, IServiceProvider serviceProvider)
