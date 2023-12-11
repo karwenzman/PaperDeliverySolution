@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace PaperDeliveryWpf.Views
 {
     /// <summary>
-    /// Interaktionslogik für Window1.xaml
+    /// Interaktionslogik für ShellHeaderView.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class ShellHeaderView : UserControl
     {
-        public Window1()
+        public ShellHeaderView()
         {
             InitializeComponent();
         }
