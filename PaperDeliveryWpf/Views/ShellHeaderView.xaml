@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel>
-        <TextBlock DockPanel.Dock="Top">
+        <TextBlock DockPanel.Dock="Top" Style="{StaticResource textBlockHeader}">
             <Run FontWeight="Bold" FontStyle="Italic" FontSize="26" Foreground="Red">S</Run><Italic>udoku</Italic> 
             <Run FontSize="10" Text="ClickOnceVersion"/>
         </TextBlock>
