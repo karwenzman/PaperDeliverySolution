@@ -12,7 +12,7 @@
             <Run FontSize="10" Text="ClickOnceVersion"/>
         </TextBlock>
 
-        <Menu DockPanel.Dock="Top">
+        <Menu DockPanel.Dock="Top" Visibility="Visible">
             <MenuItem Header="File" Background="Black" Foreground="White">
                 <MenuItem 
                         Command="{x:Static ApplicationCommands.New}"
