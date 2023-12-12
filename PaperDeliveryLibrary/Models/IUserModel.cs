@@ -10,7 +10,7 @@ public interface IUserModel
     /// <summary>
     /// This property contains the user's login expression.
     /// </summary>
-    string Login { get; set; }
+    string LoginName { get; set; }
 
     /// <summary>
     /// This property contains the user's display name.

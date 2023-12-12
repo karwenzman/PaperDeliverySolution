@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PaperDeliveryWpf.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PaperDeliveryWpf.UserControls;
 
@@ -19,6 +8,19 @@ public partial class Login : UserControl
 {
     public Login()
     {
+        var viewModel = (ILoginViewModel)App.AppHost!.Services.GetService(typeof(ILoginViewModel))!;
+
+        if (viewModel == null)
+        {
+            MessageBoxResult messageBoxResult = MessageBox.Show(
+                $"The type {nameof(ILoginViewModel)} was not loaded into the dependency injection container!",
+                $"{nameof(Login)}",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error,
+                MessageBoxResult.No);
+        }
+
+        DataContext = viewModel;
         InitializeComponent();
     }
 }

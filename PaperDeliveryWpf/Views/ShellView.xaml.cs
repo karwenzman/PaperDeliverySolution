@@ -25,6 +25,7 @@ public partial class ShellView : Window
         // Setting up the data binding.
         DataContext = _viewModel;
 
+        // Registering the commands.
         CommandBindings.Add(_viewModel.StopCommand);
 
         // Registering the events.

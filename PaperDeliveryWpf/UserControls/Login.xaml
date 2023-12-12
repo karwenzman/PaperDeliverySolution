@@ -4,8 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PaperDeliveryWpf.UserControls"
+             xmlns:viewModels="clr-namespace:PaperDeliveryWpf.ViewModels"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewModels:LoginViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
+    
     <DockPanel>
         <!-- Header -->
         <Label DockPanel.Dock="Top" Content="Login Page" HorizontalAlignment="Center" />
@@ -25,18 +28,18 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Label Grid.Column="1" Grid.Row="0" Content="Login Name" />
+                <TextBox Grid.Column="2" Grid.Row="0" Text="{Binding UiLoginName}" MinWidth="200" />
                 <Label Grid.Column="1" Grid.Row="1" Content="Password" />
-                <TextBox Grid.Column="2" Grid.Row="0" MinWidth="200" />
-                <TextBox Grid.Column="2" Grid.Row="1" MinWidth="200" />
+                <TextBox Grid.Column="2" Grid.Row="1" Text="{Binding UiPassword}" MinWidth="200" />
             </Grid>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Login" />
+                <Button Content="Login" Command="{Binding LoginCommand}" />
                 <Button Content="Cancel" />
             </StackPanel>
         </StackPanel>
         
         <!-- Footer -->
-        <Label DockPanel.Dock="Bottom" Content="Some text." HorizontalAlignment="Center" />
+        <Label DockPanel.Dock="Bottom" Content="{Binding ShowSomething}" HorizontalAlignment="Center" />
     </DockPanel>
 
 </UserControl>

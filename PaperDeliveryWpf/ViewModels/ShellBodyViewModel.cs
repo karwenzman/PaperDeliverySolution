@@ -1,9 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.Logging;
 
 namespace PaperDeliveryWpf.ViewModels;
 
-public class ShellBodyViewModel : IShellBodyViewModel
+public partial class ShellBodyViewModel : ViewModelBase, IShellBodyViewModel
 {
+    [ObservableProperty]
+    private string _title;
+
     private readonly ILogger<ShellBodyViewModel> _logger;
 
     public ShellBodyViewModel(ILogger<ShellBodyViewModel> logger)
@@ -11,5 +15,6 @@ public class ShellBodyViewModel : IShellBodyViewModel
         _logger = logger;
         _logger.LogInformation("* Loading {class}", nameof(ShellBodyViewModel));
 
+        Title = nameof(ShellBodyViewModel);
     }
 }

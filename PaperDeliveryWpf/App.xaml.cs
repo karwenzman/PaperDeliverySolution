@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PaperDeliveryLibrary.Models;
 using PaperDeliveryLibrary.ProjectOptions;
+using PaperDeliveryWpf.Repositories;
 using PaperDeliveryWpf.ViewModels;
 using PaperDeliveryWpf.Views;
 using Serilog;
@@ -12,6 +12,15 @@ namespace PaperDeliveryWpf
 {
     public partial class App : Application
     {
+        /// <summary>
+        /// This global property is providing access to the Dependency-Injection-System.
+        /// <code>
+        /// var viewModel = (ILoginViewModel)App.AppHost!.Services.GetService(typeof(ILoginViewModel))!;
+        /// </code>
+        /// Just replace the <see cref="Type"/> to the one needed in your situation.
+        /// This code is used in the code behind files of the <see cref="UserControls"/>,
+        /// since these classes do need a parameterless constructor.
+        /// </summary>
         public static IHost? AppHost { get; private set; }
 
         public App()
@@ -34,7 +43,7 @@ namespace PaperDeliveryWpf
                     services.AddLogging();
                     services.AddOptions<ApplicationOptions>().Bind(context.Configuration.GetSection(nameof(ApplicationOptions)));
 
-                    services.AddSingleton<IUserModel, UserModel>();
+                    services.AddSingleton<IUserRepository, UserRepository>();
 
                     services.AddSingleton<ShellView>();
                     services.AddSingleton<IShellViewModel, ShellViewModel>();

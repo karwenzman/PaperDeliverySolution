@@ -1,9 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.Logging;
 
 namespace PaperDeliveryWpf.ViewModels;
 
-public class ShellFooterViewModel : IShellFooterViewModel
+public partial class ShellFooterViewModel : ViewModelBase, IShellFooterViewModel
 {
+    [ObservableProperty]
+    private string _title;
+
     private readonly ILogger<ShellFooterViewModel> _logger;
 
     public ShellFooterViewModel(ILogger<ShellFooterViewModel> logger)
@@ -11,5 +15,7 @@ public class ShellFooterViewModel : IShellFooterViewModel
         _logger = logger;
         _logger.LogInformation("* Loading {class}", nameof(ShellFooterViewModel));
 
+        Title = nameof(ShellFooterViewModel);
     }
+
 }
