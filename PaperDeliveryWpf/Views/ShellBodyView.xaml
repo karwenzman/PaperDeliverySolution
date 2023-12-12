@@ -15,7 +15,7 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <userControls:Login Grid.Column="1"></userControls:Login>
+            <userControls:LoginUserControl Grid.Column="1"></userControls:LoginUserControl>
         </Grid>
     </ScrollViewer>
 </UserControl>
