@@ -43,7 +43,7 @@ namespace PaperDeliveryWpf
                     services.AddLogging();
                     services.AddOptions<ApplicationOptions>().Bind(context.Configuration.GetSection(nameof(ApplicationOptions)));
 
-                    services.AddSingleton<IUserRepository, UserRepository>();
+                    services.AddSingleton<IUserRepository, UserRepositoryFake>();
 
                     services.AddSingleton<ShellView>();
                     services.AddSingleton<IShellViewModel, ShellViewModel>();

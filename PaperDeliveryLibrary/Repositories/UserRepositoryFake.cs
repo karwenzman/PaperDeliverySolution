@@ -2,7 +2,7 @@
 
 namespace PaperDeliveryWpf.Repositories;
 
-public class UserRepository : IUserRepository
+public class UserRepositoryFake : IUserRepository
 {
     public UserModel? Login(string loginName, string password)
     {
