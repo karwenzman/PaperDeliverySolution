@@ -13,7 +13,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel
     private readonly ILogger<ShellViewModel> _logger;
     private readonly IOptions<ApplicationOptions> _options;
 
-    public CommandBinding StopCommand { get; set; }
+    //public CommandBinding StopCommand { get; set; }
 
     [ObservableProperty]
     private string? _applicationHomeDirectory;
@@ -34,30 +34,30 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel
 
 
         // Setting up the command bindings.
-        StopCommand = new CommandBinding(ApplicationCommands.Stop, Stop, CanStop);
+        //StopCommand = new CommandBinding(ApplicationCommands.Stop, Stop, CanStop);
     }
 
-    private void Stop(object sender, ExecutedRoutedEventArgs e)
-    {
-        Application.Current.MainWindow.Close();
-    }
-    private void CanStop(object sender, CanExecuteRoutedEventArgs e)
-    {
-        e.CanExecute = true;
-    }
+    //private void Stop(object sender, ExecutedRoutedEventArgs e)
+    //{
+    //    Application.Current.MainWindow.Close();
+    //}
+    //private void CanStop(object sender, CanExecuteRoutedEventArgs e)
+    //{
+    //    e.CanExecute = true;
+    //}
 
-    public void ShellView_Closing(object? sender, CancelEventArgs e)
-    {
-        MessageBoxResult messageBoxResult = MessageBox.Show(
-            "Soll das Fenster geschlossen werden?",
-            $"{nameof(ShellView_Closing)}",
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Question,
-            MessageBoxResult.No);
+    //public void ShellView_Closing(object? sender, CancelEventArgs e)
+    //{
+    //    MessageBoxResult messageBoxResult = MessageBox.Show(
+    //        "Soll das Fenster geschlossen werden?",
+    //        $"{nameof(ShellView_Closing)}",
+    //        MessageBoxButton.YesNo,
+    //        MessageBoxImage.Question,
+    //        MessageBoxResult.No);
 
-        if (messageBoxResult == MessageBoxResult.No)
-        {
-            e.Cancel = true;
-        }
-    }
+    //    if (messageBoxResult == MessageBoxResult.No)
+    //    {
+    //        e.Cancel = true;
+    //    }
+    //}
 }

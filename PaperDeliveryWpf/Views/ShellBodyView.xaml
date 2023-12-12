@@ -15,7 +15,10 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
+            <!-- *** The visibility of the UserControls is controlled by the ViewModels *** -->
             <userControls:LoginUserControl Grid.Column="1"></userControls:LoginUserControl>
+            <userControls:HomeLoggedInUserControl Grid.Column="1"></userControls:HomeLoggedInUserControl>
+            <userControls:HomeLoggedOutUserControl Grid.Column="1"></userControls:HomeLoggedOutUserControl>
         </Grid>
     </ScrollViewer>
 </UserControl>

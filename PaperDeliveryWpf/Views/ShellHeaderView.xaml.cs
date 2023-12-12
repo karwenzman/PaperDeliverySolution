@@ -21,7 +21,6 @@ public partial class ShellHeaderView : UserControl
         }
 
         DataContext = viewModel;
-
         InitializeComponent();
     }
 }
