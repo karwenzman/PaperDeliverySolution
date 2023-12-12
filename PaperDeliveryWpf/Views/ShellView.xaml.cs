@@ -11,7 +11,7 @@ public partial class ShellView : Window
     private readonly ILogger<ShellView> _logger;
     private readonly IServiceProvider _serviceProvider;
 
-    // Service provider.
+    // Private fields.
     private readonly IShellViewModel _viewModel;
 
     public ShellView(ILogger<ShellView> logger, IServiceProvider serviceProvider)
