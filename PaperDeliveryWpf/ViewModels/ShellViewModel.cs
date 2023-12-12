@@ -32,6 +32,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel
         ApplicationName = _options.Value.ApplicationName;
         ApplicationHomeDirectory = _options.Value.ApplicationHomeDirectory;
 
+
         // Setting up the command bindings.
         StopCommand = new CommandBinding(ApplicationCommands.Stop, Stop, CanStop);
     }

@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PaperDeliveryLibrary.Models;
@@ -50,6 +52,9 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
         // TODO - Error handling.
         UserModel? userModel = _userRepository.Login(UiLoginName, UiPassword);
         ShowSomething = userModel!.DisplayName;
+
+        // App wide communication. Recepients are listening for this message.
+        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(userModel));
 
         _logger.LogInformation("** User {user} has logged in.", userModel.Email);
     }

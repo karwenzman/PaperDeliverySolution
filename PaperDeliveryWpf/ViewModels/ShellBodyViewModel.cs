@@ -5,9 +5,7 @@ namespace PaperDeliveryWpf.ViewModels;
 
 public partial class ShellBodyViewModel : ViewModelBase, IShellBodyViewModel
 {
-    [ObservableProperty]
-    private string _title;
-
+    // Constructor injection.
     private readonly ILogger<ShellBodyViewModel> _logger;
 
     public ShellBodyViewModel(ILogger<ShellBodyViewModel> logger)
@@ -15,6 +13,5 @@ public partial class ShellBodyViewModel : ViewModelBase, IShellBodyViewModel
         _logger = logger;
         _logger.LogInformation("* Loading {class}", nameof(ShellBodyViewModel));
 
-        Title = nameof(ShellBodyViewModel);
     }
 }

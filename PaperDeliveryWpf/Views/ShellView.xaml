@@ -7,15 +7,22 @@
         mc:Ignorable="d"
         Title="ShellView" Height="450" Width="800">
     <Grid>
-        <!-- #region *** The main structure of the window is: Header(Row=0), Body(Row=1) and Footer(Row=2) ***-->
+        <!-- *** The main structure of the window is: Header(Row=1), Body(Row=2) and Footer(Row=3) *** -->
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <local:ShellHeaderView Grid.Row="0" />
-        <local:ShellBodyView Grid.Row="1" />
-        <local:ShellFooterView Grid.Row="2" />
+        <!-- *** The topmost frame of the UI *** -->
+        <TextBlock Grid.Row="0" Style="{StaticResource textBlockHeader}">
+            <Run FontWeight="Bold" FontStyle="Italic" FontSize="26" Foreground="Red">S</Run><Italic>udoku</Italic> 
+            <Run FontSize="10" Text="ClickOnceVersion"/>
+        </TextBlock>
+        
+        <local:ShellHeaderView Grid.Row="1" />
+        <local:ShellBodyView Grid.Row="2" />
+        <local:ShellFooterView Grid.Row="3" />
     </Grid>
 </Window>
