@@ -6,17 +6,17 @@ using PaperDeliveryLibrary.Messages;
 
 namespace PaperDeliveryWpf.ViewModels;
 
-public partial class HomeLoggedInViewModel : ViewModelBase, IHomeLoggedInViewModel, IRecipient<ValueChangedMessage<ShellMessage>>
+public partial class LoggedInViewModel : ViewModelBase, ILoggedInViewModel, IRecipient<ValueChangedMessage<ShellMessage>>
 {
-    private readonly ILogger<HomeLoggedInViewModel> _logger;
+    private readonly ILogger<LoggedInViewModel> _logger;
 
     [ObservableProperty]
     private bool _isActiveUserControl;
 
-    public HomeLoggedInViewModel(ILogger<HomeLoggedInViewModel> logger)
+    public LoggedInViewModel(ILogger<LoggedInViewModel> logger)
     {
         _logger = logger;
-        _logger.LogInformation("* Loading {class}", nameof(HomeLoggedInViewModel));
+        _logger.LogInformation("* Loading {class}", nameof(LoggedInViewModel));
 
         WeakReferenceMessenger.Default.Register(this);
 

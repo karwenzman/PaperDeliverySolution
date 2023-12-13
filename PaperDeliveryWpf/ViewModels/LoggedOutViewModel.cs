@@ -7,17 +7,17 @@ using PaperDeliveryLibrary.Models;
 
 namespace PaperDeliveryWpf.ViewModels;
 
-public partial class HomeLoggedOutViewModel : ViewModelBase, IHomeLoggedOutViewModel, IRecipient<ValueChangedMessage<ShellMessage>>
+public partial class LoggedOutViewModel : ViewModelBase, ILoggedOutViewModel, IRecipient<ValueChangedMessage<ShellMessage>>
 {
-    private readonly ILogger<HomeLoggedOutViewModel> _logger;
+    private readonly ILogger<LoggedOutViewModel> _logger;
 
     [ObservableProperty]
     private bool _isActiveUserControl;
 
-    public HomeLoggedOutViewModel(ILogger<HomeLoggedOutViewModel> logger)
+    public LoggedOutViewModel(ILogger<LoggedOutViewModel> logger)
     {
         _logger = logger;
-        _logger.LogInformation("* Loading {class}", nameof(HomeLoggedOutViewModel));
+        _logger.LogInformation("* Loading {class}", nameof(LoggedOutViewModel));
 
         WeakReferenceMessenger.Default.Register(this);
 

@@ -3,9 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PaperDeliveryWpf.Views"
+        xmlns:local="clr-namespace:PaperDeliveryWpf.Views" 
+        xmlns:viewmodels="clr-namespace:PaperDeliveryWpf.ViewModels" 
+        xmlns:userControls="clr-namespace:PaperDeliveryWpf.UserControls"
+        Title="ShellView" Height="450" Width="800"
         mc:Ignorable="d"
-        Title="ShellView" Height="450" Width="800">
+        d:DataContext="{d:DesignInstance Type=viewmodels:ShellViewModel}">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisibility" />
+    </Window.Resources>
+    
     <Grid>
         <!-- *** The main structure of the window is: Titel(Row=0), Header(Row=1), Body(Row=2) and Footer(Row=3) *** -->
         <Grid.RowDefinitions>
@@ -15,14 +22,124 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- *** The topmost frame of the UI *** -->
+        <!-- *** The UI's title *** -->
         <TextBlock Grid.Row="0" Style="{StaticResource textBlockHeader}">
             <Run FontWeight="Bold" FontStyle="Italic" FontSize="26" Foreground="Red">S</Run><Italic>udoku</Italic> 
             <Run FontSize="10" Text="ClickOnceVersion"/>
         </TextBlock>
+
+        <!-- *** The UI's header *** -->
+        <DockPanel Grid.Row="1">
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="File" Background="Black" Foreground="White">
+                    <MenuItem 
+                        Command="{x:Static ApplicationCommands.New}"
+                        Header="New">
+                    </MenuItem>
+                    <MenuItem Command="{x:Static ApplicationCommands.Open}"
+                        Header="Open">
+                    </MenuItem>
+                    <MenuItem Command="{x:Static ApplicationCommands.Close}"
+                        Header="Close">
+                    </MenuItem>
+                    <MenuItem Command="{x:Static ApplicationCommands.Save}"
+                        Header="Save">
+                    </MenuItem>
+                    <MenuItem Command="{x:Static ApplicationCommands.SaveAs}"
+                        Header="SaveAs">
+                    </MenuItem>
+                    <Separator></Separator>
+                    <MenuItem Command="{x:Static ApplicationCommands.Print}"
+                        Header="Print">
+                    </MenuItem>
+                    <MenuItem Command="{x:Static ApplicationCommands.PrintPreview}"
+                        Header="PrintPreview">
+                    </MenuItem>
+                    <MenuItem Command="{x:Static ApplicationCommands.CancelPrint}"
+                        Header="CancelPrint">
+                    </MenuItem>
+                    <Separator></Separator>
+                    <MenuItem Command="{x:Static ApplicationCommands.Stop}"
+                        Header="Stop">
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="Edit" Background="Black" Foreground="White">
+                    <MenuItem Command="{x:Static ApplicationCommands.Undo}"
+                        Header="Undo">
+                    </MenuItem>
+                    <MenuItem Command="{x:Static ApplicationCommands.Redo}"
+                        Header="Redo">
+                    </MenuItem>
+                    <Separator></Separator>
+                    <MenuItem Command="{x:Static ApplicationCommands.Cut}"
+                        Header="Cut">
+                    </MenuItem>
+                    <MenuItem Command="{x:Static ApplicationCommands.Copy}"
+                        Header="Copy">
+                    </MenuItem>
+                    <MenuItem Command="{x:Static ApplicationCommands.Paste}"
+                        Header="Paste">
+                    </MenuItem>
+                    <MenuItem Command="{x:Static ApplicationCommands.Delete}"
+                        Header="Delete">
+                    </MenuItem>
+                    <Separator></Separator>
+                    <MenuItem Command="{x:Static ApplicationCommands.Find}"
+                        Header="Find">
+                    </MenuItem>
+                    <MenuItem Command="{x:Static ApplicationCommands.Replace}"
+                        Header="Replace">
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="Tools" Background="Black" Foreground="White">
+                    <MenuItem Command="{x:Static ApplicationCommands.Properties}"
+                        Header="Properties">
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="Help" Background="Black" Foreground="White">
+                    <MenuItem Command="{x:Static ApplicationCommands.Help}"
+                        Header="Help">
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="{Binding LoginHeader}" Background="Black" Foreground="White"
+                      HorizontalAlignment="Right"
+                      Command="{Binding LoginMenuItemCommand}"
+                      Visibility="{Binding IsActiveMenuItem, Converter={StaticResource boolToVisibility}}">
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+
+        <!-- *** The UI's body *** -->
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <!-- *** The visibility of the UserControls is controlled by the ViewModels *** -->
+                <userControls:LoginUserControl Grid.Column="1"></userControls:LoginUserControl>
+                <userControls:LoggedInUserControl Grid.Column="1"></userControls:LoggedInUserControl>
+                <userControls:LoggedOutUserControl Grid.Column="1"></userControls:LoggedOutUserControl>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- *** The UI's footer *** -->
+        <StatusBar Grid.Row="3">
+            <StatusBarItem DockPanel.Dock="Right">
+                <TextBlock Text="DeveloperInformation"></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem DockPanel.Dock="Right">
+                <TextBlock Text="Information"></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem DockPanel.Dock="Right">
+                <TextBlock Text="Some more information"></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem DockPanel.Dock="Left">
+                <TextBlock Text="NewDesign"></TextBlock>
+            </StatusBarItem>
+        </StatusBar>
         
-        <local:ShellHeaderView Grid.Row="1" />
-        <local:ShellBodyView Grid.Row="2" />
-        <local:ShellFooterView Grid.Row="3" />
     </Grid>
 </Window>

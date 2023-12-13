@@ -2,19 +2,19 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace PaperDeliveryWpf.Views;
+namespace PaperDeliveryWpf.UserControls;
 
-public partial class ShellHeaderView : UserControl
+public partial class LoggedInUserControl : UserControl
 {
-    public ShellHeaderView()
+    public LoggedInUserControl()
     {
-        var viewModel = (IShellHeaderViewModel)App.AppHost!.Services.GetService(typeof(IShellHeaderViewModel))!;
+        var viewModel = (ILoggedInViewModel)App.AppHost!.Services.GetService(typeof(ILoggedInViewModel))!;
 
         if (viewModel == null)
         {
             MessageBoxResult messageBoxResult = MessageBox.Show(
-                $"The type {nameof(IShellHeaderViewModel)} was not loaded into the dependency injection container!",
-                $"{nameof(ShellHeaderView)}",
+                $"The type {nameof(ILoggedInViewModel)} was not loaded into the dependency injection container!",
+                $"{nameof(LoggedInUserControl)}",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error,
                 MessageBoxResult.No);

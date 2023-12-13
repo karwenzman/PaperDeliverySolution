@@ -1,5 +1,5 @@
 ﻿namespace PaperDeliveryWpf.ViewModels;
 
-public interface IShellBodyViewModel
+public interface ILoggedInViewModel
 {
 }
