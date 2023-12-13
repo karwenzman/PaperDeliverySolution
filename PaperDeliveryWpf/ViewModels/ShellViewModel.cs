@@ -1,32 +1,33 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PaperDeliveryLibrary.Messages;
 using PaperDeliveryLibrary.ProjectOptions;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
 namespace PaperDeliveryWpf.ViewModels;
 
-public partial class ShellViewModel : ViewModelBase, IShellViewModel
+public partial class ShellViewModel : ViewModelBase, IShellViewModel, IRecipient<ValueChangedMessage<ShellMessage>>
 {
     private readonly ILogger<ShellViewModel> _logger;
     private readonly IOptions<ApplicationOptions> _options;
+    private readonly IServiceProvider _serviceProvider;
 
-    public CommandBinding StopCommand { get; set; }
+    [ObservableProperty]
+    private object? _currentView;
 
     [ObservableProperty]
     private string? _applicationHomeDirectory;
 
     [ObservableProperty]
     private string? _applicationName;
-
-    [ObservableProperty]
-    private bool _needToLogin;
 
     [ObservableProperty]
     private string _loginHeader;
@@ -36,12 +37,10 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel
     private ShellMessage _shellMessage = new();
 
     [ObservableProperty]
-    private bool _isActiveUserControl;
+    private bool _isActiveLoginMenuItem;
 
-    [ObservableProperty]
-    private bool _isActiveMenuItem;
 
-    public ShellViewModel(ILogger<ShellViewModel> logger, IOptions<ApplicationOptions> options)
+    public ShellViewModel(ILogger<ShellViewModel> logger, IOptions<ApplicationOptions> options, IServiceProvider serviceProvider)
     {
         _logger = logger;
         _logger.LogInformation("* Loading {class}", nameof(ShellViewModel));
@@ -50,30 +49,18 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel
         ApplicationName = _options.Value.ApplicationName;
         ApplicationHomeDirectory = _options.Value.ApplicationHomeDirectory;
 
-        ShellMessage = new ShellMessage
-        {
-            DisplayLoggedIn = false,
-            DisplayLoggedOut = true,
-            DisplayLogin = false,
-        };
-        //ShellMessage.DisplayLoggedOut = true;
-        NeedToLogin = true;
-        LoginHeader = "Login Start";
-        IsActiveMenuItem = true;
-        IsActiveUserControl = true;
+        _serviceProvider = serviceProvider;
+        CurrentView = _serviceProvider.GetRequiredService<ILoggedOutViewModel>();
+
+        LoginHeader = "Login";
+        IsActiveLoginMenuItem = true;
 
         StopCommand = new CommandBinding(ApplicationCommands.Stop, Stop, CanStop);
+
+        WeakReferenceMessenger.Default.Register(this);
     }
 
-    private void Stop(object sender, ExecutedRoutedEventArgs e)
-    {
-        Application.Current.MainWindow.Close();
-    }
-    private void CanStop(object sender, CanExecuteRoutedEventArgs e)
-    {
-        e.CanExecute = true;
-    }
-
+    #region ***** Event *****
     public void ShellView_Closing(object? sender, CancelEventArgs e)
     {
         MessageBoxResult messageBoxResult = MessageBox.Show(
@@ -88,48 +75,75 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel
             e.Cancel = true;
         }
     }
+    #endregion ***** End Of Event *****
 
+    #region ***** CommandBinding *****
+    public CommandBinding StopCommand { get; set; }
+    private void Stop(object sender, ExecutedRoutedEventArgs e)
+    {
+        Application.Current.MainWindow.Close();
+    }
+    private void CanStop(object sender, CanExecuteRoutedEventArgs e)
+    {
+        e.CanExecute = true;
+    }
+    #endregion ***** End OF CommandBinding *****
+
+    #region ***** RelayCommand *****
     [RelayCommand(CanExecute = nameof(CanLoginMenuItem))]
     public void LoginMenuItem()
     {
-        if (ShellMessage.DisplayLoggedIn)
+        if (LoginHeader == "Login")
         {
-            // User clicked "Logut".
-            LoginHeader = "Login";
-            IsActiveMenuItem = true;
-            ShellMessage.DisplayLoggedOut = true;
-            ShellMessage.DisplayLoggedIn = false;
-            ShellMessage.DisplayLogin = false;
-        }
-        else if (ShellMessage.DisplayLoggedOut)
-        {
-            // User clicked "Login".
+            // Clicking "Login".
+            IsActiveLoginMenuItem = true; // for testing only
+            //IsActiveLoginMenuItem = false;
             LoginHeader = "Should be collapsed";
-            IsActiveMenuItem = false;
-            IsActiveUserControl = false;
-            ShellMessage.DisplayLoggedOut = false;
-            ShellMessage.DisplayLoggedIn = false;
-            ShellMessage.DisplayLogin = true;
+            CurrentView = _serviceProvider.GetRequiredService<ILoginViewModel>();
         }
-        else if (ShellMessage.DisplayLogin)
+        else if (LoginHeader == "Logout")
         {
-            // User finished "LoginView".
-            LoginHeader = "Logout";
-            IsActiveMenuItem = true;
-            ShellMessage.DisplayLoggedOut = false;
-            ShellMessage.DisplayLoggedIn = true;
-            ShellMessage.DisplayLogin = false;
+            // Clicking "Logout".
+            IsActiveLoginMenuItem = true;
+            LoginHeader = "Login";
+            CurrentView = _serviceProvider.GetRequiredService<ILoggedOutViewModel>();
         }
-        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(ShellMessage));
+        else if (LoginHeader == "Should be collapsed")
+        {
+            // Clicking "OK" or "Cancel" in the "LoginUserControl".
+            IsActiveLoginMenuItem = true;
+            LoginHeader = "Logout";
+            CurrentView = _serviceProvider.GetRequiredService<ILoggedInViewModel>();
+        }
     }
     public bool CanLoginMenuItem()
     {
         return true;
     }
+    #endregion ***** End OF RelayCommand *****
 
     public void Receive(ValueChangedMessage<ShellMessage> message)
     {
-        throw new NotImplementedException();
+        Debug.WriteLine($"Message received by {nameof(ShellViewModel)}.");
+        //if (message.Value.DisplayLogin)
+        //{
+        //    IsActiveLoginMenuItem = true; // for testing only
+        //    //IsActiveLoginMenuItem = false;
+        //    LoginHeader = "Should be collapsed";
+        //    CurrentView = _serviceProvider.GetRequiredService<ILoginViewModel>();
+        //}
+        //else if (message.Value.DisplayLoggedIn)
+        //{
+        //    IsActiveLoginMenuItem = true;
+        //    LoginHeader = "Logout";
+        //    CurrentView = _serviceProvider.GetRequiredService<ILoggedInViewModel>();
+        //}
+        //else if (message.Value.DisplayLoggedOut)
+        //{
+        //    IsActiveLoginMenuItem = true;
+        //    LoginHeader = "Login";
+        //    CurrentView = _serviceProvider.GetRequiredService<ILoggedOutViewModel>();
+        //}
     }
 
 }

@@ -7,11 +7,9 @@ namespace PaperDeliveryWpf.Views;
 
 public partial class ShellView : Window
 {
-    // Constructor injection.
     private readonly ILogger<ShellView> _logger;
     private readonly IServiceProvider _serviceProvider;
 
-    // Private fields.
     private readonly IShellViewModel _shellViewModel;
 
     public ShellView(ILogger<ShellView> logger, IServiceProvider serviceProvider)
@@ -30,7 +28,7 @@ public partial class ShellView : Window
 
         // Registering the events.
         Closing += _shellViewModel.ShellView_Closing;
-
+        
         InitializeComponent();
     }
 }

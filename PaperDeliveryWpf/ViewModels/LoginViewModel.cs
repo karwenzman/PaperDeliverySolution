@@ -10,7 +10,7 @@ using PaperDeliveryWpf.Repositories;
 
 namespace PaperDeliveryWpf.ViewModels;
 
-public partial class LoginViewModel : ViewModelBase, ILoginViewModel, IRecipient<ValueChangedMessage<ShellMessage>>
+public partial class LoginViewModel : ViewModelBase, ILoginViewModel
 {
     // Constructor injection.
     private readonly ILogger<LoginViewModel> _logger;
@@ -18,6 +18,7 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel, IRecipient
 
     // Private fields to store the loaded services.
     private readonly IUserRepository _userRepository;
+    private ShellMessage _message = new();
 
     // Properties using CommunityToolkit.
     [ObservableProperty]
@@ -42,9 +43,16 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel, IRecipient
         _serviceProvider = serviceProvider;
         _userRepository = _serviceProvider.GetRequiredService<IUserRepository>();
 
-        IsActiveUserControl = false;
+        IsActiveUserControl = true;
 
-        WeakReferenceMessenger.Default.Register(this);
+        _message = new ShellMessage
+        {
+            DisplayLoggedIn = true,
+            DisplayLoggedOut = false,
+            DisplayLogin = false,
+        };
+
+        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(_message));
 
         ShowSomething = "Hallo Welt!";
         UiLoginName = string.Empty;
@@ -62,23 +70,20 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel, IRecipient
         // App wide communication. Recepients are listening for this message.
         WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(userModel));
 
+        _message = new ShellMessage
+        {
+            DisplayLoggedIn = true,
+            DisplayLoggedOut = false,
+            DisplayLogin = false,
+        };
+
+        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(_message));
+
         _logger.LogInformation("** User {user} has logged in.", userModel.Email);
     }
     public bool CanLogin()
     {
         // TODO - How to enable this, if a character is entered into TextBox?
         return !string.IsNullOrEmpty(UiLoginName) && !string.IsNullOrEmpty(UiPassword);
-    }
-
-    public void Receive(ValueChangedMessage<ShellMessage> message)
-    {
-        if (message.Value.DisplayLogin)
-        {
-            IsActiveUserControl = true;
-        }
-        else
-        {
-            IsActiveUserControl = false;
-        }
     }
 }

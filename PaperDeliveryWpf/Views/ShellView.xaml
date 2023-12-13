@@ -104,7 +104,7 @@
                 <MenuItem Header="{Binding LoginHeader}" Background="Black" Foreground="White"
                       HorizontalAlignment="Right"
                       Command="{Binding LoginMenuItemCommand}"
-                      Visibility="{Binding IsActiveMenuItem, Converter={StaticResource boolToVisibility}}">
+                      Visibility="{Binding IsActiveLoginMenuItem, Converter={StaticResource boolToVisibility}}">
                 </MenuItem>
             </Menu>
         </DockPanel>
@@ -119,9 +119,12 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- *** The visibility of the UserControls is controlled by the ViewModels *** -->
-                <userControls:LoginUserControl Grid.Column="1"></userControls:LoginUserControl>
-                <userControls:LoggedInUserControl Grid.Column="1"></userControls:LoggedInUserControl>
-                <userControls:LoggedOutUserControl Grid.Column="1"></userControls:LoggedOutUserControl>
+                <!--<userControls:LoginUserControl Grid.Column="1" />-->
+                <!--<userControls:LoggedInUserControl Grid.Column="1" />-->
+                <!--<userControls:LoggedOutUserControl Grid.Column="1" />-->
+                
+                <!-- *** The ShellViewModel is hosting the logic, which UserControl shall be loaded *** -->
+                <ContentControl Content="{Binding CurrentView}" />
             </Grid>
         </ScrollViewer>
 

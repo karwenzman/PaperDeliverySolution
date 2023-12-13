@@ -6,32 +6,30 @@ using PaperDeliveryLibrary.Messages;
 
 namespace PaperDeliveryWpf.ViewModels;
 
-public partial class LoggedInViewModel : ViewModelBase, ILoggedInViewModel, IRecipient<ValueChangedMessage<ShellMessage>>
+public partial class LoggedInViewModel : ViewModelBase, ILoggedInViewModel
 {
     private readonly ILogger<LoggedInViewModel> _logger;
 
     [ObservableProperty]
     private bool _isActiveUserControl;
 
+    private ShellMessage _message = new();
+
     public LoggedInViewModel(ILogger<LoggedInViewModel> logger)
     {
         _logger = logger;
         _logger.LogInformation("* Loading {class}", nameof(LoggedInViewModel));
 
-        WeakReferenceMessenger.Default.Register(this);
 
-        IsActiveUserControl = false;
-    }
+        IsActiveUserControl = true;
 
-    public void Receive(ValueChangedMessage<ShellMessage> message)
-    {
-        if (message.Value.DisplayLoggedIn)
+        _message = new ShellMessage
         {
-            IsActiveUserControl = true;
-        }
-        else
-        {
-            IsActiveUserControl = false;
-        }
+            DisplayLoggedIn = false,
+            DisplayLoggedOut = true,
+            DisplayLogin = false,
+        };
+
+        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(_message));
     }
 }
