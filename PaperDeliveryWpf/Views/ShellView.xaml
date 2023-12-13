@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="ShellView" Height="450" Width="800">
     <Grid>
-        <!-- *** The main structure of the window is: Header(Row=1), Body(Row=2) and Footer(Row=3) *** -->
+        <!-- *** The main structure of the window is: Titel(Row=0), Header(Row=1), Body(Row=2) and Footer(Row=3) *** -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>

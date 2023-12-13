@@ -12,7 +12,7 @@
         <BooleanToVisibilityConverter x:Key="boolToVisibility" />
     </UserControl.Resources>
     
-    <DockPanel Visibility="Collapsed">
+    <DockPanel Visibility="{Binding IsActiveUserControl, Converter={StaticResource boolToVisibility}}">
         <!-- Header -->
         <Label DockPanel.Dock="Top" Content="Login Page" HorizontalAlignment="Center" />
 

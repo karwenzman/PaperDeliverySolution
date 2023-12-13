@@ -3,12 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:local="clr-namespace:PaperDeliveryWpf.Views"
-             mc:Ignorable="d" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewmodels="clr-namespace:PaperDeliveryWpf.ViewModels" 
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:ShellHeaderViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisibility" />
+    </UserControl.Resources>
     
-    <DockPanel>
-        <Menu DockPanel.Dock="Top" Visibility="Visible">
+    <DockPanel Visibility="{Binding IsActiveUserControl, Converter={StaticResource boolToVisibility}}">
+        <Menu DockPanel.Dock="Top">
             <MenuItem Header="File" Background="Black" Foreground="White">
                 <MenuItem 
                         Command="{x:Static ApplicationCommands.New}"
@@ -79,8 +84,10 @@
                         Header="Help">
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Login" Background="Black" Foreground="White"
-                      HorizontalAlignment="Right">
+            <MenuItem Header="{Binding LoginHeader}" Background="Black" Foreground="White"
+                      HorizontalAlignment="Right"
+                      Command="{Binding LoginMenuItemCommand}"
+                      Visibility="{Binding IsActiveMenuItem, Converter={StaticResource boolToVisibility}}">
             </MenuItem>
         </Menu>
 
