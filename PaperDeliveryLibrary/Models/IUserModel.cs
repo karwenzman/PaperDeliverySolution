@@ -1,5 +1,8 @@
 ﻿namespace PaperDeliveryLibrary.Models;
 
+/// <summary>
+/// This class is used to store the information about the logged in user.
+/// </summary>
 public interface IUserModel
 {
     /// <summary>
@@ -10,7 +13,7 @@ public interface IUserModel
     /// <summary>
     /// This property contains the user's login expression.
     /// </summary>
-    string LoginName { get; set; }
+    string Login { get; set; }
 
     /// <summary>
     /// This property contains the user's display name.

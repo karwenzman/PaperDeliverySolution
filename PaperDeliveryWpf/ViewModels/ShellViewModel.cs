@@ -10,6 +10,7 @@ using PaperDeliveryLibrary.Messages;
 using PaperDeliveryLibrary.Models;
 using PaperDeliveryLibrary.ProjectOptions;
 using System.ComponentModel;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 
@@ -27,6 +28,9 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
 
     [ObservableProperty]
     private string _applicationName = string.Empty;
+
+    [ObservableProperty]
+    private string _applicationVersion = string.Empty;
 
     [ObservableProperty]
     private string _userEmail = string.Empty;
@@ -65,6 +69,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
         _options = options;
         ApplicationName = _options.Value.ApplicationName;
         ApplicationHomeDirectory = _options.Value.ApplicationHomeDirectory;
+        ApplicationVersion = GetApplicationVersion();
 
         _serviceProvider = serviceProvider;
         CurrentView = _serviceProvider.GetRequiredService<ILoggedOutViewModel>();
@@ -72,6 +77,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
         StopCommand = new CommandBinding(ApplicationCommands.Stop, Stop, CanStop);
 
         WeakReferenceMessenger.Default.RegisterAll(this);
+        // TODO - How does this work?
         //WeakReferenceMessenger.Default.Register(this);
         //WeakReferenceMessenger.Default.Register<UserModel>(this, (r, m) => { });
         //WeakReferenceMessenger.Default.Register<ShellMessage>(this, (r, m) => { });
@@ -143,6 +149,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
             IsActiveLoggedOutUserControl = false;
             IsActiveLoginMenuItem = true;
             LoginHeader = $"Error in {nameof(ShellMessage)}";
+            // TODO - Error Logging 
         }
         else
         {
@@ -194,6 +201,20 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
         }
     }
 
+    private string GetApplicationVersion()
+    {
+        // TODO - Work on Deployment
+        //if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+        //{
+        //    return System.Deployment.Application.ApplicationDeployment.CurrentDeployment.
+        //        CurrentVersion.ToString();
+        //}
+        //return "Not network deployed";
+
+        // This is the assembly version only. See projet's properties. 
+        var version = Assembly.GetExecutingAssembly().GetName().Version;
+        return $"{version!.Major}.{version!.Minor}.{version!.Build}.{version!.Revision}";
+    }
     public void Receive(ValueChangedMessage<ShellMessage> message)
     {
         ManageUserControls(message.Value);

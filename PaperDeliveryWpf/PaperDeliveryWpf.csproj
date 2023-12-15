@@ -8,6 +8,8 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Images\Newspaper3.ico</ApplicationIcon>
     <UserSecretsId>26cf2dc3-1dc3-4b28-a9ee-a794d6ea7e46</UserSecretsId>
+    <AssemblyVersion></AssemblyVersion>
+    <FileVersion></FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

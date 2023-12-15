@@ -2,6 +2,9 @@
 
 namespace PaperDeliveryLibrary.Messages;
 
+/// <summary>
+/// This class is used to enable the communication between the parent ViewModel and its child ViewModels.
+/// </summary>
 public class ShellMessage
 {
     public ActivateVisibility SetToActive { get; set; } = ActivateVisibility.None;

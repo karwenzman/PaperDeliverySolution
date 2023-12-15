@@ -8,7 +8,7 @@ public class UserRepositoryFake : IUserRepository
     {
         UserModel? output = new()
         {
-            LoginName = loginName,
+            Login = loginName,
             Password = password,
             Email = "karwenzman@gmx.net",
             DisplayName = "karwenzman"
