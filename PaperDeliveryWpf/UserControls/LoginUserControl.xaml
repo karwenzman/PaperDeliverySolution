@@ -42,7 +42,6 @@
         </StackPanel>
         
         <!-- Footer -->
-        <Label DockPanel.Dock="Bottom" Content="{Binding ShowSomething}" HorizontalAlignment="Center" />
     </DockPanel>
 
 </UserControl>

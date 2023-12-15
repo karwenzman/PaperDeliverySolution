@@ -24,7 +24,7 @@
 
         <!-- *** The UI's title *** -->
         <TextBlock Grid.Row="0" Style="{StaticResource textBlockHeader}">
-            <Run FontWeight="Bold" Foreground="Orange" FontStyle="Italic" FontSize="26" Text="Paper Delivery Solution" /> 
+            <Run FontWeight="Bold" Foreground="Orange" FontStyle="Italic" FontSize="26" Text="{Binding ApplicationName}" /> 
             <Run FontSize="10" Text="Version"/>
         </TextBlock>
 
@@ -137,16 +137,16 @@
         <!-- *** The UI's footer *** -->
         <StatusBar Grid.Row="3">
             <StatusBarItem DockPanel.Dock="Right">
-                <TextBlock Text="DeveloperInformation"></TextBlock>
+                <TextBlock Text="{Binding UserEmail}"></TextBlock>
             </StatusBarItem>
             <StatusBarItem DockPanel.Dock="Right">
-                <TextBlock Text="Information"></TextBlock>
+                <TextBlock Text="{Binding UserName}"></TextBlock>
             </StatusBarItem>
             <StatusBarItem DockPanel.Dock="Right">
                 <TextBlock Text="Some more information"></TextBlock>
             </StatusBarItem>
             <StatusBarItem DockPanel.Dock="Left">
-                <TextBlock Text="NewDesign"></TextBlock>
+                <TextBlock Text="{Binding ApplicationHomeDirectory}"></TextBlock>
             </StatusBarItem>
         </StatusBar>
         

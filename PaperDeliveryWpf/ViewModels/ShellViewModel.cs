@@ -5,37 +5,41 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using PaperDeliveryLibrary.Messages;
 using PaperDeliveryLibrary.Enums;
+using PaperDeliveryLibrary.Messages;
+using PaperDeliveryLibrary.Models;
 using PaperDeliveryLibrary.ProjectOptions;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
 namespace PaperDeliveryWpf.ViewModels;
 
-public partial class ShellViewModel : ViewModelBase, IShellViewModel, IRecipient<ValueChangedMessage<ShellMessage>>
+public partial class ShellViewModel : ViewModelBase, IShellViewModel,
+    IRecipient<ValueChangedMessage<ShellMessage>>,
+    IRecipient<ValueChangedMessage<UserModel>>
 {
-    private readonly ILogger<ShellViewModel> _logger;
-    private readonly IOptions<ApplicationOptions> _options;
-    private readonly IServiceProvider _serviceProvider;
+    [ObservableProperty]
+    private object? _currentView = new();
 
     [ObservableProperty]
-    private object? _currentView;
+    private string _applicationHomeDirectory = string.Empty;
 
     [ObservableProperty]
-    private string? _applicationHomeDirectory;
+    private string _applicationName = string.Empty;
 
     [ObservableProperty]
-    private string? _applicationName;
+    private string _userEmail = string.Empty;
+
+    [ObservableProperty]
+    private string _userName = string.Empty;
 
     [ObservableProperty]
     private string _loginHeader = "Login";
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(LoginMenuItemCommand))]
-    private ShellMessage _shellMessage = new();
+    private ShellMessage? _shellMessage = new();
 
     [ObservableProperty]
     private bool _isActiveLoginMenuItem = true;
@@ -48,6 +52,10 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel, IRecipient
 
     [ObservableProperty]
     private bool _isActiveLoggedOutUserControl = true;
+
+    private readonly ILogger<ShellViewModel> _logger;
+    private readonly IOptions<ApplicationOptions> _options;
+    private readonly IServiceProvider _serviceProvider;
 
     public ShellViewModel(ILogger<ShellViewModel> logger, IOptions<ApplicationOptions> options, IServiceProvider serviceProvider)
     {
@@ -63,7 +71,10 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel, IRecipient
 
         StopCommand = new CommandBinding(ApplicationCommands.Stop, Stop, CanStop);
 
-        WeakReferenceMessenger.Default.Register(this);
+        WeakReferenceMessenger.Default.RegisterAll(this);
+        //WeakReferenceMessenger.Default.Register(this);
+        //WeakReferenceMessenger.Default.Register<UserModel>(this, (r, m) => { });
+        //WeakReferenceMessenger.Default.Register<ShellMessage>(this, (r, m) => { });
     }
 
     #region ***** Event *****
@@ -99,20 +110,23 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel, IRecipient
     [RelayCommand(CanExecute = nameof(CanLoginMenuItem))]
     public void LoginMenuItem()
     {
+        // TODO - Make this dynamic - see xaml-file, also.
         //CurrentView = _serviceProvider.GetRequiredService<ILoggedInViewModel>();
         //CurrentView = _serviceProvider.GetRequiredService<ILoginViewModel>();
         //CurrentView = _serviceProvider.GetRequiredService<ILoggedOutViewModel>();
 
         if (LoginHeader == "Login")
         {
-            ShellMessage.SetToActive = ActivateVisibility.LoginUserControl;
+            ShellMessage = new ShellMessage { SetToActive = ActivateVisibility.LoginUserControl };
         }
         else if (LoginHeader == "Logout")
         {
-            ShellMessage.SetToActive = ActivateVisibility.LoggedOutUserControl;
+            ShellMessage = new ShellMessage { SetToActive = ActivateVisibility.LoggedOutUserControl };
+            UserName = string.Empty;
+            UserEmail = string.Empty;
         }
 
-        ManageUserControls();
+        ManageUserControls(ShellMessage);
     }
     public bool CanLoginMenuItem()
     {
@@ -120,49 +134,73 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel, IRecipient
     }
     #endregion ***** End OF RelayCommand *****
 
-    private void ManageUserControls()
+    private void ManageUserControls(ShellMessage? message)
     {
-        switch (ShellMessage.SetToActive)
+        if (message == null)
         {
-            case ActivateVisibility.None:
-                IsActiveLoginUserControl = false;
-                IsActiveLoggedInUserControl = false;
-                IsActiveLoggedOutUserControl = false;
-                IsActiveLoginMenuItem = false;
-                LoginHeader = "None"; // no effect, since IsActiveLoginMenuItem = false
-                break;
-            case ActivateVisibility.LoginUserControl:
-                IsActiveLoginUserControl = true;
-                IsActiveLoggedInUserControl = false;
-                IsActiveLoggedOutUserControl = false;
-                IsActiveLoginMenuItem = false;
-                LoginHeader = "LoginUserControl"; // no effect, since IsActiveLoginMenuItem = false
-                break;
-            case ActivateVisibility.LoggedInUserControl:
-                IsActiveLoginUserControl = false;
-                IsActiveLoggedInUserControl = true;
-                IsActiveLoggedOutUserControl = false;
-                IsActiveLoginMenuItem = true;
-                LoginHeader = "Logout";
-                break;
-            case ActivateVisibility.LoggedOutUserControl:
-                IsActiveLoginUserControl = false;
-                IsActiveLoggedInUserControl = false;
-                IsActiveLoggedOutUserControl = true;
-                IsActiveLoginMenuItem = true;
-                LoginHeader = "Login";
-                break;
+            IsActiveLoginUserControl = false;
+            IsActiveLoggedInUserControl = false;
+            IsActiveLoggedOutUserControl = false;
+            IsActiveLoginMenuItem = true;
+            LoginHeader = $"Error in {nameof(ShellMessage)}";
+        }
+        else
+        {
+            switch (message.SetToActive)
+            {
+                case ActivateVisibility.None:
+                    IsActiveLoginUserControl = false;
+                    IsActiveLoggedInUserControl = false;
+                    IsActiveLoggedOutUserControl = false;
+                    IsActiveLoginMenuItem = false;
+                    LoginHeader = "None"; // no effect, since IsActiveLoginMenuItem = false
+                    break;
+                case ActivateVisibility.LoginUserControl:
+                    IsActiveLoginUserControl = true;
+                    IsActiveLoggedInUserControl = false;
+                    IsActiveLoggedOutUserControl = false;
+                    IsActiveLoginMenuItem = false;
+                    LoginHeader = "LoginUserControl"; // no effect, since IsActiveLoginMenuItem = false
+                    break;
+                case ActivateVisibility.LoggedInUserControl:
+                    IsActiveLoginUserControl = false;
+                    IsActiveLoggedInUserControl = true;
+                    IsActiveLoggedOutUserControl = false;
+                    IsActiveLoginMenuItem = true;
+                    LoginHeader = "Logout";
+                    break;
+                case ActivateVisibility.LoggedOutUserControl:
+                    IsActiveLoginUserControl = false;
+                    IsActiveLoggedInUserControl = false;
+                    IsActiveLoggedOutUserControl = true;
+                    IsActiveLoginMenuItem = true;
+                    LoginHeader = "Login";
+                    break;
+            }
         }
     }
 
+    private void ManageUserInformation(UserModel? messge)
+    {
+        if (messge == null)
+        {
+            UserEmail = string.Empty;
+            UserName = string.Empty;
+        }
+        else
+        {
+            UserEmail = messge.Email;
+            UserName = messge.DisplayName;
+        }
+    }
 
     public void Receive(ValueChangedMessage<ShellMessage> message)
     {
-        Debug.WriteLine($"Message received by {nameof(ShellViewModel)}.");
-
-        ShellMessage = message.Value;
-
-        ManageUserControls();
+        ManageUserControls(message.Value);
     }
 
+    public void Receive(ValueChangedMessage<UserModel> message)
+    {
+        ManageUserInformation(message.Value);
+    }
 }
