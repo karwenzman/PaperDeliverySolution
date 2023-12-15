@@ -25,6 +25,7 @@ namespace PaperDeliveryWpf
 
         public App()
         {
+            // TODO - Check, if userSecrets does work with this setting.
             // Enables Serilog to read configuration from appsettings.json and environment variables.
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", false, true)

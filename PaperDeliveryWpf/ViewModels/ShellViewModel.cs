@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PaperDeliveryLibrary.Messages;
+using PaperDeliveryLibrary.Enums;
 using PaperDeliveryLibrary.ProjectOptions;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -30,15 +31,23 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel, IRecipient
     private string? _applicationName;
 
     [ObservableProperty]
-    private string _loginHeader;
+    private string _loginHeader = "Login";
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(LoginMenuItemCommand))]
     private ShellMessage _shellMessage = new();
 
     [ObservableProperty]
-    private bool _isActiveLoginMenuItem;
+    private bool _isActiveLoginMenuItem = true;
 
+    [ObservableProperty]
+    private bool _isActiveLoginUserControl = false;
+
+    [ObservableProperty]
+    private bool _isActiveLoggedInUserControl = false;
+
+    [ObservableProperty]
+    private bool _isActiveLoggedOutUserControl = true;
 
     public ShellViewModel(ILogger<ShellViewModel> logger, IOptions<ApplicationOptions> options, IServiceProvider serviceProvider)
     {
@@ -51,9 +60,6 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel, IRecipient
 
         _serviceProvider = serviceProvider;
         CurrentView = _serviceProvider.GetRequiredService<ILoggedOutViewModel>();
-
-        LoginHeader = "Login";
-        IsActiveLoginMenuItem = true;
 
         StopCommand = new CommandBinding(ApplicationCommands.Stop, Stop, CanStop);
 
@@ -93,28 +99,20 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel, IRecipient
     [RelayCommand(CanExecute = nameof(CanLoginMenuItem))]
     public void LoginMenuItem()
     {
+        //CurrentView = _serviceProvider.GetRequiredService<ILoggedInViewModel>();
+        //CurrentView = _serviceProvider.GetRequiredService<ILoginViewModel>();
+        //CurrentView = _serviceProvider.GetRequiredService<ILoggedOutViewModel>();
+
         if (LoginHeader == "Login")
         {
-            // Clicking "Login".
-            IsActiveLoginMenuItem = true; // for testing only
-            //IsActiveLoginMenuItem = false;
-            LoginHeader = "Should be collapsed";
-            CurrentView = _serviceProvider.GetRequiredService<ILoginViewModel>();
+            ShellMessage.SetToActive = ActivateVisibility.LoginUserControl;
         }
         else if (LoginHeader == "Logout")
         {
-            // Clicking "Logout".
-            IsActiveLoginMenuItem = true;
-            LoginHeader = "Login";
-            CurrentView = _serviceProvider.GetRequiredService<ILoggedOutViewModel>();
+            ShellMessage.SetToActive = ActivateVisibility.LoggedOutUserControl;
         }
-        else if (LoginHeader == "Should be collapsed")
-        {
-            // Clicking "OK" or "Cancel" in the "LoginUserControl".
-            IsActiveLoginMenuItem = true;
-            LoginHeader = "Logout";
-            CurrentView = _serviceProvider.GetRequiredService<ILoggedInViewModel>();
-        }
+
+        ManageUserControls();
     }
     public bool CanLoginMenuItem()
     {
@@ -122,28 +120,49 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel, IRecipient
     }
     #endregion ***** End OF RelayCommand *****
 
+    private void ManageUserControls()
+    {
+        switch (ShellMessage.SetToActive)
+        {
+            case ActivateVisibility.None:
+                IsActiveLoginUserControl = false;
+                IsActiveLoggedInUserControl = false;
+                IsActiveLoggedOutUserControl = false;
+                IsActiveLoginMenuItem = false;
+                LoginHeader = "None"; // no effect, since IsActiveLoginMenuItem = false
+                break;
+            case ActivateVisibility.LoginUserControl:
+                IsActiveLoginUserControl = true;
+                IsActiveLoggedInUserControl = false;
+                IsActiveLoggedOutUserControl = false;
+                IsActiveLoginMenuItem = false;
+                LoginHeader = "LoginUserControl"; // no effect, since IsActiveLoginMenuItem = false
+                break;
+            case ActivateVisibility.LoggedInUserControl:
+                IsActiveLoginUserControl = false;
+                IsActiveLoggedInUserControl = true;
+                IsActiveLoggedOutUserControl = false;
+                IsActiveLoginMenuItem = true;
+                LoginHeader = "Logout";
+                break;
+            case ActivateVisibility.LoggedOutUserControl:
+                IsActiveLoginUserControl = false;
+                IsActiveLoggedInUserControl = false;
+                IsActiveLoggedOutUserControl = true;
+                IsActiveLoginMenuItem = true;
+                LoginHeader = "Login";
+                break;
+        }
+    }
+
+
     public void Receive(ValueChangedMessage<ShellMessage> message)
     {
         Debug.WriteLine($"Message received by {nameof(ShellViewModel)}.");
-        //if (message.Value.DisplayLogin)
-        //{
-        //    IsActiveLoginMenuItem = true; // for testing only
-        //    //IsActiveLoginMenuItem = false;
-        //    LoginHeader = "Should be collapsed";
-        //    CurrentView = _serviceProvider.GetRequiredService<ILoginViewModel>();
-        //}
-        //else if (message.Value.DisplayLoggedIn)
-        //{
-        //    IsActiveLoginMenuItem = true;
-        //    LoginHeader = "Logout";
-        //    CurrentView = _serviceProvider.GetRequiredService<ILoggedInViewModel>();
-        //}
-        //else if (message.Value.DisplayLoggedOut)
-        //{
-        //    IsActiveLoginMenuItem = true;
-        //    LoginHeader = "Login";
-        //    CurrentView = _serviceProvider.GetRequiredService<ILoggedOutViewModel>();
-        //}
+
+        ShellMessage = message.Value;
+
+        ManageUserControls();
     }
 
 }

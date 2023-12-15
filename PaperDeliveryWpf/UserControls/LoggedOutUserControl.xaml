@@ -12,7 +12,7 @@
         <BooleanToVisibilityConverter x:Key="boolToVisibility" />
     </UserControl.Resources>    
     
-    <Grid Visibility="{Binding IsActiveUserControl, Converter={StaticResource boolToVisibility}}">
+    <Grid>
         <TextBlock Text="You need to log in." />
     </Grid>
 </UserControl>

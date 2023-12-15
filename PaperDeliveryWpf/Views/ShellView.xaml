@@ -24,8 +24,8 @@
 
         <!-- *** The UI's title *** -->
         <TextBlock Grid.Row="0" Style="{StaticResource textBlockHeader}">
-            <Run FontWeight="Bold" FontStyle="Italic" FontSize="26" Foreground="Red">S</Run><Italic>udoku</Italic> 
-            <Run FontSize="10" Text="ClickOnceVersion"/>
+            <Run FontWeight="Bold" Foreground="Orange" FontStyle="Italic" FontSize="26" Text="Paper Delivery Solution" /> 
+            <Run FontSize="10" Text="Version"/>
         </TextBlock>
 
         <!-- *** The UI's header *** -->
@@ -118,13 +118,19 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <!-- *** The visibility of the UserControls is controlled by the ViewModels *** -->
-                <!--<userControls:LoginUserControl Grid.Column="1" />-->
-                <!--<userControls:LoggedInUserControl Grid.Column="1" />-->
-                <!--<userControls:LoggedOutUserControl Grid.Column="1" />-->
+                <!-- *** The visibility of the UserControls is controlled by the ViewModel *** -->
+                <StackPanel  Grid.Column="1" Visibility="{Binding IsActiveLoginUserControl, Converter={StaticResource boolToVisibility}}">
+                    <userControls:LoginUserControl />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Visibility="{Binding IsActiveLoggedInUserControl, Converter={StaticResource boolToVisibility}}">
+                    <userControls:LoggedInUserControl />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Visibility="{Binding IsActiveLoggedOutUserControl, Converter={StaticResource boolToVisibility}}">
+                    <userControls:LoggedOutUserControl />
+                </StackPanel>
                 
                 <!-- *** The ShellViewModel is hosting the logic, which UserControl shall be loaded *** -->
-                <ContentControl Content="{Binding CurrentView}" />
+                <!--<ContentControl Content="{Binding CurrentView}" />-->
             </Grid>
         </ScrollViewer>
 
