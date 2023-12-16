@@ -7,6 +7,7 @@ public enum ActivateVisibility
 {
     None,
     LoginUserControl,
-    LoggedInUserControl,
-    LoggedOutUserControl,
+    LogoutUserControl,
+    HomeUserControl,
+    StartUserControl,
 }

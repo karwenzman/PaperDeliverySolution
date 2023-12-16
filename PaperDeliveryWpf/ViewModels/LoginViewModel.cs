@@ -47,7 +47,7 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
 
         _message = new ShellMessage
         {
-            SetToActive = ActivateVisibility.LoggedInUserControl,
+            SetToActive = ActivateVisibility.HomeUserControl,
         };
 
         WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(_message));
@@ -79,7 +79,7 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     {
         _message = new ShellMessage
         {
-            SetToActive = ActivateVisibility.LoggedOutUserControl,
+            SetToActive = ActivateVisibility.StartUserControl,
         };
         WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(_message));
 

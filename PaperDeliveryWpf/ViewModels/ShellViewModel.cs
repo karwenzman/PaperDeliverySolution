@@ -110,7 +110,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
         }
         else if (LoginHeader == "Logout")
         {
-            ShellMessage = new ShellMessage { SetToActive = ActivateVisibility.LoggedOutUserControl };
+            ShellMessage = new ShellMessage { SetToActive = ActivateVisibility.StartUserControl };
             UserName = string.Empty;
             UserEmail = string.Empty;
         }
@@ -144,12 +144,12 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
                     LoginHeader = "LoginUserControl"; // no effect, since IsActiveLoginMenuItem = false
                     CurrentView = App.AppHost!.Services.GetRequiredService<ILoginViewModel>();
                     break;
-                case ActivateVisibility.LoggedInUserControl:
+                case ActivateVisibility.HomeUserControl:
                     IsActiveLoginMenuItem = true;
                     LoginHeader = "Logout";
                     CurrentView = App.AppHost!.Services.GetRequiredService<IHomeViewModel>();
                     break;
-                case ActivateVisibility.LoggedOutUserControl:
+                case ActivateVisibility.StartUserControl:
                     IsActiveLoginMenuItem = true;
                     LoginHeader = "Login";
                     CurrentView = App.AppHost!.Services.GetRequiredService<IStartViewModel>();
