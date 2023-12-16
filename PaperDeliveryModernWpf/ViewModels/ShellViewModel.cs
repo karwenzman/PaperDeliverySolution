@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PaperDeliveryLibrary.ProjectOptions;
@@ -16,6 +18,9 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel
     private readonly IOptions<ApplicationOptions> _applicationOptions;
 
     public CommandBinding StopCommand { get; set; }
+
+    [ObservableProperty]
+    private object? _currentView;
 
     [ObservableProperty]
     private string? _applicationHomeDirectory;
@@ -43,6 +48,10 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel
 
         DeveloperName = "karwenzman";
         DeveloperName = "Thorsten";
+
+        // Starting Page
+        //CurrentView = new HomeViewModel();
+        CurrentView = App.AppHost!.Services.GetRequiredService<IHomeViewModel>();
     }
 
     #region ***** Testing only *****
@@ -63,6 +72,17 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel
         Debug.WriteLine($"The property {nameof(DeveloperName)} is going to be changed to the new value: {value}");
     }
     #endregion
+
+    [RelayCommand(CanExecute = nameof(CanHome))]
+    public void HomeButton()
+    {
+
+    }
+    public bool CanHome()
+    {
+        return true;
+    }
+
 
     private void Stop(object sender, ExecutedRoutedEventArgs e)
     {

@@ -7,28 +7,4 @@
         <views:HomeView />
     </DataTemplate>
 
-    <!--<DataTemplate DataType="{x:Type viewmodels:CustomerVM}">
-        <views:Customers />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type viewmodels:ProductVM}">
-        <views:Products />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type viewmodels:OrderVM}">
-        <views:Orders />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type viewmodels:TransactionVM}">
-        <views:Transactions />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type viewmodels:ShipmentVM}">
-        <views:Shipments />
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type viewmodels:SettingVM}">
-        <views:Settings />
-    </DataTemplate>-->
-    
 </ResourceDictionary>

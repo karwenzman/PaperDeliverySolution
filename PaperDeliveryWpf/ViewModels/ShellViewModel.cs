@@ -21,7 +21,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
     IRecipient<ValueChangedMessage<UserModel>>
 {
     [ObservableProperty]
-    private object? _currentView = new();
+    private object? _currentView;
 
     [ObservableProperty]
     private string _applicationHomeDirectory = string.Empty;
@@ -72,7 +72,8 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
         ApplicationVersion = GetApplicationVersion();
 
         _serviceProvider = serviceProvider;
-        CurrentView = _serviceProvider.GetRequiredService<ILoggedOutViewModel>();
+        //CurrentView = _serviceProvider.GetRequiredService<ILoggedOutViewModel>();
+        CurrentView = App.AppHost!.Services.GetRequiredService<ILoggedOutViewModel>();
 
         StopCommand = new CommandBinding(ApplicationCommands.Stop, Stop, CanStop);
 
@@ -168,6 +169,8 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
                     IsActiveLoggedOutUserControl = false;
                     IsActiveLoginMenuItem = false;
                     LoginHeader = "LoginUserControl"; // no effect, since IsActiveLoginMenuItem = false
+                    CurrentView = App.AppHost!.Services.GetRequiredService<ILoginViewModel>();
+
                     break;
                 case ActivateVisibility.LoggedInUserControl:
                     IsActiveLoginUserControl = false;
@@ -175,6 +178,8 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
                     IsActiveLoggedOutUserControl = false;
                     IsActiveLoginMenuItem = true;
                     LoginHeader = "Logout";
+                    CurrentView = App.AppHost!.Services.GetRequiredService<ILoggedInViewModel>();
+
                     break;
                 case ActivateVisibility.LoggedOutUserControl:
                     IsActiveLoginUserControl = false;
@@ -182,6 +187,8 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
                     IsActiveLoggedOutUserControl = true;
                     IsActiveLoginMenuItem = true;
                     LoginHeader = "Login";
+                    CurrentView = App.AppHost!.Services.GetRequiredService<ILoggedOutViewModel>();
+
                     break;
             }
         }

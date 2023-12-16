@@ -119,7 +119,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- *** The visibility of the UserControls is controlled by the ViewModel *** -->
-                <StackPanel  Grid.Column="1" Visibility="{Binding IsActiveLoginUserControl, Converter={StaticResource boolToVisibility}}">
+                <!--<StackPanel  Grid.Column="1" Visibility="{Binding IsActiveLoginUserControl, Converter={StaticResource boolToVisibility}}">
                     <userControls:LoginUserControl />
                 </StackPanel>
                 <StackPanel Grid.Column="1" Visibility="{Binding IsActiveLoggedInUserControl, Converter={StaticResource boolToVisibility}}">
@@ -127,10 +127,12 @@
                 </StackPanel>
                 <StackPanel Grid.Column="1" Visibility="{Binding IsActiveLoggedOutUserControl, Converter={StaticResource boolToVisibility}}">
                     <userControls:LoggedOutUserControl />
-                </StackPanel>
+                </StackPanel>-->
                 
                 <!-- *** The ShellViewModel is hosting the logic, which UserControl shall be loaded *** -->
-                <!--<ContentControl Content="{Binding CurrentView}" />-->
+                <StackPanel Grid.Column="1">
+                    <ContentControl Content="{Binding CurrentView}" />
+                </StackPanel>
             </Grid>
         </ScrollViewer>
 

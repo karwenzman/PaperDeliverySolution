@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace PaperDeliveryModernWpf.ViewModels;
 
-public class HomeViewModel : ViewModelBase
+public partial class HomeViewModel : ViewModelBase, IHomeViewModel
 {
+    [ObservableProperty]
+    private string _userInformation = "Hello User!";
 }

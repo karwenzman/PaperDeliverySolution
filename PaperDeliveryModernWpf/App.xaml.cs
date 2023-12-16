@@ -36,6 +36,7 @@ public partial class App : Application
                 services.AddSingleton<IUserModel, UserModel>();
                 services.AddSingleton<ShellView>();
                 services.AddSingleton<IShellViewModel, ShellViewModel>();
+                services.AddTransient<IHomeViewModel, HomeViewModel>();
             })
             .UseSerilog()
             .Build();

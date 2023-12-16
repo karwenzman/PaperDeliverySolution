@@ -13,6 +13,6 @@
     </UserControl.Resources>    
     
     <Grid>
-        <TextBlock Text="You need to log in." />
+        <TextBlock Text="{Binding UserMessage}" FontSize="26" FontWeight="Bold" Margin="20" />
     </Grid>
 </UserControl>

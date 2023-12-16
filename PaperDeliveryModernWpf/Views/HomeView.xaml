@@ -3,15 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:PaperDeliveryModernWpf.Views"
+             xmlns:local="clr-namespace:PaperDeliveryModernWpf.Views" 
+             xmlns:viewmodels="clr-namespace:PaperDeliveryModernWpf.ViewModels" 
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:HomeViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Border CornerRadius="0,20,20,0" Margin="0,5,5,0">
-
             <Image Source="../Images/home_page.png"
                    Stretch="Fill" />
+        </Border>
 
-        </Border>            
+        <TextBlock Text="{Binding UserInformation}" Foreground="White" FontSize="36" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
     </Grid>
 </UserControl>

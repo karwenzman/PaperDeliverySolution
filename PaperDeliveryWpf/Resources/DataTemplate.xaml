@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:usercontrols="clr-namespace:PaperDeliveryWpf.UserControls"
+                    xmlns:viewmodels="clr-namespace:PaperDeliveryWpf.ViewModels">
+
+    <DataTemplate DataType="{x:Type viewmodels:LoggedOutViewModel}">
+        <usercontrols:LoggedOutUserControl />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewmodels:LoggedInViewModel}">
+        <usercontrols:LoggedInUserControl />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewmodels:LoginViewModel}">
+        <usercontrols:LoginUserControl />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type viewmodels:LogoutViewModel}">
+        <usercontrols:LogoutUserControl />
+    </DataTemplate>
+    
+</ResourceDictionary>
