@@ -64,7 +64,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
 
         _serviceProvider = serviceProvider; // Check, if needed!
 
-        CurrentView = App.AppHost!.Services.GetRequiredService<ILoggedOutViewModel>();
+        CurrentView = App.AppHost!.Services.GetRequiredService<IStartViewModel>();
 
         StopCommand = new CommandBinding(ApplicationCommands.Stop, Stop, CanStop);
 
@@ -147,12 +147,12 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
                 case ActivateVisibility.LoggedInUserControl:
                     IsActiveLoginMenuItem = true;
                     LoginHeader = "Logout";
-                    CurrentView = App.AppHost!.Services.GetRequiredService<ILoggedInViewModel>();
+                    CurrentView = App.AppHost!.Services.GetRequiredService<IHomeViewModel>();
                     break;
                 case ActivateVisibility.LoggedOutUserControl:
                     IsActiveLoginMenuItem = true;
                     LoginHeader = "Login";
-                    CurrentView = App.AppHost!.Services.GetRequiredService<ILoggedOutViewModel>();
+                    CurrentView = App.AppHost!.Services.GetRequiredService<IStartViewModel>();
                     break;
             }
         }

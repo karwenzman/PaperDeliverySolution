@@ -4,17 +4,17 @@ using System.Windows.Controls;
 
 namespace PaperDeliveryWpf.UserControls;
 
-public partial class LoggedOutUserControl : UserControl
+public partial class HomeUserControl : UserControl
 {
-    public LoggedOutUserControl()
+    public HomeUserControl()
     {
-        var viewModel = (ILoggedOutViewModel)App.AppHost!.Services.GetService(typeof(ILoggedOutViewModel))!;
+        var viewModel = (IHomeViewModel)App.AppHost!.Services.GetService(typeof(IHomeViewModel))!;
 
         if (viewModel == null)
         {
             MessageBoxResult messageBoxResult = MessageBox.Show(
-                $"The type {nameof(ILoggedOutViewModel)} was not loaded into the dependency injection container!",
-                $"{nameof(LoggedOutUserControl)}",
+                $"The type {nameof(IHomeViewModel)} was not loaded into the dependency injection container!",
+                $"{nameof(HomeUserControl)}",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error,
                 MessageBoxResult.No);

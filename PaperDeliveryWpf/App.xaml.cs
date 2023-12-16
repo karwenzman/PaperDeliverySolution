@@ -49,8 +49,8 @@ namespace PaperDeliveryWpf
                     services.AddSingleton<ShellView>();
                     services.AddSingleton<IShellViewModel, ShellViewModel>();
                     services.AddTransient<ILoginViewModel, LoginViewModel>();
-                    services.AddTransient<ILoggedInViewModel, LoggedInViewModel>();
-                    services.AddTransient<ILoggedOutViewModel, LoggedOutViewModel>();
+                    services.AddTransient<IHomeViewModel, HomeViewModel>();
+                    services.AddTransient<IStartViewModel, StartViewModel>();
                 })
                 .UseSerilog()
                 .Build();

@@ -3,11 +3,11 @@
                     xmlns:usercontrols="clr-namespace:PaperDeliveryWpf.UserControls"
                     xmlns:viewmodels="clr-namespace:PaperDeliveryWpf.ViewModels">
 
-    <DataTemplate DataType="{x:Type viewmodels:LoggedOutViewModel}">
-        <usercontrols:LoggedOutUserControl />
+    <DataTemplate DataType="{x:Type viewmodels:StartViewModel}">
+        <usercontrols:StartUserControl />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type viewmodels:LoggedInViewModel}">
-        <usercontrols:LoggedInUserControl />
+    <DataTemplate DataType="{x:Type viewmodels:HomeViewModel}">
+        <usercontrols:HomeUserControl />
     </DataTemplate>
     <DataTemplate DataType="{x:Type viewmodels:LoginViewModel}">
         <usercontrols:LoginUserControl />

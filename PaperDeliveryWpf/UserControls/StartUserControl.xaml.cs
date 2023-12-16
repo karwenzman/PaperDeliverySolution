@@ -4,17 +4,17 @@ using System.Windows.Controls;
 
 namespace PaperDeliveryWpf.UserControls;
 
-public partial class LoggedInUserControl : UserControl
+public partial class StartUserControl : UserControl
 {
-    public LoggedInUserControl()
+    public StartUserControl()
     {
-        var viewModel = (ILoggedInViewModel)App.AppHost!.Services.GetService(typeof(ILoggedInViewModel))!;
+        var viewModel = (IStartViewModel)App.AppHost!.Services.GetService(typeof(IStartViewModel))!;
 
         if (viewModel == null)
         {
             MessageBoxResult messageBoxResult = MessageBox.Show(
-                $"The type {nameof(ILoggedInViewModel)} was not loaded into the dependency injection container!",
-                $"{nameof(LoggedInUserControl)}",
+                $"The type {nameof(IStartViewModel)} was not loaded into the dependency injection container!",
+                $"{nameof(StartUserControl)}",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error,
                 MessageBoxResult.No);

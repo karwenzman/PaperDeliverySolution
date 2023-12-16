@@ -3,17 +3,17 @@ using Microsoft.Extensions.Logging;
 
 namespace PaperDeliveryWpf.ViewModels;
 
-public partial class LoggedOutViewModel : ViewModelBase, ILoggedOutViewModel
+public partial class StartViewModel : ViewModelBase, IStartViewModel
 {
-    private readonly ILogger<LoggedOutViewModel> _logger;
+    private readonly ILogger<StartViewModel> _logger;
 
     [ObservableProperty]
     private string _userMessage = string.Empty;
 
-    public LoggedOutViewModel(ILogger<LoggedOutViewModel> logger)
+    public StartViewModel(ILogger<StartViewModel> logger)
     {
         _logger = logger;
-        _logger.LogInformation("* Loading {class}", nameof(LoggedOutViewModel));
+        _logger.LogInformation("* Loading {class}", nameof(StartViewModel));
 
         UserMessage = "You need to login.";
     }
