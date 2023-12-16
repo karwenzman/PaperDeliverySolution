@@ -5,9 +5,10 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles/ShellBodyStyle.xaml" />
-                <ResourceDictionary Source="Styles/ShellFooterStyle.xaml" />
-                <ResourceDictionary Source="Styles/ShellHeaderStyle.xaml" />
+                <ResourceDictionary Source="Resources/ShellBodyStyle.xaml" />
+                <ResourceDictionary Source="Resources/ShellFooterStyle.xaml" />
+                <ResourceDictionary Source="Resources/ShellHeaderStyle.xaml" />
+                <ResourceDictionary Source="Resources/ShellTitleStyle.xaml" />
                 <ResourceDictionary Source="Resources/DataTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

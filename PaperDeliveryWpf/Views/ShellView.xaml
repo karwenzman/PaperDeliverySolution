@@ -117,17 +117,6 @@
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-
-                <!-- *** The visibility of the UserControls is controlled by the ViewModel *** -->
-                <!--<StackPanel  Grid.Column="1" Visibility="{Binding IsActiveLoginUserControl, Converter={StaticResource boolToVisibility}}">
-                    <userControls:LoginUserControl />
-                </StackPanel>
-                <StackPanel Grid.Column="1" Visibility="{Binding IsActiveLoggedInUserControl, Converter={StaticResource boolToVisibility}}">
-                    <userControls:LoggedInUserControl />
-                </StackPanel>
-                <StackPanel Grid.Column="1" Visibility="{Binding IsActiveLoggedOutUserControl, Converter={StaticResource boolToVisibility}}">
-                    <userControls:LoggedOutUserControl />
-                </StackPanel>-->
                 
                 <!-- *** The ShellViewModel is hosting the logic, which UserControl shall be loaded *** -->
                 <StackPanel Grid.Column="1">

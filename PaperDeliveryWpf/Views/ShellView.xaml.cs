@@ -10,7 +10,7 @@ public partial class ShellView : Window
     private readonly ILogger<ShellView> _logger;
     private readonly IServiceProvider _serviceProvider;
 
-    private readonly IShellViewModel _shellViewModel;
+    private readonly IShellViewModel _viewModel;
 
     public ShellView(ILogger<ShellView> logger, IServiceProvider serviceProvider)
     {
@@ -18,17 +18,14 @@ public partial class ShellView : Window
         _logger.LogInformation("* Loading {class}", nameof(ShellView));
 
         _serviceProvider = serviceProvider;
-        _shellViewModel = serviceProvider.GetRequiredService<IShellViewModel>();
+        _viewModel = serviceProvider.GetRequiredService<IShellViewModel>();
 
-        // Setting up the data binding.
-        DataContext = _shellViewModel;
+        DataContext = _viewModel;
 
-        // Registering the commands.
-        CommandBindings.Add(_shellViewModel.StopCommand);
+        CommandBindings.Add(_viewModel.StopCommand);
 
-        // Registering the events.
-        Closing += _shellViewModel.ShellView_Closing;
-        
+        Closing += _viewModel.ShellView_Closing;
+
         InitializeComponent();
     }
 }
