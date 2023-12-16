@@ -144,6 +144,11 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
                     LoginHeader = "LoginUserControl"; // no effect, since IsActiveLoginMenuItem = false
                     CurrentView = App.AppHost!.Services.GetRequiredService<ILoginViewModel>();
                     break;
+                case ActivateVisibility.LogoutUserControl:
+                    IsActiveLoginMenuItem = false;
+                    LoginHeader = "LogoutUserControl"; // no effect, since IsActiveLoginMenuItem = false
+                    CurrentView = App.AppHost!.Services.GetRequiredService<ILogoutViewModel>();
+                    break;
                 case ActivateVisibility.HomeUserControl:
                     IsActiveLoginMenuItem = true;
                     LoginHeader = "Logout";

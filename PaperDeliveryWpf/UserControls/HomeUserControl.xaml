@@ -13,6 +13,6 @@
     </UserControl.Resources>
 
     <Grid>
-        <TextBlock Text="You are logged in." />
+        <TextBlock Text="You are logged in." FontSize="26" FontWeight="Bold" Margin="20" />
     </Grid>
 </UserControl>
