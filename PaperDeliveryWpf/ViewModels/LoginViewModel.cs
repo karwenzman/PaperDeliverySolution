@@ -13,18 +13,9 @@ namespace PaperDeliveryWpf.ViewModels;
 
 public partial class LoginViewModel : ViewModelBase, ILoginViewModel
 {
-    // Constructor injection.
-    private readonly ILogger<LoginViewModel> _logger;
-    private readonly IServiceProvider _serviceProvider;
-
-    // Private fields to store the loaded services.
     private readonly IUserRepository _userRepository;
     private ShellMessage? _message = new();
     private UserModel? _user = new();
-
-    // Properties using CommunityToolkit.
-    [ObservableProperty]
-    private string _showSomething;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(LoginButtonCommand))]
@@ -34,6 +25,9 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     [NotifyCanExecuteChangedFor(nameof(LoginButtonCommand))]
     private string _uiPassword = string.Empty;
 
+    private readonly ILogger<LoginViewModel> _logger;
+    private readonly IServiceProvider _serviceProvider;
+
     public LoginViewModel(ILogger<LoginViewModel> logger, IServiceProvider serviceProvider)
     {
         _logger = logger;
@@ -41,8 +35,6 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
 
         _serviceProvider = serviceProvider;
         _userRepository = _serviceProvider.GetRequiredService<IUserRepository>();
-
-        ShowSomething = "Hallo Welt!";
     }
 
     #region ***** RelayCommand *****
