@@ -24,9 +24,6 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
     private object? _currentView;
 
     [ObservableProperty]
-    private ShellMessage? _shellMessage = new();
-
-    [ObservableProperty]
     private UserModel? _userAccount = new();
 
     [ObservableProperty]
@@ -37,12 +34,6 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
 
     [ObservableProperty]
     private string _applicationVersion = string.Empty;
-
-    [ObservableProperty]
-    private string _userEmail = string.Empty;
-
-    [ObservableProperty]
-    private string _userName = string.Empty;
 
     [ObservableProperty]
     private bool _isActiveLoginMenuItem = true;
@@ -106,36 +97,24 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
     #endregion ***** End OF CommandBinding *****
 
     #region ***** RelayCommand *****
-    [RelayCommand(CanExecute = nameof(CanLoginMenuItem))]
+    [RelayCommand]
     public void LoginMenuItem()
     {
         ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.LoginUserControl });
     }
-    public bool CanLoginMenuItem()
-    {
-        return true;
-    }
 
-    [RelayCommand(CanExecute = nameof(CanLogoutMenuItem))]
+    [RelayCommand]
     public void LogoutMenuItem()
     {
+        UserAccount = new();
+        
         ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.StartUserControl });
-
-        ManageUserAccount(UserAccount = null);
-    }
-    public bool CanLogoutMenuItem()
-    {
-        return true;
     }
 
-    [RelayCommand(CanExecute = nameof(CanUserMenuItem))]
+    [RelayCommand]
     public void UserMenuItem()
     {
 
-    }
-    public bool CanUserMenuItem()
-    {
-        return true;
     }
 
     #endregion ***** End OF RelayCommand *****
@@ -154,7 +133,8 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
                     IsActiveLoginMenuItem = false;
                     IsActiveLogoutMenuItem = false;
                     IsActiveUserMenuItem = false;
-                    _logger.LogCritical("ActivateVisibility was set to None in {class}", nameof(ShellViewModel));
+                    UserAccount = new();
+                    _logger.LogCritical("ActivateVisibility was set to <None> in {class}. The UserAccount is cleared.", nameof(ShellViewModel));
                     CurrentView = App.AppHost!.Services.GetRequiredService<IErrorViewModel>();
                     break;
                 case ActivateVisibility.LoginUserControl:
@@ -185,19 +165,6 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
         }
     }
 
-    private void ManageUserAccount(UserModel? messge)
-    {
-        if (messge == null)
-        {
-            UserEmail = string.Empty;
-            UserName = string.Empty;
-        }
-        else
-        {
-            UserEmail = messge.Email;
-            UserName = messge.Name;
-        }
-    }
 
     private string GetApplicationVersion()
     {
@@ -221,6 +188,6 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
 
     public void Receive(ValueChangedMessage<UserModel> message)
     {
-        ManageUserAccount(message.Value);
+        UserAccount = message.Value;
     }
 }

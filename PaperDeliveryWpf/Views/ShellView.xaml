@@ -109,7 +109,7 @@
                       Command="{Binding LogoutMenuItemCommand}"
                       Visibility="{Binding IsActiveLogoutMenuItem, Converter={StaticResource boolToVisibility}}">
                 </MenuItem>
-                <MenuItem Header="{Binding UserName}" Background="Black" Foreground="White"
+                <MenuItem Header="{Binding UserAccount.Name}" Background="Black" Foreground="White"
                       Command="{Binding UserMenuItemCommand}"
                       Visibility="{Binding IsActiveUserMenuItem, Converter={StaticResource boolToVisibility}}">
                     <MenuItem Header="User Setting"></MenuItem>
@@ -137,7 +137,7 @@
         <!-- *** The UI's footer *** -->
         <StatusBar Grid.Row="3">
             <StatusBarItem DockPanel.Dock="Right">
-                <TextBlock Text="{Binding UserEmail}"></TextBlock>
+                <TextBlock Text="{Binding UserAccount.Email}"></TextBlock>
             </StatusBarItem>
             <StatusBarItem DockPanel.Dock="Right">
                 <TextBlock Text="Some information"></TextBlock>
