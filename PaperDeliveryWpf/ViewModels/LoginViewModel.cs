@@ -35,30 +35,40 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
 
         _serviceProvider = serviceProvider;
         _userRepository = _serviceProvider.GetRequiredService<IUserRepository>();
+
+        // TODO - How to close this UserControl?
     }
 
     #region ***** RelayCommand *****
     [RelayCommand(CanExecute = nameof(CanLoginButton))]
     public void LoginButton()
     {
-        // TODO - Error handling.
+        // TODO - ErrorViewModel is called twice, if login failed. Why?
         _user = _userRepository.Login(UiLogin, UiPassword);
-        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(_user));
 
-        _message = new ShellMessage
+        if (_user == null)
         {
-            SetToActive = ActivateVisibility.HomeUserControl,
-        };
-
-        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(_message));
-
-        _logger.LogInformation("** User {user} has logged in.", _user.Email);
-
-        // TODO - How to close this UserControl?
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(new UserModel()));
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.None }));
+            _logger.LogInformation("** User authentication failed on account {user}.", UiLogin);
+        }
+        else if (_user.Id == 0)
+        {
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(new UserModel()));
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.None }));
+            _logger.LogInformation("** User authentication failed on account {user}.", UiLogin);
+        }
+        else
+        {
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(_user));
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl }));
+            _logger.LogInformation("** User {user} has logged in.", UiLogin);
+        }
     }
     public bool CanLoginButton()
     {
         // TODO - How to enable this, if a character is entered into TextBox?
+        // How to enable to move to next textbox when hitting enter or tab?
         bool output = true;
         if (string.IsNullOrWhiteSpace(UiLogin) && string.IsNullOrWhiteSpace(UiPassword))
         {
@@ -74,23 +84,11 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
         return output;
     }
 
-    [RelayCommand(CanExecute = nameof(CanCancelButton))]
+    [RelayCommand]
     public void CancelButton()
     {
-        _message = new ShellMessage
-        {
-            SetToActive = ActivateVisibility.StartUserControl,
-        };
-        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(_message));
-
-        _user = new();
-        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(_user));
-
-        // TODO - How to close this UserControl?
-    }
-    public bool CanCancelButton()
-    {
-        return true;
+        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(new UserModel()));
+        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.StartUserControl }));
     }
     #endregion ***** End Of RelayCommand *****
 }

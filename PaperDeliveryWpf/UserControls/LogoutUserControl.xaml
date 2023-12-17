@@ -4,13 +4,26 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PaperDeliveryWpf.UserControls"
+             xmlns:viewModels="clr-namespace:PaperDeliveryWpf.ViewModels"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewModels:LogoutViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVisibility" />
     </UserControl.Resources>
     
-    <Grid>
-            
-    </Grid>
+    <DockPanel>
+        <!-- Header -->
+        <Label DockPanel.Dock="Top" Content="Do you really want to log out?" HorizontalAlignment="Center" />
+
+        <!-- Body -->
+        <StackPanel DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Logout" Command="{Binding LogoutButtonCommand}" />
+                <Button Content="Cancel" Command="{Binding CancelButtonCommand}" />
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Footer -->
+    </DockPanel>
 </UserControl>

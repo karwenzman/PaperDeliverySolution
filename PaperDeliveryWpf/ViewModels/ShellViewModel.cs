@@ -10,6 +10,7 @@ using PaperDeliveryLibrary.Messages;
 using PaperDeliveryLibrary.Models;
 using PaperDeliveryLibrary.ProjectOptions;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
@@ -24,7 +25,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
     private object? _currentView;
 
     [ObservableProperty]
-    private UserModel? _userAccount = new();
+    private UserModel _userAccount = new();
 
     [ObservableProperty]
     private string _applicationHomeDirectory = string.Empty;
@@ -106,9 +107,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
     [RelayCommand]
     public void LogoutMenuItem()
     {
-        UserAccount = new();
-        
-        ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.StartUserControl });
+        ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.LogoutUserControl });
     }
 
     [RelayCommand]
@@ -119,49 +118,42 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
 
     #endregion ***** End OF RelayCommand *****
 
-    private void ManageUserControls(ShellMessage? message)
+    private void ManageUserControls(ShellMessage message)
     {
-        if (message == null)
+        switch (message.SetToActive)
         {
-            ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.None });
-        }
-        else
-        {
-            switch (message.SetToActive)
-            {
-                case ActivateVisibility.None:
-                    IsActiveLoginMenuItem = false;
-                    IsActiveLogoutMenuItem = false;
-                    IsActiveUserMenuItem = false;
-                    UserAccount = new();
-                    _logger.LogCritical("ActivateVisibility was set to <None> in {class}. The UserAccount is cleared.", nameof(ShellViewModel));
-                    CurrentView = App.AppHost!.Services.GetRequiredService<IErrorViewModel>();
-                    break;
-                case ActivateVisibility.LoginUserControl:
-                    IsActiveLoginMenuItem = false;
-                    IsActiveLogoutMenuItem = false;
-                    IsActiveUserMenuItem = false;
-                    CurrentView = App.AppHost!.Services.GetRequiredService<ILoginViewModel>();
-                    break;
-                case ActivateVisibility.LogoutUserControl:
-                    IsActiveLoginMenuItem = false;
-                    IsActiveLogoutMenuItem = false;
-                    IsActiveUserMenuItem = false;
-                    CurrentView = App.AppHost!.Services.GetRequiredService<ILogoutViewModel>();
-                    break;
-                case ActivateVisibility.HomeUserControl:
-                    IsActiveLoginMenuItem = false;
-                    IsActiveLogoutMenuItem = true;
-                    IsActiveUserMenuItem = true;
-                    CurrentView = App.AppHost!.Services.GetRequiredService<IHomeViewModel>();
-                    break;
-                case ActivateVisibility.StartUserControl:
-                    IsActiveLoginMenuItem = true;
-                    IsActiveLogoutMenuItem = false;
-                    IsActiveUserMenuItem = false;
-                    CurrentView = App.AppHost!.Services.GetRequiredService<IStartViewModel>();
-                    break;
-            }
+            case ActivateVisibility.None:
+                IsActiveLoginMenuItem = true;
+                IsActiveLogoutMenuItem = false;
+                IsActiveUserMenuItem = false;
+                UserAccount = new();
+                _logger.LogCritical("ActivateVisibility was set to <None> in {class}. The UserAccount is cleared.", nameof(ShellViewModel));
+                CurrentView = App.AppHost!.Services.GetRequiredService<IErrorViewModel>();
+                break;
+            case ActivateVisibility.LoginUserControl:
+                IsActiveLoginMenuItem = false;
+                IsActiveLogoutMenuItem = false;
+                IsActiveUserMenuItem = false;
+                CurrentView = App.AppHost!.Services.GetRequiredService<ILoginViewModel>();
+                break;
+            case ActivateVisibility.LogoutUserControl:
+                IsActiveLoginMenuItem = false;
+                IsActiveLogoutMenuItem = false;
+                IsActiveUserMenuItem = false;
+                CurrentView = App.AppHost!.Services.GetRequiredService<ILogoutViewModel>();
+                break;
+            case ActivateVisibility.HomeUserControl:
+                IsActiveLoginMenuItem = false;
+                IsActiveLogoutMenuItem = true;
+                IsActiveUserMenuItem = true;
+                CurrentView = App.AppHost!.Services.GetRequiredService<IHomeViewModel>();
+                break;
+            case ActivateVisibility.StartUserControl:
+                IsActiveLoginMenuItem = true;
+                IsActiveLogoutMenuItem = false;
+                IsActiveUserMenuItem = false;
+                CurrentView = App.AppHost!.Services.GetRequiredService<IStartViewModel>();
+                break;
         }
     }
 

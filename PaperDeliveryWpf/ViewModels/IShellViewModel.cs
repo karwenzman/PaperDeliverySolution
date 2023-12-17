@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using PaperDeliveryLibrary.Models;
+using System.ComponentModel;
 using System.Windows.Input;
 
 namespace PaperDeliveryWpf.ViewModels;
@@ -6,6 +7,8 @@ namespace PaperDeliveryWpf.ViewModels;
 public interface IShellViewModel
 {
     CommandBinding StopCommand { get; set; }
+
+    UserModel UserAccount { get; set; }
 
     string ApplicationHomeDirectory { get; set; }
 

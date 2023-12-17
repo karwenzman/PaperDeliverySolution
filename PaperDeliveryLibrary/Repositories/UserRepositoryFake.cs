@@ -6,13 +6,34 @@ public class UserRepositoryFake : IUserRepository
 {
     public UserModel? Login(string loginName, string password)
     {
-        UserModel? output = new()
+        UserModel? output;
+
+        if (loginName == "karwenzman")
         {
-            Login = loginName,
-            Password = password,
-            Email = "karwenzman@gmx.net",
-            Name = "karwenzman"
-        };
+            output = new()
+            {
+                Id = 1,
+                Login = loginName,
+                Password = password,
+                Email = "karwenzman@gmx.net",
+                Name = "karwenzman"
+            };
+        }
+        else if (loginName == "Thorsten")
+        {
+            output = new()
+            {
+                Id = 2,
+                Login = loginName,
+                Password = password,
+                Email = "jenning.thorsten@gmx.net",
+                Name = "Thorsten"
+            };
+        }
+        else
+        {
+            output = new();
+        }
 
         return output;
     }
