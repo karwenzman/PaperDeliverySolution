@@ -24,6 +24,12 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
     private object? _currentView;
 
     [ObservableProperty]
+    private ShellMessage? _shellMessage = new();
+
+    [ObservableProperty]
+    private UserModel? _userAccount = new();
+
+    [ObservableProperty]
     private string _applicationHomeDirectory = string.Empty;
 
     [ObservableProperty]
@@ -39,14 +45,13 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
     private string _userName = string.Empty;
 
     [ObservableProperty]
-    private string _loginHeader = "Login";
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(LoginMenuItemCommand))]
-    private ShellMessage? _shellMessage = new();
-
-    [ObservableProperty]
     private bool _isActiveLoginMenuItem = true;
+
+    [ObservableProperty]
+    private bool _isActiveLogoutMenuItem = true;
+
+    [ObservableProperty]
+    private bool _isActiveUserMenuItem = true;
 
     private readonly ILogger<ShellViewModel> _logger;
     private readonly IOptions<ApplicationOptions> _options;
@@ -64,7 +69,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
 
         _serviceProvider = serviceProvider; // Check, if needed!
 
-        CurrentView = App.AppHost!.Services.GetRequiredService<IStartViewModel>();
+        ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.StartUserControl });
 
         StopCommand = new CommandBinding(ApplicationCommands.Stop, Stop, CanStop);
 
@@ -104,16 +109,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
     [RelayCommand(CanExecute = nameof(CanLoginMenuItem))]
     public void LoginMenuItem()
     {
-        if (LoginHeader == "Login")
-        {
-            ShellMessage = new ShellMessage { SetToActive = ActivateVisibility.LoginUserControl };
-        }
-        else if (LoginHeader == "Logout")
-        {
-            ShellMessage = new ShellMessage { SetToActive = ActivateVisibility.StartUserControl };
-            UserName = string.Empty;
-            UserEmail = string.Empty;
-        }
+        ShellMessage = new ShellMessage { SetToActive = ActivateVisibility.LoginUserControl };
 
         ManageUserControls(ShellMessage);
     }
@@ -121,14 +117,35 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
     {
         return true;
     }
+
+    [RelayCommand(CanExecute = nameof(CanLogoutMenuItem))]
+    public void LogoutMenuItem()
+    {
+        ShellMessage = new ShellMessage { SetToActive = ActivateVisibility.StartUserControl };
+
+        ManageUserControls(ShellMessage);
+    }
+    public bool CanLogoutMenuItem()
+    {
+        return true;
+    }
+
+    [RelayCommand(CanExecute = nameof(CanUserMenuItem))]
+    public void UserMenuItem()
+    {
+
+    }
+    public bool CanUserMenuItem()
+    {
+        return true;
+    }
+
     #endregion ***** End OF RelayCommand *****
 
     private void ManageUserControls(ShellMessage? message)
     {
         if (message == null)
         {
-            IsActiveLoginMenuItem = true;
-            LoginHeader = $"Error in {nameof(ShellMessage)}";
             // TODO - Error Logging 
         }
         else
@@ -137,26 +154,32 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
             {
                 case ActivateVisibility.None:
                     IsActiveLoginMenuItem = false;
-                    LoginHeader = "None"; // no effect, since IsActiveLoginMenuItem = false
+                    IsActiveLogoutMenuItem = false;
+                    IsActiveUserMenuItem = false;
+                    // TODO - Error logging.
                     break;
                 case ActivateVisibility.LoginUserControl:
                     IsActiveLoginMenuItem = false;
-                    LoginHeader = "LoginUserControl"; // no effect, since IsActiveLoginMenuItem = false
+                    IsActiveLogoutMenuItem = false;
+                    IsActiveUserMenuItem = false;
                     CurrentView = App.AppHost!.Services.GetRequiredService<ILoginViewModel>();
                     break;
                 case ActivateVisibility.LogoutUserControl:
                     IsActiveLoginMenuItem = false;
-                    LoginHeader = "LogoutUserControl"; // no effect, since IsActiveLoginMenuItem = false
+                    IsActiveLogoutMenuItem = false;
+                    IsActiveUserMenuItem = false;
                     CurrentView = App.AppHost!.Services.GetRequiredService<ILogoutViewModel>();
                     break;
                 case ActivateVisibility.HomeUserControl:
-                    IsActiveLoginMenuItem = true;
-                    LoginHeader = "Logout";
+                    IsActiveLoginMenuItem = false;
+                    IsActiveLogoutMenuItem = true;
+                    IsActiveUserMenuItem = true;
                     CurrentView = App.AppHost!.Services.GetRequiredService<IHomeViewModel>();
                     break;
                 case ActivateVisibility.StartUserControl:
                     IsActiveLoginMenuItem = true;
-                    LoginHeader = "Login";
+                    IsActiveLogoutMenuItem = false;
+                    IsActiveUserMenuItem = false;
                     CurrentView = App.AppHost!.Services.GetRequiredService<IStartViewModel>();
                     break;
             }
@@ -173,7 +196,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
         else
         {
             UserEmail = messge.Email;
-            UserName = messge.DisplayName;
+            UserName = messge.Name;
         }
     }
 

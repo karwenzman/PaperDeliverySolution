@@ -11,7 +11,7 @@ public class UserRepositoryFake : IUserRepository
             Login = loginName,
             Password = password,
             Email = "karwenzman@gmx.net",
-            DisplayName = "karwenzman"
+            Name = "karwenzman"
         };
 
         return output;

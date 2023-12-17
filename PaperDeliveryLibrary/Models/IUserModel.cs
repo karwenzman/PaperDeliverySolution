@@ -18,7 +18,7 @@ public interface IUserModel
     /// <summary>
     /// This property contains the user's display name.
     /// </summary>
-    string DisplayName { get; set; }
+    string Name { get; set; }
 
     /// <summary>
     /// This property contains the user's password.

@@ -101,10 +101,19 @@
                         Header="Help">
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="{Binding LoginHeader}" Background="Black" Foreground="White"
-                      HorizontalAlignment="Right"
+                <MenuItem Header="Login" Background="Black" Foreground="White"
                       Command="{Binding LoginMenuItemCommand}"
                       Visibility="{Binding IsActiveLoginMenuItem, Converter={StaticResource boolToVisibility}}">
+                </MenuItem>
+                <MenuItem Header="Logout" Background="Black" Foreground="White"
+                      Command="{Binding LogoutMenuItemCommand}"
+                      Visibility="{Binding IsActiveLogoutMenuItem, Converter={StaticResource boolToVisibility}}">
+                </MenuItem>
+                <MenuItem Header="{Binding UserName}" Background="Black" Foreground="White"
+                      Command="{Binding UserMenuItemCommand}"
+                      Visibility="{Binding IsActiveUserMenuItem, Converter={StaticResource boolToVisibility}}">
+                    <MenuItem Header="User Setting"></MenuItem>
+                    <MenuItem Header="User Account"></MenuItem>
                 </MenuItem>
             </Menu>
         </DockPanel>
@@ -131,7 +140,7 @@
                 <TextBlock Text="{Binding UserEmail}"></TextBlock>
             </StatusBarItem>
             <StatusBarItem DockPanel.Dock="Right">
-                <TextBlock Text="{Binding UserName}"></TextBlock>
+                <TextBlock Text="Some information"></TextBlock>
             </StatusBarItem>
             <StatusBarItem DockPanel.Dock="Right">
                 <TextBlock Text="Some more information"></TextBlock>
