@@ -14,9 +14,9 @@ public partial class LogoutViewModel : ViewModelBase, ILogoutViewModel
 {
     private readonly IShellViewModel _shellViewModel;
 
-    private readonly ILogger<LogoutUserControl> _logger;
+    private readonly ILogger<LogoutViewModel> _logger;
 
-    public LogoutViewModel(ILogger<LogoutUserControl> logger)
+    public LogoutViewModel(ILogger<LogoutViewModel> logger)
     {
         _logger = logger;
         _logger.LogInformation("* Loading {class}", nameof(LogoutViewModel));
@@ -27,11 +27,10 @@ public partial class LogoutViewModel : ViewModelBase, ILogoutViewModel
     [RelayCommand]
     public void LogoutButton()
     {
-        UserModel userAccount = _shellViewModel.UserAccount;
+        _logger.LogInformation("** User {user} has logged out.", _shellViewModel.UserAccount.Login);
 
         WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(new UserModel()));
         WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.StartUserControl }));
-        _logger.LogInformation("** User {user} has logged out.", userAccount.Login);
     }
 
     [RelayCommand]
@@ -39,5 +38,4 @@ public partial class LogoutViewModel : ViewModelBase, ILogoutViewModel
     {
         WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl }));
     }
-
 }

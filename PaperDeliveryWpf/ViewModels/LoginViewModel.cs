@@ -14,7 +14,6 @@ namespace PaperDeliveryWpf.ViewModels;
 public partial class LoginViewModel : ViewModelBase, ILoginViewModel
 {
     private readonly IUserRepository _userRepository;
-    private ShellMessage? _message = new();
     private UserModel? _user = new();
 
     [ObservableProperty]
