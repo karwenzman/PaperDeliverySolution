@@ -109,9 +109,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
     [RelayCommand(CanExecute = nameof(CanLoginMenuItem))]
     public void LoginMenuItem()
     {
-        ShellMessage = new ShellMessage { SetToActive = ActivateVisibility.LoginUserControl };
-
-        ManageUserControls(ShellMessage);
+        ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.LoginUserControl });
     }
     public bool CanLoginMenuItem()
     {
@@ -121,9 +119,9 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
     [RelayCommand(CanExecute = nameof(CanLogoutMenuItem))]
     public void LogoutMenuItem()
     {
-        ShellMessage = new ShellMessage { SetToActive = ActivateVisibility.StartUserControl };
+        ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.StartUserControl });
 
-        ManageUserControls(ShellMessage);
+        ManageUserAccount(UserAccount = null);
     }
     public bool CanLogoutMenuItem()
     {
@@ -146,7 +144,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
     {
         if (message == null)
         {
-            // TODO - Error Logging 
+            ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.None });
         }
         else
         {
@@ -156,7 +154,8 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
                     IsActiveLoginMenuItem = false;
                     IsActiveLogoutMenuItem = false;
                     IsActiveUserMenuItem = false;
-                    // TODO - Error logging.
+                    _logger.LogCritical("ActivateVisibility was set to None in {class}", nameof(ShellViewModel));
+                    CurrentView = App.AppHost!.Services.GetRequiredService<IErrorViewModel>();
                     break;
                 case ActivateVisibility.LoginUserControl:
                     IsActiveLoginMenuItem = false;
@@ -186,7 +185,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
         }
     }
 
-    private void ManageUserInformation(UserModel? messge)
+    private void ManageUserAccount(UserModel? messge)
     {
         if (messge == null)
         {
@@ -222,6 +221,6 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
 
     public void Receive(ValueChangedMessage<UserModel> message)
     {
-        ManageUserInformation(message.Value);
+        ManageUserAccount(message.Value);
     }
 }

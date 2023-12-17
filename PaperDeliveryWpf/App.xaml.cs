@@ -52,6 +52,7 @@ namespace PaperDeliveryWpf
                     services.AddTransient<ILogoutViewModel, LogoutViewModel>();
                     services.AddTransient<IHomeViewModel, HomeViewModel>();
                     services.AddTransient<IStartViewModel, StartViewModel>();
+                    services.AddTransient<IErrorViewModel, ErrorViewModel>();
                 })
                 .UseSerilog()
                 .Build();
