@@ -10,7 +10,6 @@ using PaperDeliveryLibrary.Messages;
 using PaperDeliveryLibrary.Models;
 using PaperDeliveryLibrary.ProjectOptions;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
@@ -47,9 +46,8 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
 
     private readonly ILogger<ShellViewModel> _logger;
     private readonly IOptions<ApplicationOptions> _options;
-    private readonly IServiceProvider _serviceProvider;
 
-    public ShellViewModel(ILogger<ShellViewModel> logger, IOptions<ApplicationOptions> options, IServiceProvider serviceProvider)
+    public ShellViewModel(ILogger<ShellViewModel> logger, IOptions<ApplicationOptions> options)
     {
         _logger = logger;
         _logger.LogInformation("* Loading {class}", nameof(ShellViewModel));
@@ -59,7 +57,9 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
         ApplicationHomeDirectory = _options.Value.ApplicationHomeDirectory;
         ApplicationVersion = GetApplicationVersion();
 
-        _serviceProvider = serviceProvider; // Check, if needed!
+        // TODO - Pro and cons of these calls?
+        //CurrentView = _serviceProvider.GetRequiredService<IStartViewModel>();
+        //CurrentView = App.AppHost!.Services.GetRequiredService<IStartViewModel>();
 
         ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.StartUserControl });
 
@@ -126,7 +126,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
                 IsActiveLoginMenuItem = true;
                 IsActiveLogoutMenuItem = false;
                 IsActiveUserMenuItem = false;
-                UserAccount = new();
+                //UserAccount = new();
                 _logger.LogCritical("ActivateVisibility was set to <None> in {class}. The UserAccount is cleared.", nameof(ShellViewModel));
                 CurrentView = App.AppHost!.Services.GetRequiredService<IErrorViewModel>();
                 break;
