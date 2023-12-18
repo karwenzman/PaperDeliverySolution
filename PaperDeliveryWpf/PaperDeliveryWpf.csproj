@@ -13,11 +13,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Client_Kreisanzeiger.png" />
     <None Remove="Newspaper3.ico" />
     <None Remove="Newspaper3.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Images\Client_Kreisanzeiger.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\Newspaper3.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

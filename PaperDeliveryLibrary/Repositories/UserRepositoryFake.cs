@@ -30,6 +30,17 @@ public class UserRepositoryFake : IUserRepository
                 Name = "Thorsten"
             };
         }
+        else if (loginName == "guest")
+        {
+            output = new()
+            {
+                Id = 3,
+                Login = loginName,
+                Password = password,
+                Email = "guest@gmail.com",
+                Name = "guest"
+            };
+        }
         else
         {
             output = new();
