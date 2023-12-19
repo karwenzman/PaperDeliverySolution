@@ -11,6 +11,10 @@
     </UserControl.Resources>
 
     <Grid>
-        <TextBlock Text="Error! Check log file for details." FontSize="26" FontWeight="Bold" Margin="20" />
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="Your user account is not valid!" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Margin="20" />
+            <TextBlock Text="Access denied!" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Margin="20" />
+            <TextBlock Text="Please contact your local admin." HorizontalAlignment="Center" FontSize="18" Margin="20" />
+        </StackPanel>
     </Grid>
 </UserControl>

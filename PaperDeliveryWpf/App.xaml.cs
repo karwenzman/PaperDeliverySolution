@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PaperDeliveryLibrary.ProjectOptions;
+using PaperDeliveryLibrary.Repositories;
 using PaperDeliveryWpf.Repositories;
 using PaperDeliveryWpf.ViewModels;
 using PaperDeliveryWpf.Views;
@@ -42,12 +43,18 @@ namespace PaperDeliveryWpf
                 .ConfigureServices((context, services) =>
                 {
                     services.AddLogging();
+                    // Adds sections in appsettings.json file.
                     services.AddOptions<ApplicationOptions>().Bind(context.Configuration.GetSection(nameof(ApplicationOptions)));
+                    services.AddOptions<DatabaseOptionsUsingAccess>().Bind(context.Configuration.GetSection(nameof(DatabaseOptionsUsingAccess)));
 
-                    services.AddSingleton<IUserRepository, UserRepositoryFake>();
+                    //services.AddSingleton<IUserRepository, UserRepositoryFake>();
+                    services.AddSingleton<IUserRepository, UserRepositoryUsingAccess>();
 
+                    // Adds Windows and its ViewModel.
                     services.AddSingleton<ShellView>();
                     services.AddSingleton<IShellViewModel, ShellViewModel>();
+
+                    // Adds UserControl's ViewModels.
                     services.AddTransient<ILoginViewModel, LoginViewModel>();
                     services.AddTransient<ILogoutViewModel, LogoutViewModel>();
                     services.AddTransient<IHomeViewModel, HomeViewModel>();

@@ -1,44 +1,45 @@
 ﻿using PaperDeliveryLibrary.Models;
+using PaperDeliveryLibrary.ProjectOptions;
 
 namespace PaperDeliveryWpf.Repositories;
 
 public class UserRepositoryFake : IUserRepository
 {
-    public UserModel? Login(string loginName, string password)
+    public UserModel? Login(string login, string password, IApplicationOptions? applicationOptions, IDatabaseOptions? databaseOptions)
     {
         UserModel? output;
 
-        if (loginName == "karwenzman")
+        if (login == "karwenzman")
         {
             output = new()
             {
                 Id = 1,
-                Login = loginName,
+                Login = login,
                 Password = password,
                 Email = "karwenzman@gmx.net",
-                Name = "karwenzman"
+                DisplayName = "karwenzman"
             };
         }
-        else if (loginName == "Thorsten")
+        else if (login == "Thorsten")
         {
             output = new()
             {
                 Id = 2,
-                Login = loginName,
+                Login = login,
                 Password = password,
                 Email = "jenning.thorsten@gmx.net",
-                Name = "Thorsten"
+                DisplayName = "Thorsten"
             };
         }
-        else if (loginName == "guest")
+        else if (login == "guest")
         {
             output = new()
             {
                 Id = 3,
-                Login = loginName,
+                Login = login,
                 Password = password,
                 Email = "guest@gmail.com",
-                Name = "guest"
+                DisplayName = "guest"
             };
         }
         else

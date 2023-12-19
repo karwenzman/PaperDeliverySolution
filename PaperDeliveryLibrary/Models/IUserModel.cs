@@ -6,19 +6,33 @@
 public interface IUserModel
 {
     /// <summary>
+    /// This property contains the ID needed for database access.
+    /// <para></para>
+    /// This is the primary key in a database table.
+    /// </summary>
+    int Id { get; set; }
+
+    /// <summary>
+    /// This property contains the user's access level for the application.
+    /// </summary>
+    int AccessLevel { get; set; }
+
+    /// <summary>
     /// This property contains the user's email address.
     /// </summary>
     string Email { get; set; }
 
     /// <summary>
     /// This property contains the user's login expression.
+    /// <para></para>
+    /// This is an alternative key in a database table.
     /// </summary>
     string Login { get; set; }
 
     /// <summary>
     /// This property contains the user's display name.
     /// </summary>
-    string Name { get; set; }
+    string DisplayName { get; set; }
 
     /// <summary>
     /// This property contains the user's password.

@@ -2,16 +2,10 @@
 
 namespace PaperDeliveryLibrary.ProjectOptions;
 
-public partial class ApplicationOptions : ObservableObject
+public partial class ApplicationOptions : ObservableObject, IApplicationOptions
 {
     [ObservableProperty]
-    private string _applicationName;
+    private string _applicationName = string.Empty;
     [ObservableProperty]
-    private string _applicationHomeDirectory;
-
-    public ApplicationOptions()
-    {
-        _applicationName = string.Empty;
-        _applicationHomeDirectory = Environment.CurrentDirectory;
-    }
+    private string _applicationHomeDirectory = Environment.CurrentDirectory;
 }

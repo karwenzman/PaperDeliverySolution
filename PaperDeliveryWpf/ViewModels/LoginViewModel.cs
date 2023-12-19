@@ -4,9 +4,11 @@ using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using PaperDeliveryLibrary.Enums;
 using PaperDeliveryLibrary.Messages;
 using PaperDeliveryLibrary.Models;
+using PaperDeliveryLibrary.ProjectOptions;
 using PaperDeliveryWpf.Repositories;
 
 namespace PaperDeliveryWpf.ViewModels;
@@ -24,16 +26,25 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     [NotifyCanExecuteChangedFor(nameof(LoginButtonCommand))]
     private string _uiPassword = string.Empty;
 
+    [ObservableProperty]
+    private IDatabaseOptions _databaseOptions;
+
+    [ObservableProperty]
+    private ApplicationOptions _applicationOptions;
+
     private readonly ILogger<LoginViewModel> _logger;
     private readonly IServiceProvider _serviceProvider;
 
-    public LoginViewModel(ILogger<LoginViewModel> logger, IServiceProvider serviceProvider)
+    public LoginViewModel(ILogger<LoginViewModel> logger, IServiceProvider serviceProvider, IOptions<DatabaseOptionsUsingAccess> databaseOptions, IOptions<ApplicationOptions> applicationOptions)
     {
         _logger = logger;
         _logger.LogInformation("* Loading {class}", nameof(LoginViewModel));
 
         _serviceProvider = serviceProvider;
         _userRepository = _serviceProvider.GetRequiredService<IUserRepository>();
+
+        DatabaseOptions = databaseOptions.Value;
+        ApplicationOptions = applicationOptions.Value;
 
         // TODO - How to close this UserControl?
     }
@@ -42,7 +53,7 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     [RelayCommand(CanExecute = nameof(CanLoginButton))]
     public void LoginButton()
     {
-        _user = _userRepository.Login(UiLogin, UiPassword);
+        _user = _userRepository.Login(UiLogin, UiPassword, ApplicationOptions, DatabaseOptions);
 
         if (_user == null)
         {
