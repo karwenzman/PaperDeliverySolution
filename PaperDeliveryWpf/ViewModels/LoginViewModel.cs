@@ -8,7 +8,6 @@ using PaperDeliveryLibrary.Enums;
 using PaperDeliveryLibrary.Messages;
 using PaperDeliveryLibrary.Models;
 using PaperDeliveryWpf.Repositories;
-using System.Diagnostics;
 
 namespace PaperDeliveryWpf.ViewModels;
 
@@ -19,11 +18,11 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor((nameof(LoginButtonCommand)))]
-    private string? _uiLogin = string.Empty;
+    private string _uiLogin = string.Empty;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(LoginButtonCommand))]
-    private string? _uiPassword = string.Empty;
+    private string _uiPassword = string.Empty;
 
     private readonly ILogger<LoginViewModel> _logger;
     private readonly IServiceProvider _serviceProvider;
@@ -43,7 +42,7 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     [RelayCommand(CanExecute = nameof(CanLoginButton))]
     public void LoginButton()
     {
-        _user = _userRepository.Login(UiLogin!, UiPassword!);
+        _user = _userRepository.Login(UiLogin, UiPassword);
 
         if (_user == null)
         {
@@ -66,14 +65,7 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     }
     public bool CanLoginButton()
     {
-        // TODO - How to enable this, if a character is entered into TextBox?
-        // How to enable to move to next textbox when hitting enter or tab?
         bool output = true;
-
-        //if (string.IsNullOrWhiteSpace(UiLogin) && string.IsNullOrWhiteSpace(UiPassword))
-        //{
-        //    output = false;
-        //}
 
         if (string.IsNullOrWhiteSpace(UiLogin))
         {
@@ -84,34 +76,9 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
             output = false;
         }
 
-        //bool output = false;
-        //if (UiLogin.Length > 0 && UiPassword.Length > 0)
-        //{
-        //    output = true;
-        //}
-
         return output;
     }
-    partial void OnUiLoginChanging(string? value)
-    {
-        Debug.WriteLine($"Passing {nameof(OnUiLoginChanging)}");
-        LoginButtonCommand.NotifyCanExecuteChanged();
-    }
-    partial void OnUiPasswordChanging(string? value)
-    {
-        Debug.WriteLine($"Passing {nameof(OnUiPasswordChanging)}");
-        LoginButtonCommand.NotifyCanExecuteChanged();
-    }
-    partial void OnUiLoginChanged(string? value)
-    {
-        Debug.WriteLine($"Passing {nameof(OnUiLoginChanged)}");
-        LoginButtonCommand.NotifyCanExecuteChanged();
-    }
-    partial void OnUiPasswordChanged(string? value)
-    {
-        Debug.WriteLine($"Passing {nameof(OnUiPasswordChanged)}");
-        LoginButtonCommand.NotifyCanExecuteChanged();
-    }
+
 
     [RelayCommand]
     public void CancelButton()
