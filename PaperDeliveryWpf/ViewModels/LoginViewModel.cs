@@ -53,7 +53,7 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     [RelayCommand(CanExecute = nameof(CanLoginButton))]
     public void LoginButton()
     {
-        _user = _userRepository.Login(UiLogin, UiPassword, ApplicationOptions, DatabaseOptions);
+        _user = _userRepository.Login(UiLogin, UiPassword, DatabaseOptions);
 
         if (_user == null)
         {

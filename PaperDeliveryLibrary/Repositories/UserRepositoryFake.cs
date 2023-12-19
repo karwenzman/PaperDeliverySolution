@@ -5,7 +5,7 @@ namespace PaperDeliveryWpf.Repositories;
 
 public class UserRepositoryFake : IUserRepository
 {
-    public UserModel? Login(string login, string password, IApplicationOptions? applicationOptions, IDatabaseOptions? databaseOptions)
+    public UserModel? Login(string login, string password, IDatabaseOptions? databaseOptions)
     {
         UserModel? output;
 

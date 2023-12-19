@@ -43,7 +43,8 @@
         
         <!-- Test only -->
         <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
-            <Label Content="{Binding DatabaseOptions.DatabaseName}" />
+            <Label Content="{Binding DatabaseOptions.DatabasePath}" />
+            <Label Content="{Binding DatabaseOptions.DatabaseTable}" />
             <Label Content="{Binding DatabaseOptions.DatabasePassword}" />
         </StackPanel>
         

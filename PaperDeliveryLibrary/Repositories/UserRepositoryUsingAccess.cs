@@ -21,27 +21,24 @@ namespace PaperDeliveryLibrary.Repositories;
 [SupportedOSPlatform("windows")]
 public class UserRepositoryUsingAccess : IUserRepository
 {
-    public UserModel? Login(string login, string password, IApplicationOptions? applicationOptions, IDatabaseOptions? databaseOptions)
+    public UserModel? Login(string login, string password, IDatabaseOptions? databaseOptions)
     {
         // Validate parameters.
         ArgumentNullException.ThrowIfNullOrWhiteSpace(login, nameof(login));
         ArgumentNullException.ThrowIfNullOrWhiteSpace(password, nameof(password));
-        ArgumentNullException.ThrowIfNull(applicationOptions, nameof(applicationOptions));
         ArgumentNullException.ThrowIfNull(databaseOptions, nameof(databaseOptions));
 
-        if (applicationOptions.GetType() != typeof(ApplicationOptions))
-        {
-            throw new ArgumentException("Incorrect type provided", nameof(applicationOptions));
-        }
         if (databaseOptions.GetType() != typeof(DatabaseOptionsUsingAccess))
         {
             throw new ArgumentException("Incorrect type provided", nameof(databaseOptions));
         }
 
         // Setup connection strings.
-        string validatedPath = ValidatePath((applicationOptions as ApplicationOptions)!, (databaseOptions as DatabaseOptionsUsingAccess)!);
-        string queryString = $"SELECT * FROM UserAccount WHERE (UserAccount.Login = '{login}')";
+        string validatedPath = ValidatePath((databaseOptions as DatabaseOptionsUsingAccess)!);
         string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={password};";
+
+        string validatedTable = ValidateTable((databaseOptions as DatabaseOptionsUsingAccess)!, connectionString);
+        string queryString = $"SELECT * FROM {validatedTable} WHERE Login = '{login}'";
 
         // Read from database.
         UserModel? output = new();
@@ -94,14 +91,27 @@ public class UserRepositoryUsingAccess : IUserRepository
         return output;
     }
 
-
-    private static string ValidatePath(ApplicationOptions applicationOptions, DatabaseOptionsUsingAccess databaseOptions)
+    private static string ValidateTable(DatabaseOptionsUsingAccess databaseOptions, string connectionString)
     {
-        string ouptput = Path.Combine(applicationOptions.ApplicationHomeDirectory, databaseOptions.DatabaseName);
+        string output = databaseOptions.DatabaseTable;
+
+        var listOfTables = CaptureDatabaseTables(connectionString);
+
+        if (!listOfTables.Contains(output))
+        {
+            throw new ArgumentException("Table not found in database.", databaseOptions.DatabaseTable);
+        }
+
+        return output;
+    }
+
+    private static string ValidatePath(DatabaseOptionsUsingAccess databaseOptions)
+    {
+        string ouptput = databaseOptions.DatabasePath;
 
         if (!File.Exists(ouptput))
         {
-            throw new ArgumentException("Database not found.", databaseOptions.DatabaseName);
+            throw new ArgumentException("Database not found.", databaseOptions.DatabasePath);
         }
 
         return ouptput;
