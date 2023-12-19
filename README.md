@@ -1,7 +1,5 @@
 # PaperDeliverySolution
 
-Currently, I am just faking the user authentication. Enter ***guest*** as 'Login' and you will have access to the basic functionality.
-
 ## Framework
 This project is a **WPF Desktop Application** coded in **C#**. The current version is **.Net 8.0**.
 
@@ -18,3 +16,9 @@ In this project I am working on some basic patterns using several **NuGet Packag
 In this project I am implementing some **coding patterns** like:
 - MVVM
 - SOLID
+
+## Configuration
+Currently, the application is tested in developer environment, only.
+
+### UserAccounts
+In order to access the application the user has to provide a valid ***Login*** and ***Password***. These login credentials are stored in an MS ACCCESS database.
