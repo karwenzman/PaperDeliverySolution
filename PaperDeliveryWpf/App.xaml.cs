@@ -25,10 +25,10 @@ namespace PaperDeliveryWpf
 
         public App()
         {
-            // TODO - Check, if userSecrets does work with this setting.
             // Enables Serilog to read configuration from appsettings.json and environment variables.
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", false, true)
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")}.json", true, true)
                 .AddEnvironmentVariables()
                 .Build();
 
@@ -67,7 +67,7 @@ namespace PaperDeliveryWpf
 
             try
             {
-                // TODO - Where is the app, if the exception is thrown? It does not stop the app. => Issue #2
+                // TODO Issue #2 - Where is the app, if the exception is thrown? It does not stop the app.
                 //throw new Exception();
                 var mainWindow = AppHost.Services.GetRequiredService<ShellView>();
                 mainWindow.Show();
