@@ -2,7 +2,6 @@
 using PaperDeliveryLibrary.ProjectOptions;
 using PaperDeliveryWpf.Repositories;
 using System.Data.OleDb;
-using System.Diagnostics;
 using System.Runtime.Versioning;
 
 namespace PaperDeliveryLibrary.Repositories;
@@ -28,16 +27,16 @@ public class UserRepositoryUsingAccess : IUserRepository
         ArgumentNullException.ThrowIfNullOrWhiteSpace(password, nameof(password));
         ArgumentNullException.ThrowIfNull(databaseOptions, nameof(databaseOptions));
 
-        if (databaseOptions.GetType() != typeof(DatabaseOptionsUsingAccess))
-        {
-            throw new ArgumentException("Incorrect type provided", nameof(databaseOptions));
-        }
+        // Convert parameter to specific type DatabaseOptionsUsingAccess.
+        DatabaseOptionsUsingAccess convertedDatabaseOptions = databaseOptions is DatabaseOptionsUsingAccess
+            ? (DatabaseOptionsUsingAccess)databaseOptions
+            : throw new ArgumentException("Incorrect type provided", nameof(databaseOptions));
 
         // Setup connection strings.
-        string validatedPath = ValidatePath((databaseOptions as DatabaseOptionsUsingAccess)!);
-        string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={password};";
+        string validatedPath = ValidatePath(convertedDatabaseOptions);
+        string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={convertedDatabaseOptions.DatabasePassword};";
 
-        string validatedTable = ValidateTable((databaseOptions as DatabaseOptionsUsingAccess)!, connectionString);
+        string validatedTable = ValidateTable(convertedDatabaseOptions, connectionString);
         string queryString = $"SELECT * FROM {validatedTable} WHERE Login = '{login}'";
 
         // Read from database.
@@ -58,7 +57,7 @@ public class UserRepositoryUsingAccess : IUserRepository
                 output.Password = (string)reader["Password"];
                 output.DisplayName = (string)reader["DisplayName"];
                 output.AccessLevel = (int)reader["AccessLevel"];
-                
+
                 // Values can be null.
                 output.Email = DBNull.Value.Equals(reader["Email"]) ? string.Empty : (string)reader["Email"];
             }

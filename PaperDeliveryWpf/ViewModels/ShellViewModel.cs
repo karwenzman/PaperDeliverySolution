@@ -61,7 +61,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
         //CurrentView = _serviceProvider.GetRequiredService<IStartViewModel>();
         //CurrentView = App.AppHost!.Services.GetRequiredService<IStartViewModel>();
 
-        ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.StartUserControl });
+        ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.LoginUserControl });
 
         StopCommand = new CommandBinding(ApplicationCommands.Stop, Stop, CanStop);
 
