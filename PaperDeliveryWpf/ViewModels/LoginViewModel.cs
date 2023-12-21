@@ -22,7 +22,7 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     private string _uiLogin = string.Empty;
     private string _uiPassword = string.Empty;
 
-    [Required(ErrorMessage = "Input is mandatory!")]
+    [Required(ErrorMessage = "Enter your login!")]
     public string UiLogin
     {
         get => _uiLogin;
@@ -35,7 +35,7 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
         }
     }
 
-    [Required(ErrorMessage = "Input is mandatory!")]
+    [Required(ErrorMessage = "Enter your password!")]
     [MinLength(3, ErrorMessage = "You need to enter minimum 3 charaters.")]
     public string UiPassword
     {
@@ -98,7 +98,6 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     {
         bool output = true;
 
-        // TODO - Check, if there a DataError messages, then return false, also
         if (string.IsNullOrWhiteSpace(UiLogin))
         {
             output = false;
