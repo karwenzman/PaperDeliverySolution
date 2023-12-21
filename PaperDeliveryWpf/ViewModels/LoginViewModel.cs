@@ -108,6 +108,10 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
             output = false;
         }
 
+        if (HasErrors)
+        {
+            output = false;
+        }
         return output;
     }
 
