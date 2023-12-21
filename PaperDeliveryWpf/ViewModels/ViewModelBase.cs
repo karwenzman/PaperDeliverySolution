@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Messaging;
 
 namespace PaperDeliveryWpf.ViewModels;
 
-public abstract class ViewModelBase : ObservableObject, IDisposable
+public abstract class ViewModelBase : ObservableValidator, IDisposable
 {
     public void Dispose()
     {

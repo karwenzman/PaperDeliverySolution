@@ -10,6 +10,7 @@ using PaperDeliveryLibrary.Messages;
 using PaperDeliveryLibrary.Models;
 using PaperDeliveryLibrary.ProjectOptions;
 using PaperDeliveryWpf.Repositories;
+using System.ComponentModel.DataAnnotations;
 
 namespace PaperDeliveryWpf.ViewModels;
 
@@ -18,19 +19,38 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     private readonly IUserRepository _userRepository;
     private UserModel? _user = new();
 
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor((nameof(LoginButtonCommand)))]
     private string _uiLogin = string.Empty;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(LoginButtonCommand))]
     private string _uiPassword = string.Empty;
 
-    [ObservableProperty]
-    private IDatabaseOptions _databaseOptions;
+    [Required(ErrorMessage = "Input is mandatory!")]
+    public string UiLogin
+    {
+        get => _uiLogin;
+        set
+        {
+            if (SetProperty(ref _uiLogin, value, true))
+            {
+                LoginButtonCommand.NotifyCanExecuteChanged();
+            }
+        }
+    }
 
-    [ObservableProperty]
-    private ApplicationOptions _applicationOptions;
+    [Required(ErrorMessage = "Input is mandatory!")]
+    [MinLength(3, ErrorMessage = "You need to enter minimum 3 charaters.")]
+    public string UiPassword
+    {
+        get => _uiPassword;
+        set
+        {
+            if (SetProperty(ref _uiPassword, value, true))
+            {
+                LoginButtonCommand.NotifyCanExecuteChanged();
+            }
+        }
+    }
+
+    [ObservableProperty] private IDatabaseOptions _databaseOptions;
+    [ObservableProperty] private ApplicationOptions _applicationOptions;
 
     private readonly ILogger<LoginViewModel> _logger;
     private readonly IServiceProvider _serviceProvider;
@@ -78,6 +98,7 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     {
         bool output = true;
 
+        // TODO - Check, if there a DataError messages, then return false, also
         if (string.IsNullOrWhiteSpace(UiLogin))
         {
             output = false;

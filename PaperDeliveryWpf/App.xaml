@@ -9,6 +9,7 @@
                 <ResourceDictionary Source="Resources/ShellFooterStyle.xaml" />
                 <ResourceDictionary Source="Resources/ShellHeaderStyle.xaml" />
                 <ResourceDictionary Source="Resources/ShellTitleStyle.xaml" />
+                <ResourceDictionary Source="Resources/TextBoxStyle.xaml" />
                 <ResourceDictionary Source="Resources/DataTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
