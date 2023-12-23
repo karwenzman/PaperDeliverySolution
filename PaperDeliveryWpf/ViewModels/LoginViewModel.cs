@@ -75,33 +75,13 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     [RelayCommand(CanExecute = nameof(CanLoginButton))]
     public void LoginButton()
     {
-        //_user = _userRepository.Login(UiLogin, UiPassword, DatabaseOptions);
-
-        //if (_user == null)
-        //{
-        //    WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(new UserModel()));
-        //    WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.None }));
-        //    _logger.LogInformation("** User authentication failed on account {user}.", UiLogin);
-        //}
-        //else if (_user.Id == 0)
-        //{
-        //    WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(new UserModel()));
-        //    WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.None }));
-        //    _logger.LogInformation("** User authentication failed on account {user}.", UiLogin);
-        //}
-        //else
-        //{
-        //    WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(_user));
-        //    WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl }));
-        //    _logger.LogInformation("** User {user} has logged in.", UiLogin);
-        //}
-
-        bool validUser = _userRepository.AuthenticateUser(new NetworkCredential(UiLogin, UiPassword), DatabaseOptions);
+        bool validUser = _userRepository.Authenticate(new NetworkCredential(UiLogin, UiPassword));
 
         if (validUser)
         {
-            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(UiLogin),null);
-            _user = _userRepository.Login(UiLogin, UiPassword, DatabaseOptions);
+            // here might be a change in logic needed; adding roles
+            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(UiLogin), null);
+            _user = _userRepository.GetByUserName(UiLogin);
             WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(_user!));
             WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl }));
             _logger.LogInformation("** User {user} has logged in.", UiLogin);

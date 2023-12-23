@@ -1,68 +1,67 @@
 ﻿using PaperDeliveryLibrary.Models;
-using PaperDeliveryLibrary.ProjectOptions;
 using System.Net;
 
 namespace PaperDeliveryWpf.Repositories;
 
 public class UserRepositoryFake : IUserRepository
 {
-    public void AddUser(UserModel user, IDatabaseOptions? databaseOptions)
+    public void Add(UserModel user)
     {
         throw new NotImplementedException();
     }
 
-    public bool AuthenticateUser(NetworkCredential networkCredential, IDatabaseOptions? databaseOptions)
+    public bool Authenticate(NetworkCredential networkCredential)
     {
         throw new NotImplementedException();
     }
 
-    public void DeleteUser(int id, IDatabaseOptions? databaseOptions)
+    public void Delete(int userId)
     {
         throw new NotImplementedException();
     }
 
-    public UserModel GetUserById(int id, IDatabaseOptions? databaseOptions)
+    public UserModel? GetById(int userId)
     {
         throw new NotImplementedException();
     }
 
-    public UserModel GetUserByUserName(string userName, IDatabaseOptions? databaseOptions)
+    public UserModel? GetByUserName(string userName)
     {
         throw new NotImplementedException();
     }
 
-    public UserModel? Login(string login, string password, IDatabaseOptions? databaseOptions)
+    public UserModel? Login(string userName, string password)
     {
         UserModel? output;
 
-        if (login == "karwenzman")
+        if (userName == "karwenzman")
         {
             output = new()
             {
                 Id = 1,
-                Login = login,
+                Login = userName,
                 Password = password,
                 Email = "karwenzman@gmx.net",
                 DisplayName = "karwenzman"
             };
         }
-        else if (login == "Thorsten")
+        else if (userName == "Thorsten")
         {
             output = new()
             {
                 Id = 2,
-                Login = login,
+                Login = userName,
                 Password = password,
                 Email = "jenning.thorsten@gmx.net",
                 DisplayName = "Thorsten"
             };
         }
-        else if (login == "guest")
+        else if (userName == "guest")
         {
             output = new()
             {
                 Id = 3,
-                Login = login,
+                Login = userName,
                 Password = password,
                 Email = "guest@gmail.com",
                 DisplayName = "guest"
@@ -76,7 +75,7 @@ public class UserRepositoryFake : IUserRepository
         return output;
     }
 
-    public void UpdateUser(UserModel user, IDatabaseOptions? databaseOptions)
+    public void Update(UserModel user)
     {
         throw new NotImplementedException();
     }

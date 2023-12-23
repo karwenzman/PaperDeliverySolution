@@ -1,4 +1,5 @@
-﻿using PaperDeliveryLibrary.Models;
+﻿using Microsoft.Extensions.Options;
+using PaperDeliveryLibrary.Models;
 using PaperDeliveryLibrary.ProjectOptions;
 using PaperDeliveryWpf.Repositories;
 using System.Data.OleDb;
@@ -21,25 +22,27 @@ namespace PaperDeliveryLibrary.Repositories;
 [SupportedOSPlatform("windows")]
 public class UserRepositoryUsingAccess : IUserRepository
 {
-    public bool AuthenticateUser(NetworkCredential networkCredential, IDatabaseOptions? databaseOptions)
+    private readonly IOptions<DatabaseOptionsUsingAccess> _databaseOptions;
+
+    public UserRepositoryUsingAccess(IOptions<DatabaseOptionsUsingAccess> databaseOptions)
+    {
+        _databaseOptions = databaseOptions;
+    }
+
+    public bool Authenticate(NetworkCredential networkCredential)
     {
         bool output = false;
 
         // Validate parameters.
         ArgumentNullException.ThrowIfNullOrWhiteSpace(networkCredential.UserName, nameof(networkCredential.UserName));
         ArgumentNullException.ThrowIfNullOrWhiteSpace(networkCredential.Password, nameof(networkCredential.Password));
-        ArgumentNullException.ThrowIfNull(databaseOptions, nameof(databaseOptions));
-
-        // Convert parameter to specific type DatabaseOptionsUsingAccess.
-        DatabaseOptionsUsingAccess convertedDatabaseOptions = databaseOptions is DatabaseOptionsUsingAccess
-            ? (DatabaseOptionsUsingAccess)databaseOptions
-            : throw new ArgumentException("Incorrect type provided", nameof(IDatabaseOptions));
+        ArgumentNullException.ThrowIfNull(_databaseOptions, nameof(DatabaseOptionsUsingAccess));
 
         // Setup connection strings.
-        string validatedPath = ValidatePath(convertedDatabaseOptions);
-        string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={convertedDatabaseOptions.DatabasePassword};";
+        string validatedPath = ValidatePath(_databaseOptions.Value);
+        string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={_databaseOptions.Value.DatabasePassword};";
 
-        string validatedTable = ValidateTable(convertedDatabaseOptions, connectionString);
+        string validatedTable = ValidateTable(_databaseOptions.Value, connectionString);
         string queryString = $"SELECT * FROM {validatedTable} WHERE Login = '{networkCredential.UserName}'";
 
         // Read from database.
@@ -92,27 +95,22 @@ public class UserRepositoryUsingAccess : IUserRepository
         return output;
     }
 
-    public UserModel GetUserById(int id, IDatabaseOptions? databaseOptions)
+    public UserModel? GetById(int id)
     {
         throw new NotImplementedException();
     }
 
-    public UserModel GetUserByUserName(string userName, IDatabaseOptions? databaseOptions)
+    public UserModel? GetByUserName(string userName)
     {
         // Validate parameters.
         ArgumentNullException.ThrowIfNullOrWhiteSpace(userName, nameof(userName));
-        ArgumentNullException.ThrowIfNull(databaseOptions, nameof(databaseOptions));
-
-        // Convert parameter to specific type DatabaseOptionsUsingAccess.
-        DatabaseOptionsUsingAccess convertedDatabaseOptions = databaseOptions is DatabaseOptionsUsingAccess
-            ? (DatabaseOptionsUsingAccess)databaseOptions
-            : throw new ArgumentException("Incorrect type provided", nameof(databaseOptions));
+        ArgumentNullException.ThrowIfNull(_databaseOptions, nameof(DatabaseOptionsUsingAccess));
 
         // Setup connection strings.
-        string validatedPath = ValidatePath(convertedDatabaseOptions);
-        string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={convertedDatabaseOptions.DatabasePassword};";
+        string validatedPath = ValidatePath(_databaseOptions.Value);
+        string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={_databaseOptions.Value.DatabasePassword};";
 
-        string validatedTable = ValidateTable(convertedDatabaseOptions, connectionString);
+        string validatedTable = ValidateTable(_databaseOptions.Value, connectionString);
         string queryString = $"SELECT * FROM {validatedTable} WHERE Login = '{userName}'";
 
         // Read from database.
@@ -160,38 +158,33 @@ public class UserRepositoryUsingAccess : IUserRepository
         return output;
     }
 
-    public void AddUser(UserModel user, IDatabaseOptions? databaseOptions)
+    public void Add(UserModel user)
     {
         throw new NotImplementedException();
     }
 
-    public void UpdateUser(UserModel user, IDatabaseOptions? databaseOptions)
+    public void Update(UserModel user)
     {
         throw new NotImplementedException();
     }
 
-    public void DeleteUser(int id, IDatabaseOptions? databaseOptions)
+    public void Delete(int id)
     {
         throw new NotImplementedException();
     }
 
-    public UserModel? Login(string login, string password, IDatabaseOptions? databaseOptions)
+    public UserModel? Login(string login, string password)
     {
         // Validate parameters.
         ArgumentNullException.ThrowIfNullOrWhiteSpace(login, nameof(login));
         ArgumentNullException.ThrowIfNullOrWhiteSpace(password, nameof(password));
-        ArgumentNullException.ThrowIfNull(databaseOptions, nameof(databaseOptions));
-
-        // Convert parameter to specific type DatabaseOptionsUsingAccess.
-        DatabaseOptionsUsingAccess convertedDatabaseOptions = databaseOptions is DatabaseOptionsUsingAccess
-            ? (DatabaseOptionsUsingAccess)databaseOptions
-            : throw new ArgumentException("Incorrect type provided", nameof(databaseOptions));
+        ArgumentNullException.ThrowIfNull(_databaseOptions, nameof(DatabaseOptionsUsingAccess));
 
         // Setup connection strings.
-        string validatedPath = ValidatePath(convertedDatabaseOptions);
-        string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={convertedDatabaseOptions.DatabasePassword};";
+        string validatedPath = ValidatePath(_databaseOptions.Value);
+        string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={_databaseOptions.Value.DatabasePassword};";
 
-        string validatedTable = ValidateTable(convertedDatabaseOptions, connectionString);
+        string validatedTable = ValidateTable(_databaseOptions.Value, connectionString);
         string queryString = $"SELECT * FROM {validatedTable} WHERE Login = '{login}'";
 
         // Read from database.
