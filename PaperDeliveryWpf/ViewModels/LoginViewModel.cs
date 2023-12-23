@@ -11,6 +11,8 @@ using PaperDeliveryLibrary.Models;
 using PaperDeliveryLibrary.ProjectOptions;
 using PaperDeliveryWpf.Repositories;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
+using System.Security.Principal;
 
 namespace PaperDeliveryWpf.ViewModels;
 
@@ -73,26 +75,44 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     [RelayCommand(CanExecute = nameof(CanLoginButton))]
     public void LoginButton()
     {
-        _user = _userRepository.Login(UiLogin, UiPassword, DatabaseOptions);
+        //_user = _userRepository.Login(UiLogin, UiPassword, DatabaseOptions);
 
-        if (_user == null)
+        //if (_user == null)
+        //{
+        //    WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(new UserModel()));
+        //    WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.None }));
+        //    _logger.LogInformation("** User authentication failed on account {user}.", UiLogin);
+        //}
+        //else if (_user.Id == 0)
+        //{
+        //    WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(new UserModel()));
+        //    WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.None }));
+        //    _logger.LogInformation("** User authentication failed on account {user}.", UiLogin);
+        //}
+        //else
+        //{
+        //    WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(_user));
+        //    WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl }));
+        //    _logger.LogInformation("** User {user} has logged in.", UiLogin);
+        //}
+
+        bool validUser = _userRepository.AuthenticateUser(new NetworkCredential(UiLogin, UiPassword), DatabaseOptions);
+
+        if (validUser)
         {
-            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(new UserModel()));
-            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.None }));
-            _logger.LogInformation("** User authentication failed on account {user}.", UiLogin);
-        }
-        else if (_user.Id == 0)
-        {
-            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(new UserModel()));
-            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.None }));
-            _logger.LogInformation("** User authentication failed on account {user}.", UiLogin);
-        }
-        else
-        {
-            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(_user));
+            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(UiLogin),null);
+            _user = _userRepository.Login(UiLogin, UiPassword, DatabaseOptions);
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(_user!));
             WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl }));
             _logger.LogInformation("** User {user} has logged in.", UiLogin);
         }
+        else
+        {
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(new UserModel()));
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.None }));
+            _logger.LogInformation("** User authentication failed on account {user}.", UiLogin);
+        }
+
     }
     public bool CanLoginButton()
     {
@@ -106,11 +126,11 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
         {
             output = false;
         }
-
         if (HasErrors)
         {
             output = false;
         }
+
         return output;
     }
 

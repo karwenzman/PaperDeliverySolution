@@ -2,6 +2,7 @@
 using PaperDeliveryLibrary.ProjectOptions;
 using PaperDeliveryWpf.Repositories;
 using System.Data.OleDb;
+using System.Net;
 using System.Runtime.Versioning;
 
 namespace PaperDeliveryLibrary.Repositories;
@@ -20,6 +21,160 @@ namespace PaperDeliveryLibrary.Repositories;
 [SupportedOSPlatform("windows")]
 public class UserRepositoryUsingAccess : IUserRepository
 {
+    public bool AuthenticateUser(NetworkCredential networkCredential, IDatabaseOptions? databaseOptions)
+    {
+        bool output = false;
+
+        // Validate parameters.
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(networkCredential.UserName, nameof(networkCredential.UserName));
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(networkCredential.Password, nameof(networkCredential.Password));
+        ArgumentNullException.ThrowIfNull(databaseOptions, nameof(databaseOptions));
+
+        // Convert parameter to specific type DatabaseOptionsUsingAccess.
+        DatabaseOptionsUsingAccess convertedDatabaseOptions = databaseOptions is DatabaseOptionsUsingAccess
+            ? (DatabaseOptionsUsingAccess)databaseOptions
+            : throw new ArgumentException("Incorrect type provided", nameof(IDatabaseOptions));
+
+        // Setup connection strings.
+        string validatedPath = ValidatePath(convertedDatabaseOptions);
+        string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={convertedDatabaseOptions.DatabasePassword};";
+
+        string validatedTable = ValidateTable(convertedDatabaseOptions, connectionString);
+        string queryString = $"SELECT * FROM {validatedTable} WHERE Login = '{networkCredential.UserName}'";
+
+        // Read from database.
+        UserModel userModel = new();
+        using var connection = new OleDbConnection(connectionString);
+        OleDbCommand command = new(queryString, connection);
+        try
+        {
+            connection.Open();
+
+            using OleDbDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                // Values can not be null.
+                userModel.Id = (int)reader["ID"];
+                userModel.Login = (string)reader["Login"];
+                userModel.Password = (string)reader["Password"];
+                userModel.DisplayName = (string)reader["DisplayName"];
+                userModel.AccessLevel = (int)reader["AccessLevel"];
+
+                // Values can be null.
+                userModel.Email = DBNull.Value.Equals(reader["Email"]) ? string.Empty : (string)reader["Email"];
+            }
+
+            reader.Close();
+            connection.Close();
+        }
+        catch (OleDbException ex)
+        {
+            if (ex.ErrorCode == -2147217843)
+            {
+                throw new UnauthorizedAccessException($"Invalid Password! No access to {validatedPath}! " +
+                    $"Error code: {ex.ErrorCode}");
+            }
+
+            throw new UnauthorizedAccessException($"No access to {validatedPath}! Error code: {ex.ErrorCode}");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Unexpected exception while accessing the database! Message: {ex.Message}");
+        }
+
+        // Validate password.
+        if (networkCredential.Password == userModel.Password)
+        {
+            output = true;
+        }
+
+        return output;
+    }
+
+    public UserModel GetUserById(int id, IDatabaseOptions? databaseOptions)
+    {
+        throw new NotImplementedException();
+    }
+
+    public UserModel GetUserByUserName(string userName, IDatabaseOptions? databaseOptions)
+    {
+        // Validate parameters.
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(userName, nameof(userName));
+        ArgumentNullException.ThrowIfNull(databaseOptions, nameof(databaseOptions));
+
+        // Convert parameter to specific type DatabaseOptionsUsingAccess.
+        DatabaseOptionsUsingAccess convertedDatabaseOptions = databaseOptions is DatabaseOptionsUsingAccess
+            ? (DatabaseOptionsUsingAccess)databaseOptions
+            : throw new ArgumentException("Incorrect type provided", nameof(databaseOptions));
+
+        // Setup connection strings.
+        string validatedPath = ValidatePath(convertedDatabaseOptions);
+        string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={convertedDatabaseOptions.DatabasePassword};";
+
+        string validatedTable = ValidateTable(convertedDatabaseOptions, connectionString);
+        string queryString = $"SELECT * FROM {validatedTable} WHERE Login = '{userName}'";
+
+        // Read from database.
+        UserModel? output = new();
+        using var connection = new OleDbConnection(connectionString);
+        OleDbCommand command = new(queryString, connection);
+        try
+        {
+            connection.Open();
+
+            using OleDbDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                // Values can not be null.
+                output.Id = (int)reader["ID"];
+                output.Login = (string)reader["Login"];
+                output.Password = (string)reader["Password"];
+                output.DisplayName = (string)reader["DisplayName"];
+                output.AccessLevel = (int)reader["AccessLevel"];
+
+                // Values can be null.
+                output.Email = DBNull.Value.Equals(reader["Email"]) ? string.Empty : (string)reader["Email"];
+            }
+
+            reader.Close();
+            connection.Close();
+        }
+        catch (OleDbException ex)
+        {
+            if (ex.ErrorCode == -2147217843)
+            {
+                throw new UnauthorizedAccessException($"Invalid Password! No access to {validatedPath}! " +
+                    $"Error code: {ex.ErrorCode}");
+            }
+
+            throw new UnauthorizedAccessException($"No access to {validatedPath}! Error code: {ex.ErrorCode}");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Unexpected exception while accessing the database! Message: {ex.Message}");
+        }
+
+        // Return UserModel.
+        return output;
+    }
+
+    public void AddUser(UserModel user, IDatabaseOptions? databaseOptions)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void UpdateUser(UserModel user, IDatabaseOptions? databaseOptions)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DeleteUser(int id, IDatabaseOptions? databaseOptions)
+    {
+        throw new NotImplementedException();
+    }
+
     public UserModel? Login(string login, string password, IDatabaseOptions? databaseOptions)
     {
         // Validate parameters.
@@ -172,4 +327,5 @@ public class UserRepositoryUsingAccess : IUserRepository
 
         return output;
     }
+
 }

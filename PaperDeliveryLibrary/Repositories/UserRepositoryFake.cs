@@ -1,10 +1,36 @@
 ﻿using PaperDeliveryLibrary.Models;
 using PaperDeliveryLibrary.ProjectOptions;
+using System.Net;
 
 namespace PaperDeliveryWpf.Repositories;
 
 public class UserRepositoryFake : IUserRepository
 {
+    public void AddUser(UserModel user, IDatabaseOptions? databaseOptions)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool AuthenticateUser(NetworkCredential networkCredential, IDatabaseOptions? databaseOptions)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DeleteUser(int id, IDatabaseOptions? databaseOptions)
+    {
+        throw new NotImplementedException();
+    }
+
+    public UserModel GetUserById(int id, IDatabaseOptions? databaseOptions)
+    {
+        throw new NotImplementedException();
+    }
+
+    public UserModel GetUserByUserName(string userName, IDatabaseOptions? databaseOptions)
+    {
+        throw new NotImplementedException();
+    }
+
     public UserModel? Login(string login, string password, IDatabaseOptions? databaseOptions)
     {
         UserModel? output;
@@ -48,5 +74,10 @@ public class UserRepositoryFake : IUserRepository
         }
 
         return output;
+    }
+
+    public void UpdateUser(UserModel user, IDatabaseOptions? databaseOptions)
+    {
+        throw new NotImplementedException();
     }
 }

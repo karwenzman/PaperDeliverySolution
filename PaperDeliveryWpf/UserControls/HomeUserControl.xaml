@@ -13,7 +13,7 @@
     </UserControl.Resources>
 
     <DockPanel>
-        <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" Text="You are logged in." FontSize="26" FontWeight="Bold" Margin="20" />
+        <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" Text="{Binding DisplayMessage}" FontSize="26" FontWeight="Bold" Margin="20" />
         <Border DockPanel.Dock="Top" HorizontalAlignment="Center" CornerRadius="20" Background="LightGray" BorderBrush="Black" BorderThickness="4">
             <Image Source="../Images/Client_Kreisanzeiger.png" Margin="10" />
         </Border>
