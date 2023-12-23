@@ -18,19 +18,18 @@ namespace PaperDeliveryWpf.ViewModels;
 
 public partial class LoginViewModel : ViewModelBase, ILoginViewModel
 {
-    private readonly IUserRepository _userRepository;
     private UserModel? _user = new();
 
-    private string _uiLogin = string.Empty;
+    private string _uiUserName = string.Empty;
     private string _uiPassword = string.Empty;
 
-    [Required(ErrorMessage = "Enter your login!")]
-    public string UiLogin
+    [Required(ErrorMessage = "Enter your user name!")]
+    public string UiUserName
     {
-        get => _uiLogin;
+        get => _uiUserName;
         set
         {
-            if (SetProperty(ref _uiLogin, value, true))
+            if (SetProperty(ref _uiUserName, value, true))
             {
                 LoginButtonCommand.NotifyCanExecuteChanged();
             }
@@ -51,22 +50,15 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
         }
     }
 
-    [ObservableProperty] private IDatabaseOptions _databaseOptions;
-    [ObservableProperty] private ApplicationOptions _applicationOptions;
-
     private readonly ILogger<LoginViewModel> _logger;
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IUserRepository _userRepository;
 
-    public LoginViewModel(ILogger<LoginViewModel> logger, IServiceProvider serviceProvider, IOptions<DatabaseOptionsUsingAccess> databaseOptions, IOptions<ApplicationOptions> applicationOptions)
+    public LoginViewModel(ILogger<LoginViewModel> logger, IUserRepository userRepository)
     {
         _logger = logger;
+        _userRepository = userRepository;
+
         _logger.LogInformation("* Loading {class}", nameof(LoginViewModel));
-
-        _serviceProvider = serviceProvider;
-        _userRepository = _serviceProvider.GetRequiredService<IUserRepository>();
-
-        DatabaseOptions = databaseOptions.Value;
-        ApplicationOptions = applicationOptions.Value;
 
         // TODO - How to close this UserControl?
     }
@@ -75,30 +67,29 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     [RelayCommand(CanExecute = nameof(CanLoginButton))]
     public void LoginButton()
     {
-        bool validUser = _userRepository.Authenticate(new NetworkCredential(UiLogin, UiPassword));
+        bool validUser = _userRepository.Authenticate(new NetworkCredential(UiUserName, UiPassword));
 
         if (validUser)
         {
             // here might be a change in logic needed; adding roles
-            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(UiLogin), null);
-            _user = _userRepository.GetByUserName(UiLogin);
+            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(UiUserName), null);
+            _user = _userRepository.GetByUserName(UiUserName);
             WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(_user!));
             WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl }));
-            _logger.LogInformation("** User {user} has logged in.", UiLogin);
+            _logger.LogInformation("** User {user} has logged in.", UiUserName);
         }
         else
         {
             WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(new UserModel()));
             WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.None }));
-            _logger.LogInformation("** User authentication failed on account {user}.", UiLogin);
+            _logger.LogInformation("** User authentication failed on account {user}.", UiUserName);
         }
-
     }
     public bool CanLoginButton()
     {
         bool output = true;
 
-        if (string.IsNullOrWhiteSpace(UiLogin))
+        if (string.IsNullOrWhiteSpace(UiUserName))
         {
             output = false;
         }

@@ -8,6 +8,7 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=viewModels:LoginViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
+    
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVisibility" />
     </UserControl.Resources>
@@ -30,8 +31,8 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Column="1" Grid.Row="0" Content="Login" />
-                <TextBox Grid.Column="2" Grid.Row="0" Text="{Binding UiLogin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" MinWidth="200" />
+                <Label Grid.Column="1" Grid.Row="0" Content="User Name" />
+                <TextBox Grid.Column="2" Grid.Row="0" Text="{Binding UiUserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" MinWidth="200" />
                 <Label Grid.Column="1" Grid.Row="1" Content="Password" />
                 <TextBox Grid.Column="2" Grid.Row="1" Text="{Binding UiPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" MinWidth="200" />
             </Grid>
@@ -39,13 +40,6 @@
                 <Button Content="Login" Command="{Binding LoginButtonCommand}" />
                 <Button Content="Cancel" Command="{Binding CancelButtonCommand}"/>
             </StackPanel>
-        </StackPanel>
-        
-        <!-- Test only -->
-        <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
-            <Label Content="{Binding DatabaseOptions.DatabasePath}" />
-            <Label Content="{Binding DatabaseOptions.DatabaseTable}" />
-            <Label Content="{Binding DatabaseOptions.DatabasePassword}" />
         </StackPanel>
         
         <!-- Footer -->
