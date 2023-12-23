@@ -14,6 +14,8 @@
 
   <ItemGroup>
     <None Remove="Images\Client_Kreisanzeiger.png" />
+    <None Remove="Images\UiLogin.png" />
+    <None Remove="Images\UiUniqueKey.png" />
     <None Remove="Newspaper3.ico" />
     <None Remove="Newspaper3.png" />
   </ItemGroup>
@@ -26,6 +28,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Newspaper3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\UiLogin.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\UiUniqueKey.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
