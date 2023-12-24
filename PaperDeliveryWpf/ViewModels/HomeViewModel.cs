@@ -43,7 +43,7 @@ public partial class HomeViewModel : ViewModelBase, IHomeViewModel
         PrincipalUserName = genericAppIdentity.Name;
         PrincipalIsAdmin = genericAppPrincipal.IsInRole("admin");
         PrincipalIsUser = genericAppPrincipal.IsInRole("user");
-
+        
         DisplayMessage = $"Hello {UserAccount.DisplayName}! You are logged in.";
     }
 }

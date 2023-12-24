@@ -25,7 +25,12 @@ public class UserRepositoryFake : IUserRepository
         throw new NotImplementedException();
     }
 
-    public UserModel? GetByUserName(string userName)
+    public UserModel? GetByUserName(string? userName)
+    {
+        throw new NotImplementedException();
+    }
+
+    public string[]? GetUserRoles(string? userRole)
     {
         throw new NotImplementedException();
     }

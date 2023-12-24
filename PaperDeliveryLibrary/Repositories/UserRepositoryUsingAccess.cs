@@ -163,6 +163,31 @@ public class UserRepositoryUsingAccess : IUserRepository
         return output;
     }
 
+    public string[]? GetUserRoles(string? userRole)
+    {
+        // TODO - This is not working properly. The IsInRole() does not work with that output.
+        string[]? output = [];
+
+        if (userRole == null)
+        {
+            output = null;
+        }
+        else if (userRole == "guest")
+        {
+            output = ["guest"];
+        }
+        else if (userRole == "user")
+        {
+            output = ["guest", "user"];
+        }
+        else if (userRole == "admin")
+        {
+            output = ["guest", "user", "admin"];
+        }
+
+        return output;
+    }
+
     public void Add(UserModel user)
     {
         throw new NotImplementedException();
@@ -326,5 +351,4 @@ public class UserRepositoryUsingAccess : IUserRepository
 
         return output;
     }
-
 }
