@@ -59,13 +59,14 @@ public class UserRepositoryUsingAccess : IUserRepository
             {
                 // Values can not be null.
                 userModel.Id = (int)reader["ID"];
-                userModel.Login = (string)reader["Login"];
+                userModel.UserName = (string)reader["Login"];
                 userModel.Password = (string)reader["Password"];
                 userModel.DisplayName = (string)reader["DisplayName"];
-                userModel.AccessLevel = (int)reader["AccessLevel"];
+                userModel.IsActive = (bool)reader["IsActive"];
 
                 // Values can be null.
-                userModel.Email = DBNull.Value.Equals(reader["Email"]) ? string.Empty : (string)reader["Email"];
+                userModel.Email = DBNull.Value.Equals(reader["Email"]) ? null : (string)reader["Email"];
+                userModel.Role = DBNull.Value.Equals(reader["Role"]) ? null : (string)reader["Role"];
             }
 
             reader.Close();
@@ -86,8 +87,8 @@ public class UserRepositoryUsingAccess : IUserRepository
             throw new Exception($"Unexpected exception while accessing the database! Message: {ex.Message}");
         }
 
-        // Validate password.
-        if (networkCredential.Password == userModel.Password)
+        // Validate password and permission.
+        if (networkCredential.Password == userModel.Password && userModel.IsActive == true)
         {
             output = true;
         }
@@ -100,8 +101,10 @@ public class UserRepositoryUsingAccess : IUserRepository
         throw new NotImplementedException();
     }
 
-    public UserModel? GetByUserName(string userName)
+    public UserModel? GetByUserName(string? userName)
     {
+        UserModel? output = null;
+
         // Validate parameters.
         ArgumentNullException.ThrowIfNullOrWhiteSpace(userName, nameof(userName));
         ArgumentNullException.ThrowIfNull(_databaseOptions, nameof(DatabaseOptionsUsingAccess));
@@ -114,7 +117,6 @@ public class UserRepositoryUsingAccess : IUserRepository
         string queryString = $"SELECT * FROM {validatedTable} WHERE Login = '{userName}'";
 
         // Read from database.
-        UserModel? output = new();
         using var connection = new OleDbConnection(connectionString);
         OleDbCommand command = new(queryString, connection);
         try
@@ -125,15 +127,18 @@ public class UserRepositoryUsingAccess : IUserRepository
 
             while (reader.Read())
             {
+                output = new();
                 // Values can not be null.
                 output.Id = (int)reader["ID"];
-                output.Login = (string)reader["Login"];
-                output.Password = (string)reader["Password"];
+                output.UserName = (string)reader["Login"];
+                output.Password = "**********"; // never publish the password; except when authenticating
+                //output.Password = (string)reader["Password"];
                 output.DisplayName = (string)reader["DisplayName"];
-                output.AccessLevel = (int)reader["AccessLevel"];
+                output.IsActive = (bool)reader["IsActive"];
 
                 // Values can be null.
-                output.Email = DBNull.Value.Equals(reader["Email"]) ? string.Empty : (string)reader["Email"];
+                output.Email = DBNull.Value.Equals(reader["Email"]) ? null : (string)reader["Email"];
+                output.Role = DBNull.Value.Equals(reader["Role"]) ? null : (string)reader["Role"];
             }
 
             reader.Close();
@@ -201,13 +206,14 @@ public class UserRepositoryUsingAccess : IUserRepository
             {
                 // Values can not be null.
                 output.Id = (int)reader["ID"];
-                output.Login = (string)reader["Login"];
+                output.UserName = (string)reader["Login"];
                 output.Password = (string)reader["Password"];
                 output.DisplayName = (string)reader["DisplayName"];
-                output.AccessLevel = (int)reader["AccessLevel"];
+                output.IsActive = (bool)reader["IsActive"];
 
                 // Values can be null.
-                output.Email = DBNull.Value.Equals(reader["Email"]) ? string.Empty : (string)reader["Email"];
+                output.Email = DBNull.Value.Equals(reader["Email"]) ? null : (string)reader["Email"];
+                output.Role = DBNull.Value.Equals(reader["Email"]) ? null : (string)reader["Role"];
             }
 
             reader.Close();

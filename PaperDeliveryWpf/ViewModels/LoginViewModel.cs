@@ -1,14 +1,10 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using PaperDeliveryLibrary.Enums;
 using PaperDeliveryLibrary.Messages;
 using PaperDeliveryLibrary.Models;
-using PaperDeliveryLibrary.ProjectOptions;
 using PaperDeliveryWpf.Repositories;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
@@ -71,12 +67,13 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
 
         if (validUser)
         {
-            // here might be a change in logic needed; adding roles
-            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(UiUserName), null);
             _user = _userRepository.GetByUserName(UiUserName);
-            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(_user!));
+            ArgumentNullException.ThrowIfNull(_user);
+
+            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(_user.UserName), [$"{_user.Role}"]);
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(_user));
             WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl }));
-            _logger.LogInformation("** User {user} has logged in.", UiUserName);
+            _logger.LogInformation("** User {user} has logged in.", _user.UserName);
         }
         else
         {

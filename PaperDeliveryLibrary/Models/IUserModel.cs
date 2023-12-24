@@ -13,21 +13,21 @@ public interface IUserModel
     int Id { get; set; }
 
     /// <summary>
-    /// This property contains the user's access level for the application.
+    /// This property contains the user's role for the application.
     /// </summary>
-    int AccessLevel { get; set; }
+    string? Role { get; set; }
 
     /// <summary>
     /// This property contains the user's email address.
     /// </summary>
-    string Email { get; set; }
+    string? Email { get; set; }
 
     /// <summary>
     /// This property contains the user's login expression.
     /// <para></para>
     /// This is an alternative key in a database table.
     /// </summary>
-    string Login { get; set; }
+    string UserName { get; set; }
 
     /// <summary>
     /// This property contains the user's display name.

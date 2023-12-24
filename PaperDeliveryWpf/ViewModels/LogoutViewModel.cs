@@ -27,7 +27,7 @@ public partial class LogoutViewModel : ViewModelBase, ILogoutViewModel
     [RelayCommand]
     public void LogoutButton()
     {
-        _logger.LogInformation("** User {user} has logged out.", _shellViewModel.UserAccount.Login);
+        _logger.LogInformation("** User {user} has logged out.", _shellViewModel.UserAccount.UserName);
 
         WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(new UserModel()));
         WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.StartUserControl }));

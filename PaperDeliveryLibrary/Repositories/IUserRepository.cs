@@ -38,11 +38,11 @@ namespace PaperDeliveryWpf.Repositories
         UserModel? GetById(int userId);
 
         /// <summary>
-        /// This method is accessing the database using the user's user name.
+        /// This method is accessing the database using the user's login expression.
         /// </summary>
         /// <param name="userName">The user's unique user name.</param>
         /// <returns>null, if no valid user is found</returns>
-        UserModel? GetByUserName(string userName);
+        UserModel? GetByUserName(string? userName);
 
         void Add(UserModel user);
         void Update(UserModel user);

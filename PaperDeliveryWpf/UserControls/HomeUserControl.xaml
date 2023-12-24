@@ -17,5 +17,20 @@
         <Border DockPanel.Dock="Top" HorizontalAlignment="Center" CornerRadius="20" Background="LightGray" BorderBrush="Black" BorderThickness="4">
             <Image Source="../Images/Client_Kreisanzeiger.png" Margin="10" />
         </Border>
+
+        <!-- Testing -->
+        <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+            <Label Content="Authentication Type" />
+            <TextBox Text="{Binding PrincipalAuthenticationType}" />
+            <Label Content="Is Authenticated" />
+            <TextBox Text="{Binding PrincipalIsAuthenticated}" />
+            <Label Content="Authenticated UserName" />
+            <TextBox Text="{Binding PrincipalUserName}" />
+            <Label Content="Is in role 'admin'" />
+            <TextBox Text="{Binding PrincipalIsAdmin}" />
+            <Label Content="Is in role 'user'" />
+            <TextBox Text="{Binding PrincipalIsUser}" />
+        </StackPanel>
+        
     </DockPanel>
 </UserControl>

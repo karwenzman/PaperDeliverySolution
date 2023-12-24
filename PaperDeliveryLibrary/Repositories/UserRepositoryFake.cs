@@ -39,7 +39,7 @@ public class UserRepositoryFake : IUserRepository
             output = new()
             {
                 Id = 1,
-                Login = userName,
+                UserName = userName,
                 Password = password,
                 Email = "karwenzman@gmx.net",
                 DisplayName = "karwenzman"
@@ -50,7 +50,7 @@ public class UserRepositoryFake : IUserRepository
             output = new()
             {
                 Id = 2,
-                Login = userName,
+                UserName = userName,
                 Password = password,
                 Email = "jenning.thorsten@gmx.net",
                 DisplayName = "Thorsten"
@@ -61,7 +61,7 @@ public class UserRepositoryFake : IUserRepository
             output = new()
             {
                 Id = 3,
-                Login = userName,
+                UserName = userName,
                 Password = password,
                 Email = "guest@gmail.com",
                 DisplayName = "guest"

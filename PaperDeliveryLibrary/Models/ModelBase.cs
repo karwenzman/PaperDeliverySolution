@@ -6,9 +6,12 @@
 public abstract class ModelBase
 {
     /// <summary>
-    /// This property contains the ID needed for database access.
-    /// <para></para>
-    /// This is the primary key in a database table.
+    /// This property contains the data record's primary key.
     /// </summary>
     public int Id { get; set; } = 0;
+
+    /// <summary>
+    /// This property contains the the data record's status.
+    /// </summary>
+    public bool IsActive { get; set; } = true;
 }
