@@ -1,7 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using System.Diagnostics;
-using System.Security.Claims;
 using System.Security.Principal;
 
 namespace PaperDeliveryWpf.ViewModels;
@@ -18,30 +16,8 @@ public abstract class ViewModelBase : ObservableValidator, IDisposable
         ArgumentNullException.ThrowIfNullOrWhiteSpace(userName, nameof(userName));
         ArgumentNullException.ThrowIfNull(authenticationType, nameof(authenticationType));
 
-        // TODO - Test all the posibilites how to create one.
-
         var identity = new GenericIdentity(userName, authenticationType);
-
         var principal = new GenericPrincipal(identity, userRoles);
-
-        // For testing.
-        Debug.WriteLine($"\nPrincipal");
-        Debug.WriteLine($"=========");
-        //Debug.WriteLine($"Identities:"); // of no interest / use
-        Debug.WriteLine($"Claims:");
-        foreach (var item in principal.Claims)
-        {
-            Debug.WriteLine($"{item}");
-        }
-        Debug.WriteLine($"Role 'admin': {principal.IsInRole("admin")}");
-        Debug.WriteLine($"Role 'user': {principal.IsInRole("user")}");
-        Debug.WriteLine($"Role 'guest': {principal.IsInRole("guest")}");
-
-        Debug.WriteLine($"\nIdentity");
-        Debug.WriteLine($"========");
-        Debug.WriteLine($"Name: {principal.Identity.Name}");
-        Debug.WriteLine($"Is authenticated: {principal.Identity.IsAuthenticated}");
-        Debug.WriteLine($"Authentication Type: {principal.Identity.AuthenticationType}");
 
         Thread.CurrentPrincipal = principal;
     }
@@ -62,7 +38,7 @@ public abstract class ViewModelBase : ObservableValidator, IDisposable
     /// <returns>null, if the user does have no roles, otherwise a list of roles</returns>
     internal static string[]? GetUserRoles(string? userRole)
     {
-        if ( string.IsNullOrWhiteSpace(userRole) )
+        if (string.IsNullOrWhiteSpace(userRole))
         {
             return null;
         }
@@ -100,11 +76,11 @@ public abstract class ViewModelBase : ObservableValidator, IDisposable
 
     internal static bool IsUserInRole(string? userRole)
     {
-        if (string.IsNullOrWhiteSpace(userRole) )
+        if (string.IsNullOrWhiteSpace(userRole))
         {
             throw new ArgumentException("Can not compare the user role with null or empty string!", nameof(userRole));
         }
-        
+
         var principal = Thread.CurrentPrincipal;
         return principal != null && principal.IsInRole(userRole);
     }
