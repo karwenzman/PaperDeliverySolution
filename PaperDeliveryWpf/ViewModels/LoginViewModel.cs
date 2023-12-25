@@ -8,7 +8,6 @@ using PaperDeliveryLibrary.Models;
 using PaperDeliveryWpf.Repositories;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
-using System.Security.Principal;
 
 namespace PaperDeliveryWpf.ViewModels;
 
@@ -70,9 +69,8 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
             _user = _userRepository.GetByUserName(UiUserName);
             ArgumentNullException.ThrowIfNull(_user);
 
-            Thread.CurrentPrincipal = new GenericPrincipal(
-                new GenericIdentity(_user.UserName, "Access database"),
-                [$"{_user.Role}"]);
+            var userRoles = GetUserRoles(_user.Role);
+            CreateThreadPrincipal(UiUserName, userRoles, "access database");
 
             WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(_user));
             WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl }));

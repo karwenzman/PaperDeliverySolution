@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using System.Diagnostics;
 using System.Security.Claims;
 using System.Security.Principal;
 
@@ -12,27 +13,105 @@ public abstract class ViewModelBase : ObservableValidator, IDisposable
         WeakReferenceMessenger.Default.UnregisterAll(this);
     }
 
-    internal static IPrincipal GetCurrentApplicationPrincipal()
+    internal static void CreateThreadPrincipal(string? userName, string[]? userRoles, string? authenticationType)
     {
-        ArgumentNullException.ThrowIfNull(Thread.CurrentPrincipal, nameof(Thread.CurrentPrincipal));
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(userName, nameof(userName));
+        ArgumentNullException.ThrowIfNull(authenticationType, nameof(authenticationType));
 
-        return Thread.CurrentPrincipal;
+        // TODO - Test all the posibilites how to create one.
+
+        var identity = new GenericIdentity(userName, authenticationType);
+
+        var principal = new GenericPrincipal(identity, userRoles);
+
+        // For testing.
+        Debug.WriteLine($"\nPrincipal");
+        Debug.WriteLine($"=========");
+        //Debug.WriteLine($"Identities:"); // of no interest / use
+        Debug.WriteLine($"Claims:");
+        foreach (var item in principal.Claims)
+        {
+            Debug.WriteLine($"{item}");
+        }
+        Debug.WriteLine($"Role 'admin': {principal.IsInRole("admin")}");
+        Debug.WriteLine($"Role 'user': {principal.IsInRole("user")}");
+        Debug.WriteLine($"Role 'guest': {principal.IsInRole("guest")}");
+
+        Debug.WriteLine($"\nIdentity");
+        Debug.WriteLine($"========");
+        Debug.WriteLine($"Name: {principal.Identity.Name}");
+        Debug.WriteLine($"Is authenticated: {principal.Identity.IsAuthenticated}");
+        Debug.WriteLine($"Authentication Type: {principal.Identity.AuthenticationType}");
+
+        Thread.CurrentPrincipal = principal;
     }
 
-    internal static IIdentity GetCurrentApplicationIdentity()
+    /// <summary>
+    /// This method is generating a <see cref="string[]"/> with the user's roles.
+    /// <para></para>
+    /// The reason for this detour is that the database just stores one role.
+    /// But as example the 'admin' has also the role of a 'user'.
+    /// <para></para>
+    /// Currently these roles are supported:
+    /// <br></br>- null => null
+    /// <br></br>- guest => guest
+    /// <br></br>- user => guest, user
+    /// <br></br>- admin => guest, user, admin
+    /// </summary>
+    /// <param name="userRole">The role stored in the database.</param>
+    /// <returns>null, if the user does have no roles, otherwise a list of roles</returns>
+    internal static string[]? GetUserRoles(string? userRole)
     {
-        ArgumentNullException.ThrowIfNull(Thread.CurrentPrincipal.Identity, nameof(Thread.CurrentPrincipal.Identity));
-
-        return Thread.CurrentPrincipal.Identity;
+        if ( string.IsNullOrWhiteSpace(userRole) )
+        {
+            return null;
+        }
+        else if (userRole == "guest")
+        {
+            return ["guest"];
+        }
+        else if (userRole == "user")
+        {
+            return ["guest", "user"];
+        }
+        else if (userRole == "admin")
+        {
+            return ["guest", "user", "admin"];
+        }
+        else
+        {
+            throw new ArgumentException("Unexpected role stored in database!", nameof(userRole));
+        }
     }
 
-    internal static ClaimsPrincipal? GetCurrentOsPrincipal()
+    internal static string? GetUserAuthenticationType()
     {
-        return WindowsPrincipal.Current;
+        var principal = Thread.CurrentPrincipal;
+        var identity = principal?.Identity;
+        return identity?.AuthenticationType;
     }
 
-    internal static WindowsIdentity GetCurrentOsIdentity()
+    internal static string? GetUserName()
     {
-        return WindowsIdentity.GetCurrent();
+        var principal = Thread.CurrentPrincipal;
+        var identity = principal?.Identity;
+        return identity?.Name;
+    }
+
+    internal static bool IsUserInRole(string? userRole)
+    {
+        if (string.IsNullOrWhiteSpace(userRole) )
+        {
+            throw new ArgumentException("Can not compare the user role with null or empty string!", nameof(userRole));
+        }
+        
+        var principal = Thread.CurrentPrincipal;
+        return principal != null && principal.IsInRole(userRole);
+    }
+
+    internal static bool IsUserAuthenticated()
+    {
+        var principal = Thread.CurrentPrincipal;
+        return principal != null && principal.Identity!.IsAuthenticated;
     }
 }

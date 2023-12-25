@@ -30,6 +30,8 @@
             <TextBox Text="{Binding PrincipalIsAdmin}" />
             <Label Content="Is in role 'user'" />
             <TextBox Text="{Binding PrincipalIsUser}" />
+            <Label Content="Is in role 'guest'" />
+            <TextBox Text="{Binding PrincipalIsGuest}" />        
         </StackPanel>
         
     </DockPanel>

@@ -44,22 +44,6 @@ namespace PaperDeliveryWpf.Repositories
         /// <returns>null, if no valid user is found</returns>
         UserModel? GetByUserName(string? userName);
 
-        /// <summary>
-        /// This method is generating a <see cref="List{T}"/> with the user's roles.
-        /// <para></para>
-        /// The reason for this detour is that the database just stores one role.
-        /// But as example the 'admin' has also the role of a 'user'.
-        /// <para></para>
-        /// Currently these roles are supported:
-        /// <br></br>- null => null
-        /// <br></br>- guest => guest
-        /// <br></br>- user => guest, user
-        /// <br></br>- admin => guest, user, admin
-        /// </summary>
-        /// <param name="userRole">The role stored in the database.</param>
-        /// <returns>null, if the user does have no roles, otherwise a list of roles</returns>
-        string[]? GetUserRoles(string? userRole);
-
         void Add(UserModel user);
         void Update(UserModel user);
         void Delete(int userId);
