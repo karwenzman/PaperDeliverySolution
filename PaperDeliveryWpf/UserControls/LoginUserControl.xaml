@@ -52,17 +52,10 @@
                          MinWidth="200"
                          Text="{Binding UiPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />-->
             </Grid>
+            
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Login" Command="{Binding LoginButtonCommand}">
-                    <Button.Resources>
-                        <Style TargetType="Border" BasedOn="{StaticResource buttonWithRoundCorners}" />
-                    </Button.Resources>
-                </Button>
-                <Button Content="Cancel" Command="{Binding CancelButtonCommand}">
-                    <Button.Resources>
-                        <Style TargetType="Border" BasedOn="{StaticResource buttonWithRoundCorners}" />
-                    </Button.Resources>
-                </Button>
+                <Button Content="Login" Command="{Binding LoginButtonCommand}" />
+                <Button Content="Cancel" Command="{Binding CancelButtonCommand}" />
             </StackPanel>
         </StackPanel>
         
