@@ -7,7 +7,7 @@ namespace PaperDeliveryLibrary.Messages;
 /// </summary>
 public class ShellMessage
 {
-    public ActivateVisibility SetToActive { get; set; } = ActivateVisibility.None;
+    public ActivateVisibility SetToActive { get; set; } = ActivateVisibility.ErrorUserControl;
     public bool DisplayLoggedOut { get; set; } = false;
     public bool DisplayLoggedIn { get; set; } = false;
     public bool DisplayLogin { get; set; } = false;

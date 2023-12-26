@@ -23,6 +23,16 @@ public abstract class ViewModelBase : ObservableValidator, IDisposable
     }
 
     /// <summary>
+    /// This method is setting the <see cref="Thread.CurrentPrincipal"/> to null.
+    /// <para></para>
+    /// 
+    /// </summary>
+    internal static void DisposeThreadPrincipal()
+    {
+        Thread.CurrentPrincipal = null;
+    }
+
+    /// <summary>
     /// This method is generating a <see cref="string[]"/> with the user's roles.
     /// <para></para>
     /// The reason for this detour is that the database just stores one role.

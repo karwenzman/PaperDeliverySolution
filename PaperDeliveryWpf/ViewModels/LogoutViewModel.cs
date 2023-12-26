@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PaperDeliveryLibrary.Enums;
 using PaperDeliveryLibrary.Messages;
-using PaperDeliveryLibrary.Models;
 
 namespace PaperDeliveryWpf.ViewModels;
 
@@ -28,7 +27,8 @@ public partial class LogoutViewModel : ViewModelBase, ILogoutViewModel
     {
         _logger.LogInformation("** User {user} has logged out.", _shellViewModel.CurrentUser!.UserName);
 
-        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(new UserModel()));
+        DisposeThreadPrincipal();
+
         WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.StartUserControl }));
     }
 

@@ -13,7 +13,7 @@ namespace PaperDeliveryWpf.ViewModels;
 
 public partial class LoginViewModel : ViewModelBase, ILoginViewModel
 {
-    private UserModel? _user = new();
+    private UserModel? _currentUser = new();
 
     private string _uiUserName = string.Empty;
     private string _uiPassword = string.Empty;
@@ -54,8 +54,6 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
         _userRepository = userRepository;
 
         _logger.LogInformation("* Loading {class}", nameof(LoginViewModel));
-
-        // TODO - How to close this UserControl?
     }
 
     #region ***** RelayCommand *****
@@ -66,21 +64,17 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
 
         if (validUser)
         {
-            _user = _userRepository.GetByUserName(UiUserName);
-            ArgumentNullException.ThrowIfNull(_user);
+            _currentUser = _userRepository.GetByUserName(UiUserName);
+            ArgumentNullException.ThrowIfNull(_currentUser);
 
-            var userRoles = GetUserRoles(_user.Role);
-            CreateThreadPrincipal(UiUserName, userRoles, "access database");
+            CreateThreadPrincipal(_currentUser.UserName, GetUserRoles(_currentUser.Role), "access database");
 
-            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(_user));
             WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl }));
-            _logger.LogInformation("** User {user} has logged in.", _user.UserName);
+            _logger.LogInformation("** User {user} has logged in.", _currentUser.UserName);
         }
         else
         {
-            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(new UserModel()));
-            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.None }));
-            _logger.LogInformation("** User authentication failed on account {user}.", UiUserName);
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.ErrorUserControl }));
         }
     }
     public bool CanLoginButton()
@@ -107,7 +101,6 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     [RelayCommand]
     public void CancelButton()
     {
-        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<UserModel>(new UserModel()));
         WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.StartUserControl }));
     }
     #endregion ***** End Of RelayCommand *****

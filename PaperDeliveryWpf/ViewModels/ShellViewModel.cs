@@ -9,6 +9,7 @@ using PaperDeliveryLibrary.Enums;
 using PaperDeliveryLibrary.Messages;
 using PaperDeliveryLibrary.Models;
 using PaperDeliveryLibrary.ProjectOptions;
+using PaperDeliveryWpf.Repositories;
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
@@ -16,12 +17,12 @@ using System.Windows.Input;
 
 namespace PaperDeliveryWpf.ViewModels;
 
-public partial class ShellViewModel : ViewModelBase, IShellViewModel,
-    IRecipient<ValueChangedMessage<ShellMessage>>,
-    IRecipient<ValueChangedMessage<UserModel>>
+public partial class ShellViewModel : ViewModelBase,
+    IShellViewModel,
+    IRecipient<ValueChangedMessage<ShellMessage>>
 {
     [ObservableProperty]
-    private object? _currentView;
+    private object? _currentView = new();
 
     [ObservableProperty]
     private UserModel? _currentUser = new();
@@ -44,22 +45,26 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
     [ObservableProperty]
     private bool _isActiveUserMenuItem = true;
 
+    [ObservableProperty]
+    private bool _isActiveAdminMenuItem = true;
+
     private readonly ILogger<ShellViewModel> _logger;
     private readonly IOptions<ApplicationOptions> _options;
+    private readonly IUserRepository _userRepository;
 
-    public ShellViewModel(ILogger<ShellViewModel> logger, IOptions<ApplicationOptions> options)
+    public ShellViewModel(ILogger<ShellViewModel> logger,
+        IOptions<ApplicationOptions> options,
+        IUserRepository userRepository)
     {
         _logger = logger;
+        _options = options;
+        _userRepository = userRepository;
+
         _logger.LogInformation("* Loading {class}", nameof(ShellViewModel));
 
-        _options = options;
         ApplicationName = _options.Value.ApplicationName;
         ApplicationHomeDirectory = _options.Value.ApplicationHomeDirectory;
         ApplicationVersion = GetApplicationVersion();
-
-        // TODO - Pro and cons of these calls?
-        //CurrentView = _serviceProvider.GetRequiredService<IStartViewModel>();
-        //CurrentView = App.AppHost!.Services.GetRequiredService<IStartViewModel>();
 
         ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.LoginUserControl });
 
@@ -113,44 +118,36 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
 
     private void ManageUserControls(ShellMessage message)
     {
+        IsActiveLoginMenuItem = message.SetToActive == ActivateVisibility.StartUserControl || message.SetToActive == ActivateVisibility.ErrorUserControl;
+        IsActiveLogoutMenuItem = IsUserAuthenticated();
+        IsActiveUserMenuItem = IsUserAuthenticated() && IsUserInRole("user");
+        IsActiveAdminMenuItem = IsUserAuthenticated() && IsUserInRole("admin");
+
         switch (message.SetToActive)
         {
-            case ActivateVisibility.None:
-                IsActiveLoginMenuItem = true;
-                IsActiveLogoutMenuItem = false;
-                IsActiveUserMenuItem = false;
-                _logger.LogCritical("ActivateVisibility was set to <None> in {class}. The UserAccount is cleared.", nameof(ShellViewModel));
+            case ActivateVisibility.ErrorUserControl:
+                CurrentUser = new();
                 CurrentView = App.AppHost!.Services.GetRequiredService<IErrorViewModel>();
                 break;
             case ActivateVisibility.LoginUserControl:
-                IsActiveLoginMenuItem = false;
-                IsActiveLogoutMenuItem = false;
-                IsActiveUserMenuItem = false;
+                CurrentUser = new();
                 CurrentView = App.AppHost!.Services.GetRequiredService<ILoginViewModel>();
                 break;
             case ActivateVisibility.LogoutUserControl:
-                IsActiveLoginMenuItem = false;
-                IsActiveLogoutMenuItem = false;
-                IsActiveUserMenuItem = false;
                 CurrentView = App.AppHost!.Services.GetRequiredService<ILogoutViewModel>();
                 break;
             case ActivateVisibility.HomeUserControl:
-                IsActiveLoginMenuItem = false;
-                IsActiveLogoutMenuItem = true;
-                IsActiveUserMenuItem = true;
+                CurrentUser = _userRepository.GetByUserName(GetUserName());
                 CurrentView = App.AppHost!.Services.GetRequiredService<IHomeViewModel>();
                 break;
             case ActivateVisibility.StartUserControl:
-                IsActiveLoginMenuItem = true;
-                IsActiveLogoutMenuItem = false;
-                IsActiveUserMenuItem = false;
+                CurrentUser = new();
                 CurrentView = App.AppHost!.Services.GetRequiredService<IStartViewModel>();
                 break;
         }
     }
 
-
-    private string GetApplicationVersion()
+    private static string GetApplicationVersion()
     {
         // TODO - Work on Deployment
         //if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
@@ -165,13 +162,12 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
         return $"{version!.Major}.{version!.Minor}.{version!.Build}.{version!.Revision}";
     }
 
+    /// <summary>
+    /// This method is listening to the <see cref="WeakReferenceMessenger"/>.
+    /// </summary>
+    /// <param name="message">This parameter contains the information, which view is the <see cref="CurrentView"/>.</param>
     public void Receive(ValueChangedMessage<ShellMessage> message)
     {
         ManageUserControls(message.Value);
-    }
-
-    public void Receive(ValueChangedMessage<UserModel> message)
-    {
-        CurrentUser = message.Value;
     }
 }

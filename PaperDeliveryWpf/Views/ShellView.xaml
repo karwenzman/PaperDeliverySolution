@@ -110,7 +110,7 @@
                       Visibility="{Binding IsActiveLogoutMenuItem, Converter={StaticResource boolToVisibility}}">
                 </MenuItem>
                 <MenuItem Header="Admin" Background="Black" Foreground="White"
-                      Visibility="{Binding IsActiveLogoutMenuItem, Converter={StaticResource boolToVisibility}}">
+                      Visibility="{Binding IsActiveAdminMenuItem, Converter={StaticResource boolToVisibility}}">
                     <MenuItem Header="Account Manager"></MenuItem>
                     <MenuItem Header="Do something"></MenuItem>                
                 </MenuItem>

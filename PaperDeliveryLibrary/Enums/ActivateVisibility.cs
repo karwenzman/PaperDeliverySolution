@@ -5,7 +5,7 @@
 /// </summary>
 public enum ActivateVisibility
 {
-    None,
+    ErrorUserControl,
     LoginUserControl,
     LogoutUserControl,
     HomeUserControl,
