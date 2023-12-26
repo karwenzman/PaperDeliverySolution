@@ -10,6 +10,7 @@
                 <ResourceDictionary Source="Resources/ShellHeaderStyle.xaml" />
                 <ResourceDictionary Source="Resources/ShellTitleStyle.xaml" />
                 <ResourceDictionary Source="Resources/TextBoxStyle.xaml" />
+                <ResourceDictionary Source="Resources/PasswordBoxStyle.xaml" />
                 <ResourceDictionary Source="Resources/DataTemplate.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
