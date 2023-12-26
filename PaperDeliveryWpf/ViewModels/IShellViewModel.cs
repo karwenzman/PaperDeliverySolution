@@ -8,7 +8,7 @@ public interface IShellViewModel
 {
     CommandBinding StopCommand { get; set; }
 
-    UserModel UserAccount { get; set; }
+    UserModel? CurrentUser { get; set; }
 
     string ApplicationHomeDirectory { get; set; }
 

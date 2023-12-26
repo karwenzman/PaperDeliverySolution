@@ -7,18 +7,16 @@ namespace PaperDeliveryWpf.Views;
 
 public partial class ShellView : Window
 {
-    private readonly ILogger<ShellView> _logger;
-    private readonly IServiceProvider _serviceProvider;
-
     private readonly IShellViewModel _viewModel;
 
-    public ShellView(ILogger<ShellView> logger, IServiceProvider serviceProvider)
+    private readonly ILogger<ShellView> _logger;
+
+    public ShellView(ILogger<ShellView> logger)
     {
         _logger = logger;
         _logger.LogInformation("* Loading {class}", nameof(ShellView));
 
-        _serviceProvider = serviceProvider;
-        _viewModel = serviceProvider.GetRequiredService<IShellViewModel>();
+        _viewModel = App.AppHost!.Services.GetRequiredService<IShellViewModel>();
 
         DataContext = _viewModel;
 

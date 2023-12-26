@@ -24,7 +24,7 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
     private object? _currentView;
 
     [ObservableProperty]
-    private UserModel _userAccount = new();
+    private UserModel? _currentUser = new();
 
     [ObservableProperty]
     private string _applicationHomeDirectory = string.Empty;
@@ -109,13 +109,6 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
     {
         ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.LogoutUserControl });
     }
-
-    [RelayCommand]
-    public void UserMenuItem()
-    {
-
-    }
-
     #endregion ***** End OF RelayCommand *****
 
     private void ManageUserControls(ShellMessage message)
@@ -126,7 +119,6 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
                 IsActiveLoginMenuItem = true;
                 IsActiveLogoutMenuItem = false;
                 IsActiveUserMenuItem = false;
-                //UserAccount = new();
                 _logger.LogCritical("ActivateVisibility was set to <None> in {class}. The UserAccount is cleared.", nameof(ShellViewModel));
                 CurrentView = App.AppHost!.Services.GetRequiredService<IErrorViewModel>();
                 break;
@@ -180,6 +172,6 @@ public partial class ShellViewModel : ViewModelBase, IShellViewModel,
 
     public void Receive(ValueChangedMessage<UserModel> message)
     {
-        UserAccount = message.Value;
+        CurrentUser = message.Value;
     }
 }
