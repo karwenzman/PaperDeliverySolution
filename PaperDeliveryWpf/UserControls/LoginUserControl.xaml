@@ -13,10 +13,10 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVisibility" />
     </UserControl.Resources>
-    
+
     <DockPanel>
         <!-- Header -->
-        <Label DockPanel.Dock="Top" Content="Login Page" HorizontalAlignment="Center" />
+        <Label DockPanel.Dock="Top" Content="Login Page" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Margin="20" />
 
         <!-- Body -->
         <StackPanel DockPanel.Dock="Top">
@@ -53,8 +53,16 @@
                          Text="{Binding UiPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />-->
             </Grid>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Login" Command="{Binding LoginButtonCommand}" />
-                <Button Content="Cancel" Command="{Binding CancelButtonCommand}"/>
+                <Button Content="Login" Command="{Binding LoginButtonCommand}">
+                    <Button.Resources>
+                        <Style TargetType="Border" BasedOn="{StaticResource buttonWithRoundCorners}" />
+                    </Button.Resources>
+                </Button>
+                <Button Content="Cancel" Command="{Binding CancelButtonCommand}">
+                    <Button.Resources>
+                        <Style TargetType="Border" BasedOn="{StaticResource buttonWithRoundCorners}" />
+                    </Button.Resources>
+                </Button>
             </StackPanel>
         </StackPanel>
         
