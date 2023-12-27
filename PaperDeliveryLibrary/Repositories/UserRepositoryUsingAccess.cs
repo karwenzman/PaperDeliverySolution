@@ -62,10 +62,10 @@ public class UserRepositoryUsingAccess : IUserRepository
                 userModel.UserName = (string)reader["Login"];
                 userModel.Password = (string)reader["Password"];
                 userModel.DisplayName = (string)reader["DisplayName"];
+                userModel.Email = (string)reader["Email"];
                 userModel.IsActive = (bool)reader["IsActive"];
 
                 // Values can be null.
-                userModel.Email = DBNull.Value.Equals(reader["Email"]) ? null : (string)reader["Email"];
                 userModel.Role = DBNull.Value.Equals(reader["Role"]) ? null : (string)reader["Role"];
             }
 
@@ -133,10 +133,10 @@ public class UserRepositoryUsingAccess : IUserRepository
                 output.Password = "**********"; // never publish the password; except when authenticating
                 //output.Password = (string)reader["Password"];
                 output.DisplayName = (string)reader["DisplayName"];
+                output.Email = (string)reader["Email"];
                 output.IsActive = (bool)reader["IsActive"];
 
                 // Values can be null.
-                output.Email = DBNull.Value.Equals(reader["Email"]) ? null : (string)reader["Email"];
                 output.Role = DBNull.Value.Equals(reader["Role"]) ? null : (string)reader["Role"];
             }
 
@@ -169,17 +169,17 @@ public class UserRepositoryUsingAccess : IUserRepository
     }
 
 
-    public void Add(UserModel user)
+    public bool Add(UserModel? user)
     {
         throw new NotImplementedException();
     }
 
-    public void Update(UserModel user)
+    public bool Update(UserModel? user)
     {
         throw new NotImplementedException();
     }
 
-    public void Delete(int id)
+    public bool Delete(UserModel? user)
     {
         throw new NotImplementedException();
     }
@@ -215,10 +215,10 @@ public class UserRepositoryUsingAccess : IUserRepository
                 output.UserName = (string)reader["Login"];
                 output.Password = (string)reader["Password"];
                 output.DisplayName = (string)reader["DisplayName"];
+                output.Email = (string)reader["Email"];
                 output.IsActive = (bool)reader["IsActive"];
 
                 // Values can be null.
-                output.Email = DBNull.Value.Equals(reader["Email"]) ? null : (string)reader["Email"];
                 output.Role = DBNull.Value.Equals(reader["Email"]) ? null : (string)reader["Role"];
             }
 

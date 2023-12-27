@@ -15,15 +15,6 @@ namespace PaperDeliveryWpf.Repositories
     public interface IUserRepository
     {
         /// <summary>
-        /// For Testing ONLY.
-        /// This method is using an Access database to validate the application's access.
-        /// </summary>
-        /// <param name="userName">The user's unique user name expression.</param>
-        /// <param name="password">The user's password.</param>
-        /// <returns>Null - if no valid user is found.</returns>
-        UserModel? Login(string userName, string password);
-
-        /// <summary>
         /// This method is validating the user's access to the application.
         /// </summary>
         /// <param name="networkCredential">This credential contains the user name and the user password.</param>
@@ -44,8 +35,25 @@ namespace PaperDeliveryWpf.Repositories
         /// <returns>null, if no valid user is found</returns>
         UserModel? GetByUserName(string? userName);
 
-        void Add(UserModel user);
-        void Update(UserModel user);
-        void Delete(int userId);
+        /// <summary>
+        /// This method is adding a new user account to the database.
+        /// </summary>
+        /// <param name="user">A new user account.</param>
+        /// <returns>true, if database access was successful</returns>
+        bool Add(UserModel? user);
+
+        /// <summary>
+        /// This method is updating a user account.
+        /// </summary>
+        /// <param name="user">A updated user account.</param>
+        /// <returns>true, if database access was successful</returns>
+        bool Update(UserModel? user);
+
+        /// <summary>
+        /// This method is setting a user account to 'InActive'.
+        /// </summary>
+        /// <param name="user">A new user account.</param>
+        /// <returns>true, if database access was successful</returns>
+        bool Delete(UserModel? user);
     }
 }

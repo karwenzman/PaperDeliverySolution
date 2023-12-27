@@ -13,6 +13,11 @@ public interface IUserModel
     int Id { get; set; }
 
     /// <summary>
+    /// This property contains the information, if the account is still valid.
+    /// </summary>
+    bool IsActive { get; set; }
+
+    /// <summary>
     /// This property contains the user's role for the application.
     /// </summary>
     string? Role { get; set; }
@@ -20,7 +25,7 @@ public interface IUserModel
     /// <summary>
     /// This property contains the user's email address.
     /// </summary>
-    string? Email { get; set; }
+    string Email { get; set; }
 
     /// <summary>
     /// This property contains the user's login expression.

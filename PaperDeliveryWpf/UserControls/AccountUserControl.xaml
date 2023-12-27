@@ -17,7 +17,8 @@
         <!-- Frame on left and right -->
         <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Width="24"></StackPanel>
         <StackPanel DockPanel.Dock="Right" Orientation="Vertical" Width="24">
-            <Button Content="X"/>
+            <Button Content="X"
+                    Command="{Binding CloseButtonCommand}"/>
         </StackPanel>
 
         <!-- Header -->
@@ -25,14 +26,18 @@
 
         <!-- Footer -->
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Reset Password" />
-            <Button Content="Change Password" />
-            <Button Content="Save Changes" />
-            <Button Content="Discard Changes" />
+            <Button Content="Reset Password" 
+                    Command="{Binding ResetPasswordButtonCommand}" />
+            <Button Content="Change Password" 
+                    Command="{Binding ChangePasswordButtonCommand}" />
+            <Button Content="Save Changes"
+                    Command="{Binding SaveChangesButtonCommand}" />
+            <Button Content="Discard Changes" 
+                    Command="{Binding DiscardChangesButtonCommand}" />
         </StackPanel>
         
         <!-- Body -->
-        <Grid DockPanel.Dock="Top" HorizontalAlignment="Center" FocusManager.FocusedElement="{Binding ElementName=txtUserName}">
+        <Grid DockPanel.Dock="Top" HorizontalAlignment="Center" FocusManager.FocusedElement="{Binding ElementName=txtDisplayName}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -52,43 +57,45 @@
             <!-- UserName components -->
             <Label Grid.Row="0" Grid.Column="1" Content="User Name" />
             <TextBox Grid.Row="1" Grid.Column="1"
-                     x:Name="txtUserName"
+                     IsEnabled="False"
                      MinWidth="200"
-                     Text="{Binding CurrentUser.UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                     Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
             <!-- DisplayName components -->
             <Label Grid.Row="2" Grid.Column="1" Content="Display Name" />
             <TextBox Grid.Row="3" Grid.Column="1"
                      x:Name="txtDisplayName"
+                     IsEnabled="True"
                      MinWidth="200"
-                     Text="{Binding CurrentUser.DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
-            <!-- Email components -->
+                     Text="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+            <!-- Email components; always focusable -->
             <Label Grid.Row="4" Grid.Column="1" Content="Email" />
             <TextBox Grid.Row="5" Grid.Column="1"
-                     x:Name="txtEmail"
+                     IsEnabled="True"
                      MinWidth="200"
-                     Text="{Binding CurrentUser.Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                     Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
             <!-- IsActive components -->
             <Label Grid.Row="6" Grid.Column="1" Content="IsActive" />
             <CheckBox Grid.Row="7" Grid.Column="1" 
-                      IsChecked="{Binding CurrentUser.IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            <!-- ID components; not focusable-->
+                      IsEnabled="False"
+                      IsChecked="{Binding IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <!-- ID components; never focusable -->
             <Label Grid.Row="0" Grid.Column="2" Content="User ID" />
             <TextBox Grid.Row="1" Grid.Column="2"
-                     Focusable="False"
+                     IsEnabled="False"
                      MinWidth="200"
-                     Text="{Binding CurrentUser.Id, Mode=OneTime}" />
-            <!-- LastModified components; not focusable -->
+                     Text="{Binding Id, Mode=OneTime}" />
+            <!-- LastModified components; never focusable -->
             <Label Grid.Row="2" Grid.Column="2" Content="Last Modified" />
             <TextBox Grid.Row="3" Grid.Column="2"
-                     Focusable="False"
+                     IsEnabled="False"
                      MinWidth="200"
-                     Text="{Binding CurrentUser.LastModified, Mode=OneTime}" />
-            <!-- LastLogin components; not focusable -->
+                     Text="{Binding LastModified, Mode=OneTime}" />
+            <!-- LastLogin components; never focusable -->
             <Label Grid.Row="4" Grid.Column="2" Content="Last Login" />
             <TextBox Grid.Row="5" Grid.Column="2"
-                     Focusable="False"
+                     IsEnabled="False"
                      MinWidth="200"
-                     Text="{Binding CurrentUser.LastLogin, Mode=OneTime}" />
+                     Text="{Binding LastLogin, Mode=OneTime}" />
 
         </Grid>
         
