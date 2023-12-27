@@ -5,6 +5,7 @@ using PaperDeliveryWpf.Repositories;
 using System.Data.OleDb;
 using System.Net;
 using System.Runtime.Versioning;
+using System.Xml;
 
 namespace PaperDeliveryLibrary.Repositories;
 
@@ -130,8 +131,8 @@ public class UserRepositoryUsingAccess : IUserRepository
                 // Values can not be null.
                 output.Id = (int)reader["ID"];
                 output.UserName = (string)reader["Login"];
-                output.Password = "**********"; // never publish the password; except when authenticating
-                //output.Password = (string)reader["Password"];
+                //output.Password = "**********"; // never publish the password; except when authenticating
+                output.Password = (string)reader["Password"];
                 output.DisplayName = (string)reader["DisplayName"];
                 output.Email = (string)reader["Email"];
                 output.IsActive = (bool)reader["IsActive"];
@@ -174,9 +175,57 @@ public class UserRepositoryUsingAccess : IUserRepository
         throw new NotImplementedException();
     }
 
-    public bool Update(UserModel? user)
+    public bool Update(UserModel? userAccount)
     {
-        throw new NotImplementedException();
+        bool output = false;
+        
+        // Validate parameters.
+        ArgumentNullException.ThrowIfNull(userAccount, nameof(userAccount));
+
+        // Setup connection strings.
+        string validatedPath = ValidatePath(_databaseOptions.Value);
+        string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={_databaseOptions.Value.DatabasePassword};";
+
+        string validatedTable = ValidateTable(_databaseOptions.Value, connectionString);
+        string queryString = $"UPDATE {validatedTable} SET " +
+            $"DisplayName = @DisplayName," +
+            $"Email = @Email " +
+            $"WHERE Login = '{userAccount.UserName}'";
+
+        //  Update database.
+        using var connection = new OleDbConnection(connectionString);
+        OleDbCommand command = new(queryString, connection);
+        command.Parameters.AddWithValue("@DisplayName", userAccount.DisplayName);
+        command.Parameters.AddWithValue("@Email", userAccount.Email);
+        try
+        {
+            connection.Open();
+            if (command.ExecuteNonQuery() == 0)
+            {
+                output = false;
+            }
+            else
+            {
+                output = true;
+            }
+            connection.Close();
+        }
+        catch (OleDbException ex)
+        {
+            if (ex.ErrorCode == -2147217843)
+            {
+                throw new UnauthorizedAccessException($"Invalid Password! No access to {validatedPath}! " +
+                    $"Error code: {ex.ErrorCode}");
+            }
+
+            throw new UnauthorizedAccessException($"No access to {validatedPath}! Error code: {ex.ErrorCode}");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Unexpected exception while accessing the database! Message: {ex.Message}");
+        }
+
+        return output;
     }
 
     public bool Delete(UserModel? user)

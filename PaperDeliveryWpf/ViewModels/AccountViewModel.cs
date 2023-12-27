@@ -1,14 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging.Messages;
 using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Extensions.Logging;
 using PaperDeliveryLibrary.Enums;
 using PaperDeliveryLibrary.Messages;
 using PaperDeliveryLibrary.Models;
 using PaperDeliveryWpf.Repositories;
-using System.Diagnostics;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Windows;
 
 namespace PaperDeliveryWpf.ViewModels;
 
@@ -161,9 +162,27 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
     {
         if (_currentUser != null)
         {
+            string message;
+            string caption = nameof(SaveChangesButton);
+
+            // Providing just the accessable members. Change might be necessary. 
             _currentUser.Email = Email;
             _currentUser.DisplayName = DisplayName;
-            _userRepository.Update(_currentUser);
+            if (_userRepository.Update(_currentUser))
+            {
+                message = "Update successful.\nThe changes have been saved to your account.";
+            }
+            else
+            {
+                message = "Update failed.\nThe changes have not been saved to your account.";
+            }
+
+            MessageBoxResult messageBoxResult = MessageBox.Show(
+                messageBoxText: message,
+                caption: caption,
+                MessageBoxButton.OK,
+                MessageBoxImage.Information,
+                MessageBoxResult.No);
         }
         else
         {
@@ -175,7 +194,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
     }
     public bool CanSaveChangesButton()
     {
-       return CurrentUserHasChanged && !HasErrors;
+        return CurrentUserHasChanged && !HasErrors;
     }
 
     [RelayCommand(CanExecute = nameof(CanDiscardChangesButton))]

@@ -124,7 +124,6 @@ public partial class ShellViewModel : ViewModelBase,
         }
         catch (Exception ex)
         {
-            // TODO - more differenciation in the message
             string message = ex.Message;
             string caption = nameof(AccountMenuItem);
 
@@ -169,7 +168,10 @@ public partial class ShellViewModel : ViewModelBase,
                 CurrentView = App.AppHost!.Services.GetRequiredService<IStartViewModel>();
                 break;
             case ActivateVisibility.AccountUserControl:
-                CurrentUser = _userRepository.GetByUserName(GetUserName());
+                IsActiveLoginMenuItem = false;
+                IsActiveLogoutMenuItem = false;
+                IsActiveUserMenuItem = false;
+                IsActiveAdminMenuItem = false;
                 CurrentView = App.AppHost!.Services.GetRequiredService<IAccountViewModel>();
                 break;
         }
