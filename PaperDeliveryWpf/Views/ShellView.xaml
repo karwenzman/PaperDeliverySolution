@@ -116,8 +116,7 @@
                 </MenuItem>
                 <MenuItem Header="{Binding CurrentUser.DisplayName}" Background="Black" Foreground="White"
                       Visibility="{Binding IsActiveUserMenuItem, Converter={StaticResource boolToVisibility}}">
-                    <MenuItem Header="User Setting"></MenuItem>
-                    <MenuItem Header="User Account"></MenuItem>
+                    <MenuItem Header="User Account" Command="{Binding AccountMenuItemCommand}"></MenuItem>
                 </MenuItem>
             </Menu>
         </DockPanel>

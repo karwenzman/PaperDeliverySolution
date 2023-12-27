@@ -38,4 +38,14 @@ public interface IUserModel
     /// This property contains the user's password.
     /// </summary>
     string Password { get; set; }
+
+    /// <summary>
+    ///  This property contains the user's last login to the application.
+    /// </summary>
+    string LastLogin { get; set; }
+
+    /// <summary>
+    /// This property contains the user's last modification of its account.
+    /// </summary>
+    string LastModified { get; set; }
 }

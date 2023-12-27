@@ -114,6 +114,30 @@ public partial class ShellViewModel : ViewModelBase,
     {
         ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.LogoutUserControl });
     }
+
+    [RelayCommand]
+    public void AccountMenuItem()
+    {
+        try
+        {
+            ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.AccountUserControl });
+        }
+        catch (Exception ex)
+        {
+            // TODO - more differenciation in the message
+            string message = ex.Message;
+            string caption = nameof(AccountMenuItem);
+
+            MessageBoxResult messageBoxResult = MessageBox.Show(
+                messageBoxText: message,
+                caption: caption,
+                MessageBoxButton.OK,
+                MessageBoxImage.Error,
+                MessageBoxResult.No);
+
+            ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl });
+        }
+    }
     #endregion ***** End OF RelayCommand *****
 
     private void ManageUserControls(ShellMessage message)
@@ -143,6 +167,10 @@ public partial class ShellViewModel : ViewModelBase,
             case ActivateVisibility.StartUserControl:
                 CurrentUser = new();
                 CurrentView = App.AppHost!.Services.GetRequiredService<IStartViewModel>();
+                break;
+            case ActivateVisibility.AccountUserControl:
+                CurrentUser = _userRepository.GetByUserName(GetUserName());
+                CurrentView = App.AppHost!.Services.GetRequiredService<IAccountViewModel>();
                 break;
         }
     }

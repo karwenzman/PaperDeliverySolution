@@ -18,5 +18,7 @@
     <DataTemplate DataType="{x:Type viewmodels:LogoutViewModel}">
         <usercontrols:LogoutUserControl />
     </DataTemplate>
-    
+    <DataTemplate DataType="{x:Type viewmodels:AccountViewModel}">
+        <usercontrols:AccountUserControl />
+    </DataTemplate>
 </ResourceDictionary>

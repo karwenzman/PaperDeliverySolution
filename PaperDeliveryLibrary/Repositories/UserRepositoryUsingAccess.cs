@@ -103,7 +103,7 @@ public class UserRepositoryUsingAccess : IUserRepository
 
     public UserModel? GetByUserName(string? userName)
     {
-        UserModel? output = null;
+        UserModel? output = new();
 
         // Validate parameters.
         ArgumentNullException.ThrowIfNullOrWhiteSpace(userName, nameof(userName));
@@ -127,7 +127,6 @@ public class UserRepositoryUsingAccess : IUserRepository
 
             while (reader.Read())
             {
-                output = new();
                 // Values can not be null.
                 output.Id = (int)reader["ID"];
                 output.UserName = (string)reader["Login"];
@@ -157,6 +156,12 @@ public class UserRepositoryUsingAccess : IUserRepository
         catch (Exception ex)
         {
             throw new Exception($"Unexpected exception while accessing the database! Message: {ex.Message}");
+        }
+
+        // Validate user account.
+        if (!output.IsActive)
+        {
+            return output = null;
         }
 
         // Return UserModel.

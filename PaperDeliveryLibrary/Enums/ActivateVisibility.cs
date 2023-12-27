@@ -10,4 +10,5 @@ public enum ActivateVisibility
     LogoutUserControl,
     HomeUserControl,
     StartUserControl,
+    AccountUserControl,
 }

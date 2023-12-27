@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PaperDeliveryLibrary.Models;
 using PaperDeliveryLibrary.ProjectOptions;
 using PaperDeliveryLibrary.Repositories;
 using PaperDeliveryWpf.Repositories;
@@ -61,6 +60,7 @@ namespace PaperDeliveryWpf
                     services.AddTransient<IHomeViewModel, HomeViewModel>();
                     services.AddTransient<IStartViewModel, StartViewModel>();
                     services.AddTransient<IErrorViewModel, ErrorViewModel>();
+                    services.AddTransient<IAccountViewModel, AccountViewModel>();
                 })
                 .UseSerilog()
                 .Build();
