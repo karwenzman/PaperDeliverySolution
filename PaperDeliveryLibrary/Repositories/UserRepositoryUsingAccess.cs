@@ -5,7 +5,6 @@ using PaperDeliveryWpf.Repositories;
 using System.Data.OleDb;
 using System.Net;
 using System.Runtime.Versioning;
-using System.Xml;
 
 namespace PaperDeliveryLibrary.Repositories;
 
@@ -32,7 +31,7 @@ public class UserRepositoryUsingAccess : IUserRepository
 
     public bool Authenticate(NetworkCredential networkCredential)
     {
-        bool output = false;
+        bool output;
 
         // Validate parameters.
         ArgumentNullException.ThrowIfNullOrWhiteSpace(networkCredential.UserName, nameof(networkCredential.UserName));
@@ -44,7 +43,7 @@ public class UserRepositoryUsingAccess : IUserRepository
         string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={_databaseOptions.Value.DatabasePassword};";
 
         string validatedTable = ValidateTable(_databaseOptions.Value, connectionString);
-        string queryString = $"SELECT * FROM {validatedTable} WHERE Login = '{networkCredential.UserName}'";
+        string queryString = $"SELECT * FROM {validatedTable} WHERE UserName = '{networkCredential.UserName}'";
 
         // Read from database.
         UserModel userModel = new();
@@ -53,21 +52,13 @@ public class UserRepositoryUsingAccess : IUserRepository
         try
         {
             connection.Open();
-
             using OleDbDataReader reader = command.ExecuteReader();
 
             while (reader.Read())
             {
                 // Values can not be null.
-                userModel.Id = (int)reader["ID"];
-                userModel.UserName = (string)reader["Login"];
                 userModel.Password = (string)reader["Password"];
-                userModel.DisplayName = (string)reader["DisplayName"];
-                userModel.Email = (string)reader["Email"];
                 userModel.IsActive = (bool)reader["IsActive"];
-
-                // Values can be null.
-                userModel.Role = DBNull.Value.Equals(reader["Role"]) ? null : (string)reader["Role"];
             }
 
             reader.Close();
@@ -93,6 +84,10 @@ public class UserRepositoryUsingAccess : IUserRepository
         {
             output = true;
         }
+        else
+        {
+            output = false;
+        }
 
         return output;
     }
@@ -115,7 +110,7 @@ public class UserRepositoryUsingAccess : IUserRepository
         string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={_databaseOptions.Value.DatabasePassword};";
 
         string validatedTable = ValidateTable(_databaseOptions.Value, connectionString);
-        string queryString = $"SELECT * FROM {validatedTable} WHERE Login = '{userName}'";
+        string queryString = $"SELECT * FROM {validatedTable} WHERE UserName = '{userName}'";
 
         // Read from database.
         using var connection = new OleDbConnection(connectionString);
@@ -123,22 +118,23 @@ public class UserRepositoryUsingAccess : IUserRepository
         try
         {
             connection.Open();
-
             using OleDbDataReader reader = command.ExecuteReader();
 
             while (reader.Read())
             {
                 // Values can not be null.
                 output.Id = (int)reader["ID"];
-                output.UserName = (string)reader["Login"];
-                //output.Password = "**********"; // never publish the password; except when authenticating
-                output.Password = (string)reader["Password"];
+                output.UserName = (string)reader["UserName"];
+                output.Password = "**********"; // never publish the password; except when authenticating
+                //output.Password = (string)reader["Password"];
                 output.DisplayName = (string)reader["DisplayName"];
-                output.Email = (string)reader["Email"];
+                output.Role = (string)reader["Role"];
                 output.IsActive = (bool)reader["IsActive"];
 
                 // Values can be null.
-                output.Role = DBNull.Value.Equals(reader["Role"]) ? null : (string)reader["Role"];
+                output.Email = DBNull.Value.Equals(reader["Email"]) ? null : (string)reader["Email"];
+                output.LastLogin = DBNull.Value.Equals(reader["LastLogin"]) ? null : (string)reader["LastLogin"];
+                output.LastModified = DBNull.Value.Equals(reader["LastModified"]) ? null : (string)reader["LastModified"];
             }
 
             reader.Close();
@@ -169,16 +165,15 @@ public class UserRepositoryUsingAccess : IUserRepository
         return output;
     }
 
-
     public bool Add(UserModel? user)
     {
         throw new NotImplementedException();
     }
 
-    public bool Update(UserModel? userAccount)
+    public bool UpdateAccount(UserModel? userAccount)
     {
-        bool output = false;
-        
+        bool output;
+
         // Validate parameters.
         ArgumentNullException.ThrowIfNull(userAccount, nameof(userAccount));
 
@@ -189,14 +184,20 @@ public class UserRepositoryUsingAccess : IUserRepository
         string validatedTable = ValidateTable(_databaseOptions.Value, connectionString);
         string queryString = $"UPDATE {validatedTable} SET " +
             $"DisplayName = @DisplayName," +
-            $"Email = @Email " +
-            $"WHERE Login = '{userAccount.UserName}'";
+            $"Role = @Role," +
+            $"Email = @Email," +
+            $"LastModified = @LastModified, " +
+            $"IsActive = @IsActive " +
+            $"WHERE UserName = '{userAccount.UserName}'";
 
         //  Update database.
         using var connection = new OleDbConnection(connectionString);
         OleDbCommand command = new(queryString, connection);
         command.Parameters.AddWithValue("@DisplayName", userAccount.DisplayName);
+        command.Parameters.AddWithValue("@Role", userAccount.Role);
         command.Parameters.AddWithValue("@Email", userAccount.Email);
+        command.Parameters.AddWithValue("@LastModified", DateTime.Now.ToString());
+        command.Parameters.AddWithValue("@IsActive", userAccount.IsActive);
         try
         {
             connection.Open();
@@ -228,50 +229,37 @@ public class UserRepositoryUsingAccess : IUserRepository
         return output;
     }
 
-    public bool Delete(UserModel? user)
+    public bool UpdateLastLogin(UserModel? userAccount)
     {
-        throw new NotImplementedException();
-    }
+        bool output;
 
-    public UserModel? Login(string login, string password)
-    {
         // Validate parameters.
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(login, nameof(login));
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(password, nameof(password));
-        ArgumentNullException.ThrowIfNull(_databaseOptions, nameof(DatabaseOptionsUsingAccess));
+        ArgumentNullException.ThrowIfNull(userAccount, nameof(userAccount));
 
         // Setup connection strings.
         string validatedPath = ValidatePath(_databaseOptions.Value);
         string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={_databaseOptions.Value.DatabasePassword};";
 
         string validatedTable = ValidateTable(_databaseOptions.Value, connectionString);
-        string queryString = $"SELECT * FROM {validatedTable} WHERE Login = '{login}'";
+        string queryString = $"UPDATE {validatedTable} SET " +
+            $"LastLogin = @LastLogin " +
+            $"WHERE UserName = '{userAccount.UserName}'";
 
-        // Read from database.
-        UserModel? output = new();
+        //  Update database.
         using var connection = new OleDbConnection(connectionString);
         OleDbCommand command = new(queryString, connection);
+        command.Parameters.AddWithValue("@LastLogin", DateTime.Now.ToString());
         try
         {
             connection.Open();
-
-            using OleDbDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
+            if (command.ExecuteNonQuery() == 0)
             {
-                // Values can not be null.
-                output.Id = (int)reader["ID"];
-                output.UserName = (string)reader["Login"];
-                output.Password = (string)reader["Password"];
-                output.DisplayName = (string)reader["DisplayName"];
-                output.Email = (string)reader["Email"];
-                output.IsActive = (bool)reader["IsActive"];
-
-                // Values can be null.
-                output.Role = DBNull.Value.Equals(reader["Email"]) ? null : (string)reader["Role"];
+                output = false;
             }
-
-            reader.Close();
+            else
+            {
+                output = true;
+            }
             connection.Close();
         }
         catch (OleDbException ex)
@@ -289,15 +277,84 @@ public class UserRepositoryUsingAccess : IUserRepository
             throw new Exception($"Unexpected exception while accessing the database! Message: {ex.Message}");
         }
 
-        // Validate password.
-        if (password != output.Password)
-        {
-            output = null;
-        }
-
-        // Return UserModel.
         return output;
     }
+
+    public bool UpdatePassword(UserModel? user)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool Delete(UserModel? user)
+    {
+        throw new NotImplementedException();
+    }
+
+    //public UserModel? Login(string userName, string password)
+    //{
+    //    // Validate parameters.
+    //    ArgumentNullException.ThrowIfNullOrWhiteSpace(userName, nameof(userName));
+    //    ArgumentNullException.ThrowIfNullOrWhiteSpace(password, nameof(password));
+    //    ArgumentNullException.ThrowIfNull(_databaseOptions, nameof(DatabaseOptionsUsingAccess));
+
+    //    // Setup connection strings.
+    //    string validatedPath = ValidatePath(_databaseOptions.Value);
+    //    string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={_databaseOptions.Value.DatabasePassword};";
+
+    //    string validatedTable = ValidateTable(_databaseOptions.Value, connectionString);
+    //    string queryString = $"SELECT * FROM {validatedTable} WHERE UserName = '{userName}'";
+
+    //    // Read from database.
+    //    UserModel? output = new();
+    //    using var connection = new OleDbConnection(connectionString);
+    //    OleDbCommand command = new(queryString, connection);
+    //    try
+    //    {
+    //        connection.Open();
+
+    //        using OleDbDataReader reader = command.ExecuteReader();
+
+    //        while (reader.Read())
+    //        {
+    //            // Values can not be null.
+    //            output.Id = (int)reader["ID"];
+    //            output.UserName = (string)reader["UserName"];
+    //            output.Password = (string)reader["Password"];
+    //            output.DisplayName = (string)reader["DisplayName"];
+    //            output.Email = (string)reader["Email"];
+    //            output.IsActive = (bool)reader["IsActive"];
+
+    //            // Values can be null.
+    //            output.Role = DBNull.Value.Equals(reader["Email"]) ? null : (string)reader["Role"];
+    //        }
+
+    //        reader.Close();
+    //        connection.Close();
+    //    }
+    //    catch (OleDbException ex)
+    //    {
+    //        if (ex.ErrorCode == -2147217843)
+    //        {
+    //            throw new UnauthorizedAccessException($"Invalid Password! No access to {validatedPath}! " +
+    //                $"Error code: {ex.ErrorCode}");
+    //        }
+
+    //        throw new UnauthorizedAccessException($"No access to {validatedPath}! Error code: {ex.ErrorCode}");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw new Exception($"Unexpected exception while accessing the database! Message: {ex.Message}");
+    //    }
+
+    //    // Validate password.
+    //    if (password != output.Password)
+    //    {
+    //        output = null;
+    //    }
+
+    //    // Return UserModel.
+    //    return output;
+    //}
 
     private static string ValidateTable(DatabaseOptionsUsingAccess databaseOptions, string connectionString)
     {
@@ -381,4 +438,6 @@ public class UserRepositoryUsingAccess : IUserRepository
 
         return output;
     }
+
+
 }

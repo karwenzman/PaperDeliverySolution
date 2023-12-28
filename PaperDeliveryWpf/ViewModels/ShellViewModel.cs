@@ -127,6 +127,7 @@ public partial class ShellViewModel : ViewModelBase,
             string message = ex.Message;
             string caption = nameof(AccountMenuItem);
 
+            // TODO - MessageBoxes should not be handled by the ViewModel.
             MessageBoxResult messageBoxResult = MessageBox.Show(
                 messageBoxText: message,
                 caption: caption,

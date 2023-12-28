@@ -83,19 +83,19 @@
             <TextBox Grid.Row="1" Grid.Column="2"
                      IsEnabled="False"
                      MinWidth="200"
-                     Text="{Binding Id, Mode=OneTime}" />
+                     Text="{Binding Id, Mode=TwoWay}" />
             <!-- LastModified components; never focusable -->
             <Label Grid.Row="2" Grid.Column="2" Content="Last Modified" />
             <TextBox Grid.Row="3" Grid.Column="2"
                      IsEnabled="False"
                      MinWidth="200"
-                     Text="{Binding LastModified, Mode=OneTime}" />
+                     Text="{Binding LastModified, Mode=TwoWay}" />
             <!-- LastLogin components; never focusable -->
             <Label Grid.Row="4" Grid.Column="2" Content="Last Login" />
             <TextBox Grid.Row="5" Grid.Column="2"
                      IsEnabled="False"
                      MinWidth="200"
-                     Text="{Binding LastLogin, Mode=OneTime}" />
+                     Text="{Binding LastLogin, Mode=TwoWay}" />
 
         </Grid>
         

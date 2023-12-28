@@ -7,7 +7,6 @@ using PaperDeliveryLibrary.Enums;
 using PaperDeliveryLibrary.Messages;
 using PaperDeliveryLibrary.Models;
 using PaperDeliveryWpf.Repositories;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Windows;
 
@@ -15,8 +14,8 @@ namespace PaperDeliveryWpf.ViewModels;
 
 public partial class AccountViewModel : ViewModelBase, IAccountViewModel
 {
-    private string _displayName;
-    private string _email;
+    private string? _displayName;
+    private string? _email;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveChangesButtonCommand))]
@@ -24,7 +23,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
     private bool _currentUserHasChanged;
 
     [Required(ErrorMessage = "Enter your display name!")]
-    public string DisplayName
+    public string? DisplayName
     {
         get => _displayName;
         set
@@ -47,7 +46,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
     }
 
     [Required(ErrorMessage = "Enter your email address!")]
-    public string Email
+    public string? Email
     {
         get => _email;
         set
@@ -79,18 +78,18 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
     private bool _isActive; // can only be modified by admin in accounts view
 
     [ObservableProperty]
-    private string _userName; // can not be modified by user
+    private string? _userName; // can not be modified by user
 
     [ObservableProperty]
-    private string _lastLogin; // can not be modified by user
+    private string? _lastLogin; // can not be modified by user
 
     [ObservableProperty]
-    private string _lastModified; // can not be modified by user
+    private string? _lastModified; // can not be modified by user
 
     [ObservableProperty]
     private int _id; // can not be modified by user
 
-    private readonly UserModel? _currentUser = new();
+    private UserModel? _currentUser = new();
 
     private readonly ILogger<AccountViewModel> _logger;
     private readonly IUserRepository _userRepository;
@@ -115,17 +114,9 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
 
         _logger.LogInformation("* Loading {class}", nameof(AccountViewModel));
 
-        CurrentUserHasChanged = false;
+        AssignUserAccountToLocalProperties();
 
-        _id = _currentUser.Id;
-        _isActive = _currentUser.IsActive;
-        _userName = _currentUser.UserName;
-        _displayName = _currentUser.DisplayName;
-        _role = _currentUser.Role;
-        _password = _currentUser.Password;
-        _email = _currentUser.Email;
-        _lastLogin = _currentUser.LastLogin;
-        _lastModified = _currentUser.LastModified;
+        CurrentUserHasChanged = false;
     }
 
     #region ***** RelayCommand *****
@@ -167,16 +158,19 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
 
             // Providing just the accessable members. Change might be necessary. 
             _currentUser.Email = Email;
-            _currentUser.DisplayName = DisplayName;
-            if (_userRepository.Update(_currentUser))
+            _currentUser.DisplayName = DisplayName!;
+            if (_userRepository.UpdateAccount(_currentUser))
             {
                 message = "Update successful.\nThe changes have been saved to your account.";
+                _currentUser = _userRepository.GetByUserName(GetUserName());
+                AssignUserAccountToLocalProperties();
             }
             else
             {
                 message = "Update failed.\nThe changes have not been saved to your account.";
             }
 
+            // TODO - MessageBoxes should not be handled by the ViewModel.
             MessageBoxResult messageBoxResult = MessageBox.Show(
                 messageBoxText: message,
                 caption: caption,
@@ -210,4 +204,22 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
     }
     #endregion ***** End OF RelayCommand *****
 
+    private void AssignUserAccountToLocalProperties()
+    {
+        if (_currentUser == null)
+        {
+            _logger.LogError("** No valid user account is loaded while accessing {class} by {name}!", nameof(AccountViewModel), GetUserName());
+            throw new ArgumentException($"No valid user account is loaded while accessing class {nameof(AccountViewModel)} by {GetUserName()}!");
+        }
+
+        Id = _currentUser.Id;
+        IsActive = _currentUser.IsActive;
+        UserName = _currentUser.UserName;
+        DisplayName = _currentUser.DisplayName;
+        Role = _currentUser.Role;
+        Password = _currentUser.Password;
+        Email = _currentUser.Email;
+        LastLogin = _currentUser.LastLogin;
+        LastModified = _currentUser.LastModified;
+    }
 }

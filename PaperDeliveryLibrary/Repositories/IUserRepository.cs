@@ -16,6 +16,10 @@ namespace PaperDeliveryWpf.Repositories
     {
         /// <summary>
         /// This method is validating the user's access to the application.
+        /// <para></para>
+        /// Two properties are checked for this validation:
+        /// <br></br>-Password
+        /// <br></br>-IsActive
         /// </summary>
         /// <param name="networkCredential">This credential contains the user name and the user password.</param>
         /// <returns>true, if the authentication was successful, otherwise false</returns>
@@ -44,13 +48,51 @@ namespace PaperDeliveryWpf.Repositories
 
         /// <summary>
         /// This method is updating a user account.
+        /// <para></para>
+        /// These properties are updated:
+        /// <br></br>-DisplayName
+        /// <br></br>-Role
+        /// <br></br>-Email
+        /// <br></br>-LastModified
+        /// <br></br>-IsActive
         /// </summary>
-        /// <param name="user">A updated user account.</param>
+        /// <param name="user">An updated user account.</param>
         /// <returns>true, if database access was successful</returns>
-        bool Update(UserModel? user);
+        bool UpdateAccount(UserModel? user);
 
         /// <summary>
-        /// This method is setting a user account to 'InActive'.
+        /// This method is updating a user's 'LastLogin' property, only>.
+        /// <para></para>
+        /// This is the only method that updates the user's 'LastLogin' property.
+        /// <para></para>
+        /// These properties are updated:
+        /// <br></br>-LastLogin
+        /// </summary>
+        /// <param name="user">An updated user account.</param>
+        /// <returns>true, if database access was successful</returns>
+        bool UpdateLastLogin(UserModel? user);
+
+        /// <summary>
+        /// This method is updating a user's 'Password' property, only>.
+        /// <para></para>
+        /// This is the only method that updates the user's 'Password' property.
+        /// <para></para>
+        /// These properties are updated:
+        /// <br></br>-Password
+        /// <br></br>-LastModified
+        /// </summary>
+        /// <param name="user">An updated user account.</param>
+        /// <returns>true, if database access was successful</returns>
+        bool UpdatePassword(UserModel? user);
+
+        /// <summary>
+        /// This method is setting a user account to 'IsActive'.
+        /// <para></para>
+        /// This is the only method that updates the user's 'IsActive' property.
+        /// <para></para>
+        /// These properties are updated:
+        /// <br></br>-IsActive
+        /// <br></br>-LastModified
         /// </summary>
         /// <param name="user">A new user account.</param>
         /// <returns>true, if database access was successful</returns>

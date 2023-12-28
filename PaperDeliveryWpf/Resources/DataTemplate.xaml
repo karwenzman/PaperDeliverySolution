@@ -21,4 +21,5 @@
     <DataTemplate DataType="{x:Type viewmodels:AccountViewModel}">
         <usercontrols:AccountUserControl />
     </DataTemplate>
+    
 </ResourceDictionary>

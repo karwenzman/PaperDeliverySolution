@@ -68,6 +68,7 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
             ArgumentNullException.ThrowIfNull(_currentUser);
 
             CreateThreadPrincipal(_currentUser.UserName, GetUserRoles(_currentUser.Role), "access database");
+            _userRepository.UpdateLastLogin(_currentUser);
 
             WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl }));
             _logger.LogInformation("** User {user} has logged in.", _currentUser.UserName);

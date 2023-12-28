@@ -35,7 +35,22 @@ public class UserRepositoryFake : IUserRepository
         throw new NotImplementedException();
     }
 
-    public bool Update(UserModel? user)
+    public bool UpdateAccount(UserModel? user)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool UpdateLastLogin(UserModel? user)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool UpdateLastModified(UserModel? user)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool UpdatePassword(UserModel? user)
     {
         throw new NotImplementedException();
     }

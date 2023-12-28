@@ -11,9 +11,4 @@
         <Setter Property="Margin" Value="5" />
     </Style>
 
-    <!-- not needed anymor; it is integrated into the button style, now -->        
-    <Style TargetType="Border" x:Key="buttonWithRoundCorners">
-        <Setter Property="CornerRadius" Value="4" />
-    </Style>
-    
 </ResourceDictionary>

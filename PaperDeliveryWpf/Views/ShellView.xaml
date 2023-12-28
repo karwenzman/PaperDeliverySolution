@@ -9,6 +9,7 @@
         Title="ShellView" Height="450" Width="800"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewmodels:ShellViewModel}">
+    
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVisibility" />
     </Window.Resources>
@@ -132,7 +133,7 @@
                 
                 <!-- *** The ShellViewModel is hosting the logic, which UserControl shall be loaded *** -->
                 <StackPanel Grid.Column="1">
-                    <ContentControl Content="{Binding CurrentView}" />
+                    <ContentControl Content="{Binding CurrentView,  ValidatesOnNotifyDataErrors=False}" />
                 </StackPanel>
             </Grid>
         </ScrollViewer>

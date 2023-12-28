@@ -6,24 +6,6 @@
         <Setter Property="Padding" Value="2 1" />
         <Setter Property="BorderBrush" Value="LightGray" />
         
-        <!-- Option, that can be deleted somewhen -->
-        <!--<Setter Property="Validation.ErrorTemplate">
-            <Setter.Value>
-                <ControlTemplate>
-                    <StackPanel>
-                        <AdornedElementPlaceholder />
-                        <ItemsControl Margin="0 5 0 0" FontSize="12" ItemsSource="{Binding}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Foreground="Red" Text="{Binding ErrorContent}" />
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>-->
-        
         <!-- Removes the red border around the TextBox, if validation found errors -->
         <Setter Property="Validation.ErrorTemplate">
             <Setter.Value>
