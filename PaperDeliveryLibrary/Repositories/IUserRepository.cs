@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using PaperDeliveryLibrary.Models;
 using PaperDeliveryLibrary.ProjectOptions;
+using System.Collections.ObjectModel;
 using System.Net;
 
 namespace PaperDeliveryWpf.Repositories
@@ -24,6 +25,12 @@ namespace PaperDeliveryWpf.Repositories
         /// <param name="networkCredential">This credential contains the user name and the user password.</param>
         /// <returns>true, if the authentication was successful, otherwise false</returns>
         bool Authenticate(NetworkCredential networkCredential);
+
+        /// <summary>
+        /// This method is accessing the database and returning all data records.
+        /// </summary>
+        /// <returns>a list of data records</returns>
+        ObservableCollection<UserModel> GetAllRecords();
 
         /// <summary>
         /// This method is accessing the database using the user's ID.

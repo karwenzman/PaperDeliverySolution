@@ -1,4 +1,5 @@
 ﻿using PaperDeliveryLibrary.Models;
+using System.Collections.ObjectModel;
 using System.Net;
 
 namespace PaperDeliveryWpf.Repositories;
@@ -16,6 +17,11 @@ public class UserRepositoryFake : IUserRepository
     }
 
     public bool Delete(UserModel? user)
+    {
+        throw new NotImplementedException();
+    }
+
+    public ObservableCollection<UserModel> GetAllRecords()
     {
         throw new NotImplementedException();
     }

@@ -71,6 +71,15 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
     private bool _currentUserHasChanged;
 
     [ObservableProperty]
+    private bool _isVisibleCloseAccountButton;
+
+    [ObservableProperty]
+    private bool _isVisibleAdminControl;
+
+    [ObservableProperty]
+    private bool _isEnabledAdminControl;
+
+    [ObservableProperty]
     private string? _password;
 
     [ObservableProperty]
@@ -100,12 +109,22 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
         _userRepository = userRepository;
         _currentUser = _userRepository.GetByUserName(GetUserName());
 
-        CheckUserRole("user");
-        CheckUserAccountAndAssignToLocalProperties();
+        if (IsUserInRole("user"))
+        {
+            CheckUserAccountAndAssignToLocalProperties();
 
-        CurrentUserHasChanged = false;
+            IsEnabledAdminControl = IsUserInRole("admin");
+            IsVisibleAdminControl = IsUserInRole("admin");
+            IsVisibleCloseAccountButton = true;
+            CurrentUserHasChanged = false;
 
-        _logger.LogInformation("* Loading {class}", nameof(AccountViewModel));
+            _logger.LogInformation("* Loading {class}", nameof(AccountViewModel));
+        }
+        else
+        {
+            _logger.LogError("** Access denied on page {class} by {name}!", nameof(AccountViewModel), GetUserName());
+            throw new ArgumentException($"Access denied on page {nameof(AccountViewModel)} by {GetUserName()}!");
+        }
     }
 
     #region ***** RelayCommand *****
@@ -192,15 +211,6 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
         return CurrentUserHasChanged;
     }
     #endregion ***** End OF RelayCommand *****
-
-    private void CheckUserRole(string userRole)
-    {
-        if (!IsUserInRole(userRole))
-        {
-            _logger.LogError("** Access denied on page {class} by {name}!", nameof(AccountViewModel), GetUserName());
-            throw new ArgumentException($"Access denied on page {nameof(AccountViewModel)} by {GetUserName()}!");
-        }
-    }
 
     private void CheckUserAccount()
     {

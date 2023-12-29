@@ -2,6 +2,7 @@
 using PaperDeliveryLibrary.Models;
 using PaperDeliveryLibrary.ProjectOptions;
 using PaperDeliveryWpf.Repositories;
+using System.Collections.ObjectModel;
 using System.Data.OleDb;
 using System.Net;
 using System.Runtime.Versioning;
@@ -88,6 +89,68 @@ public class UserRepositoryUsingAccess : IUserRepository
         {
             output = false;
         }
+
+        return output;
+    }
+
+    public ObservableCollection<UserModel> GetAllRecords()
+    {
+        ObservableCollection<UserModel> output = [];
+
+        // Setup connection strings.
+        string validatedPath = ValidatePath(_databaseOptions.Value);
+        string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={validatedPath};Jet OLEDB:Database Password={_databaseOptions.Value.DatabasePassword};";
+
+        string validatedTable = ValidateTable(_databaseOptions.Value, connectionString);
+        string queryString = $"SELECT * FROM {validatedTable}";
+
+        // Read from database.
+        using var connection = new OleDbConnection(connectionString);
+        OleDbCommand command = new(queryString, connection);
+        try
+        {
+            connection.Open();
+            using OleDbDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                UserModel userModel = new()
+                {
+                    // Values can not be null.
+                    Id = (int)reader["ID"],
+                    UserName = (string)reader["UserName"],
+                    Password = "**********", // never publish the password; except when authenticating
+                    DisplayName = (string)reader["DisplayName"],
+                    Role = (string)reader["Role"],
+                    IsActive = (bool)reader["IsActive"],
+
+                    // Values can be null.
+                    Email = DBNull.Value.Equals(reader["Email"]) ? null : (string)reader["Email"],
+                    LastLogin = DBNull.Value.Equals(reader["LastLogin"]) ? null : (string)reader["LastLogin"],
+                    LastModified = DBNull.Value.Equals(reader["LastModified"]) ? null : (string)reader["LastModified"]
+                };
+
+                output.Add(userModel);
+            }
+
+            reader.Close();
+            connection.Close();
+        }
+        catch (OleDbException ex)
+        {
+            if (ex.ErrorCode == -2147217843)
+            {
+                throw new UnauthorizedAccessException($"Invalid Password! No access to {validatedPath}! " +
+                    $"Error code: {ex.ErrorCode}");
+            }
+
+            throw new UnauthorizedAccessException($"No access to {validatedPath}! Error code: {ex.ErrorCode}");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Unexpected exception while accessing the database! Message: {ex.Message}");
+        }
+
 
         return output;
     }
@@ -438,6 +501,4 @@ public class UserRepositoryUsingAccess : IUserRepository
 
         return output;
     }
-
-
 }

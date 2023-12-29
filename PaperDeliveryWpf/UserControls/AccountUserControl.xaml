@@ -19,8 +19,9 @@
 
         <!-- Footer -->
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 20 0 0">
-            <!--<Button Content="Reset Password" 
-                    Command="{Binding ResetPasswordButtonCommand}" />-->
+            <Button Content="Reset Password" 
+                    Visibility="{Binding IsVisibleAdminControl, Converter={StaticResource boolToVisibility}}"
+                    Command="{Binding ResetPasswordButtonCommand}" />
             <Button Content="Change Password" 
                     Command="{Binding ChangePasswordButtonCommand}" />
             <Button Content="Save Changes"
@@ -35,6 +36,7 @@
             <Button Content="X"
                     Cursor="Hand"
                     BorderThickness="0"
+                    Visibility="{Binding IsVisibleCloseAccountButton, Converter={StaticResource boolToVisibility}}"
                     Command="{Binding CloseAccountButtonCommand}">
 
                 <Button.Style>
@@ -105,7 +107,7 @@
             <!-- IsActive components -->
             <Label Grid.Row="6" Grid.Column="1" Content="IsActive" />
             <CheckBox Grid.Row="7" Grid.Column="1" 
-                      IsEnabled="False"
+                      IsEnabled="{Binding IsEnabledAdminControl}"
                       IsChecked="{Binding IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <!-- ID components -->
             <Label Grid.Row="0" Grid.Column="3" Content="User ID" />
@@ -116,9 +118,9 @@
             <!-- Role components -->
             <Label Grid.Row="2" Grid.Column="3" Content="Role" />
             <TextBox Grid.Row="3" Grid.Column="3"
-                     IsEnabled="False"
+                     IsEnabled="{Binding IsEnabledAdminControl}"
                      MinWidth="200"
-                     Text="{Binding Role, Mode=TwoWay}" />
+                     Text="{Binding Role, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
             <!-- LastModified components -->
             <Label Grid.Row="4" Grid.Column="3" Content="Last Modified" />
             <TextBox Grid.Row="5" Grid.Column="3"
