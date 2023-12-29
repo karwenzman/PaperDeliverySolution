@@ -61,6 +61,7 @@ namespace PaperDeliveryWpf
                     services.AddTransient<IStartViewModel, StartViewModel>();
                     services.AddTransient<IErrorViewModel, ErrorViewModel>();
                     services.AddTransient<IAccountViewModel, AccountViewModel>();
+                    services.AddTransient<IAccountsViewModel, AccountsViewModel>();
                 })
                 .UseSerilog()
                 .Build();

@@ -138,6 +138,30 @@ public partial class ShellViewModel : ViewModelBase,
             ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl });
         }
     }
+
+    [RelayCommand]
+    public void AccountsMenuItem()
+    {
+        try
+        {
+            ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.AccountsUserControl });
+        }
+        catch (Exception ex)
+        {
+            string message = ex.Message;
+            string caption = nameof(AccountsMenuItem);
+
+            // TODO - MessageBoxes should not be handled by the ViewModel.
+            MessageBoxResult messageBoxResult = MessageBox.Show(
+                messageBoxText: message,
+                caption: caption,
+                MessageBoxButton.OK,
+                MessageBoxImage.Error,
+                MessageBoxResult.No);
+
+            ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl });
+        }
+    }
     #endregion ***** End OF RelayCommand *****
 
     private void ManageUserControls(ShellMessage message)
@@ -174,6 +198,13 @@ public partial class ShellViewModel : ViewModelBase,
                 IsActiveUserMenuItem = false;
                 IsActiveAdminMenuItem = false;
                 CurrentView = App.AppHost!.Services.GetRequiredService<IAccountViewModel>();
+                break;
+            case ActivateVisibility.AccountsUserControl:
+                IsActiveLoginMenuItem = false;
+                IsActiveLogoutMenuItem = false;
+                IsActiveUserMenuItem = false;
+                IsActiveAdminMenuItem = false;
+                CurrentView = App.AppHost!.Services.GetRequiredService<IAccountsViewModel>();
                 break;
         }
     }

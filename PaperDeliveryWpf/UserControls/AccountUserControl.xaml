@@ -12,7 +12,7 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVisibility" />
     </UserControl.Resources>
-    
+
     <DockPanel>
         <!-- Header -->
         <Label DockPanel.Dock="Top" Content="User Account" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Margin="20" />
@@ -28,7 +28,7 @@
             <Button Content="Discard Changes" 
                     Command="{Binding DiscardChangesButtonCommand}" />
         </StackPanel>
-        
+
         <!-- Frame on left and right -->
         <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Width="24"></StackPanel>
         <StackPanel DockPanel.Dock="Right" Orientation="Vertical" Width="24">
@@ -36,10 +36,10 @@
                     Cursor="Hand"
                     BorderThickness="0"
                     Command="{Binding CloseButtonCommand}">
-                
+
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Background" Value="LightGray"/>
+                        <Setter Property="Background" Value="#FFDDDDDD"/>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Background" Value="DarkGray"/>
@@ -55,10 +55,10 @@
                         </Border>
                     </ControlTemplate>
                 </Button.Template>
-                
+
             </Button>
         </StackPanel>
-        
+
         <!-- Body -->
         <Grid DockPanel.Dock="Top" HorizontalAlignment="Center" FocusManager.FocusedElement="{Binding ElementName=txtDisplayName}">
             <Grid.ColumnDefinitions>
@@ -79,7 +79,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            
+
             <!-- A column to seperate the user components on the left and right -->
             <Rectangle Grid.Column="2" Grid.Row="0" Grid.RowSpan="8"
                        MinWidth=" 20" />
@@ -118,7 +118,7 @@
             <TextBox Grid.Row="3" Grid.Column="3"
                      IsEnabled="False"
                      MinWidth="200"
-                     Text="{Binding Role, Mode=TwoWay}" />            
+                     Text="{Binding Role, Mode=TwoWay}" />
             <!-- LastModified components -->
             <Label Grid.Row="4" Grid.Column="3" Content="Last Modified" />
             <TextBox Grid.Row="5" Grid.Column="3"
