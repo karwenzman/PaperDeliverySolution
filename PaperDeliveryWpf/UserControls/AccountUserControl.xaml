@@ -14,6 +14,21 @@
     </UserControl.Resources>
     
     <DockPanel>
+        <!-- Header -->
+        <Label DockPanel.Dock="Top" Content="User Account" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Margin="20" />
+
+        <!-- Footer -->
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 20 0 0">
+            <Button Content="Reset Password" 
+                    Command="{Binding ResetPasswordButtonCommand}" />
+            <Button Content="Change Password" 
+                    Command="{Binding ChangePasswordButtonCommand}" />
+            <Button Content="Save Changes"
+                    Command="{Binding SaveChangesButtonCommand}" />
+            <Button Content="Discard Changes" 
+                    Command="{Binding DiscardChangesButtonCommand}" />
+        </StackPanel>
+        
         <!-- Frame on left and right -->
         <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Width="24"></StackPanel>
         <StackPanel DockPanel.Dock="Right" Orientation="Vertical" Width="24">
@@ -43,21 +58,6 @@
                 
             </Button>
         </StackPanel>
-
-        <!-- Header -->
-        <Label DockPanel.Dock="Top" Content="User Account" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Margin="20" />
-
-        <!-- Footer -->
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Content="Reset Password" 
-                    Command="{Binding ResetPasswordButtonCommand}" />
-            <Button Content="Change Password" 
-                    Command="{Binding ChangePasswordButtonCommand}" />
-            <Button Content="Save Changes"
-                    Command="{Binding SaveChangesButtonCommand}" />
-            <Button Content="Discard Changes" 
-                    Command="{Binding DiscardChangesButtonCommand}" />
-        </StackPanel>
         
         <!-- Body -->
         <Grid DockPanel.Dock="Top" HorizontalAlignment="Center" FocusManager.FocusedElement="{Binding ElementName=txtDisplayName}">
@@ -68,6 +68,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
