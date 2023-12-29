@@ -18,7 +18,30 @@
         <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Width="24"></StackPanel>
         <StackPanel DockPanel.Dock="Right" Orientation="Vertical" Width="24">
             <Button Content="X"
-                    Command="{Binding CloseButtonCommand}"/>
+                    Cursor="Hand"
+                    BorderThickness="0"
+                    Command="{Binding CloseButtonCommand}">
+                
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="LightGray"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="DarkGray"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="18" Height="18" CornerRadius="9" Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+                
+            </Button>
         </StackPanel>
 
         <!-- Header -->
