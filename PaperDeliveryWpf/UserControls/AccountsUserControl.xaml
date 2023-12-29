@@ -3,8 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:PaperDeliveryWpf.UserControls"
+             xmlns:local="clr-namespace:PaperDeliveryWpf.UserControls" 
+             xmlns:viewmodels="clr-namespace:PaperDeliveryWpf.ViewModels" 
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:AccountsViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
@@ -28,7 +30,7 @@
             <Button Content="X"
                     Cursor="Hand"
                     BorderThickness="0"
-                    Command="{Binding CloseButtonCommand}">
+                    Command="{Binding CloseAccountsButtonCommand}">
 
                 <Button.Style>
                     <Style TargetType="Button">

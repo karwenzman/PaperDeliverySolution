@@ -35,7 +35,7 @@
             <Button Content="X"
                     Cursor="Hand"
                     BorderThickness="0"
-                    Command="{Binding CloseButtonCommand}">
+                    Command="{Binding CloseAccountButtonCommand}">
 
                 <Button.Style>
                     <Style TargetType="Button">

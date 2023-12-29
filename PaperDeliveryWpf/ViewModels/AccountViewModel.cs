@@ -121,7 +121,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
 
     #region ***** RelayCommand *****
     [RelayCommand]
-    public void CloseButton()
+    public void CloseAccountButton()
     {
         WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl }));
     }
