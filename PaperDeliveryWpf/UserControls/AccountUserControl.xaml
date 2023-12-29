@@ -19,8 +19,8 @@
 
         <!-- Footer -->
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 20 0 0">
-            <Button Content="Reset Password" 
-                    Command="{Binding ResetPasswordButtonCommand}" />
+            <!--<Button Content="Reset Password" 
+                    Command="{Binding ResetPasswordButtonCommand}" />-->
             <Button Content="Change Password" 
                     Command="{Binding ChangePasswordButtonCommand}" />
             <Button Content="Save Changes"
@@ -65,6 +65,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -78,6 +79,10 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            
+            <!-- A column to seperate the user components on the left and right -->
+            <Rectangle Grid.Column="2" Grid.Row="0" Grid.RowSpan="8"
+                       MinWidth=" 20" />
             <!-- UserName components -->
             <Label Grid.Row="0" Grid.Column="1" Content="User Name" />
             <TextBox Grid.Row="1" Grid.Column="1"
@@ -91,7 +96,7 @@
                      IsEnabled="True"
                      MinWidth="200"
                      Text="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
-            <!-- Email components; always focusable -->
+            <!-- Email components -->
             <Label Grid.Row="4" Grid.Column="1" Content="Email" />
             <TextBox Grid.Row="5" Grid.Column="1"
                      IsEnabled="True"
@@ -102,27 +107,31 @@
             <CheckBox Grid.Row="7" Grid.Column="1" 
                       IsEnabled="False"
                       IsChecked="{Binding IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-            <!-- ID components; never focusable -->
-            <Label Grid.Row="0" Grid.Column="2" Content="User ID" />
-            <TextBox Grid.Row="1" Grid.Column="2"
+            <!-- ID components -->
+            <Label Grid.Row="0" Grid.Column="3" Content="User ID" />
+            <TextBox Grid.Row="1" Grid.Column="3"
                      IsEnabled="False"
                      MinWidth="200"
                      Text="{Binding Id, Mode=TwoWay}" />
-            <!-- LastModified components; never focusable -->
-            <Label Grid.Row="2" Grid.Column="2" Content="Last Modified" />
-            <TextBox Grid.Row="3" Grid.Column="2"
+            <!-- Role components -->
+            <Label Grid.Row="2" Grid.Column="3" Content="Role" />
+            <TextBox Grid.Row="3" Grid.Column="3"
+                     IsEnabled="False"
+                     MinWidth="200"
+                     Text="{Binding Role, Mode=TwoWay}" />            
+            <!-- LastModified components -->
+            <Label Grid.Row="4" Grid.Column="3" Content="Last Modified" />
+            <TextBox Grid.Row="5" Grid.Column="3"
                      IsEnabled="False"
                      MinWidth="200"
                      Text="{Binding LastModified, Mode=TwoWay}" />
-            <!-- LastLogin components; never focusable -->
-            <Label Grid.Row="4" Grid.Column="2" Content="Last Login" />
-            <TextBox Grid.Row="5" Grid.Column="2"
+            <!-- LastLogin components -->
+            <Label Grid.Row="6" Grid.Column="3" Content="Last Login" />
+            <TextBox Grid.Row="7" Grid.Column="3"
                      IsEnabled="False"
                      MinWidth="200"
                      Text="{Binding LastLogin, Mode=TwoWay}" />
-
         </Grid>
-        
 
     </DockPanel>
 </UserControl>
