@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using PaperDeliveryLibrary.Models;
 using PaperDeliveryWpf.Repositories;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Security;
 
 namespace PaperDeliveryWpf.ViewModels;
 
@@ -15,35 +17,24 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
 {
     private UserModel? _currentUser = new();
 
-    private string _uiUserName = string.Empty;
-    private string _uiPassword = string.Empty;
+    private string? _userName;
 
     [Required(ErrorMessage = "Enter your user name!")]
-    public string UiUserName
+    public string? UserName
     {
-        get => _uiUserName;
+        get => _userName;
         set
         {
-            if (SetProperty(ref _uiUserName, value, true))
+            if (SetProperty(ref _userName, value, true))
             {
                 LoginButtonCommand.NotifyCanExecuteChanged();
             }
         }
     }
 
-    [Required(ErrorMessage = "Enter your password!")]
-    [MinLength(3, ErrorMessage = "You need to enter minimum 3 charaters.")]
-    public string UiPassword
-    {
-        get => _uiPassword;
-        set
-        {
-            if (SetProperty(ref _uiPassword, value, true))
-            {
-                LoginButtonCommand.NotifyCanExecuteChanged();
-            }
-        }
-    }
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(LoginButtonCommand))]
+    private SecureString? _password;
 
     private readonly ILogger<LoginViewModel> _logger;
     private readonly IUserRepository _userRepository;
@@ -60,11 +51,11 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     [RelayCommand(CanExecute = nameof(CanLoginButton))]
     public void LoginButton()
     {
-        bool validUser = _userRepository.Authenticate(new NetworkCredential(UiUserName, UiPassword));
+        bool validUser = _userRepository.Authenticate(new NetworkCredential(UserName, Password));
 
         if (validUser)
         {
-            _currentUser = _userRepository.GetByUserName(UiUserName);
+            _currentUser = _userRepository.GetByUserName(UserName);
             ArgumentNullException.ThrowIfNull(_currentUser);
 
             CreateThreadPrincipal(_currentUser.UserName, GetUserRoles(_currentUser.Role), "access database");
@@ -82,11 +73,11 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     {
         bool output = true;
 
-        if (string.IsNullOrWhiteSpace(UiUserName))
+        if (string.IsNullOrWhiteSpace(UserName))
         {
             output = false;
         }
-        if (string.IsNullOrWhiteSpace(UiPassword))
+        if (Password == null || Password.Length == 0)
         {
             output = false;
         }
@@ -98,9 +89,8 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
         return output;
     }
 
-
     [RelayCommand]
-    public void CancelButton()
+    public static void CancelButton()
     {
         WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.StartUserControl }));
     }

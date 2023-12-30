@@ -62,7 +62,7 @@
         </StackPanel>
 
         <!-- Body -->
-        <Grid DockPanel.Dock="Top" HorizontalAlignment="Center" FocusManager.FocusedElement="{Binding ElementName=txtDisplayName}">
+        <Grid DockPanel.Dock="Top" HorizontalAlignment="Center">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -94,7 +94,6 @@
             <!-- DisplayName components -->
             <Label Grid.Row="2" Grid.Column="1" Content="Display Name" />
             <TextBox Grid.Row="3" Grid.Column="1"
-                     x:Name="txtDisplayName"
                      IsEnabled="True"
                      MinWidth="200"
                      Text="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
