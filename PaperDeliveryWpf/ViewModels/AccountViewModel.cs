@@ -18,6 +18,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
 
     private string? _displayName;
     private string? _email;
+    private string? _role;
 
     [Required(ErrorMessage = "Enter your display name!")]
     public string? DisplayName
@@ -65,6 +66,30 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
         }
     }
 
+    [Required(ErrorMessage = "Enter your user role!")]
+    [AllowedValues(["guest", "user", "admin"], ErrorMessage = "Select a valid role - guest, user or admin")]
+    public string? Role
+    {
+        get => _role;
+        set
+        {
+            if (SetProperty(ref _role, value, true))
+            {
+                SaveChangesButtonCommand.NotifyCanExecuteChanged();
+                DiscardChangesButtonCommand.NotifyCanExecuteChanged();
+            }
+
+            if (_role == _currentUser!.Role)
+            {
+                CurrentUserHasChanged = false;
+            }
+            else
+            {
+                CurrentUserHasChanged = true;
+            }
+        }
+    }
+
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveChangesButtonCommand))]
     [NotifyCanExecuteChangedFor(nameof(DiscardChangesButtonCommand))]
@@ -81,9 +106,6 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
 
     [ObservableProperty]
     private string? _password;
-
-    [ObservableProperty]
-    private string? _role;
 
     [ObservableProperty]
     private bool _isActive;
@@ -204,6 +226,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
     {
         DisplayName = _currentUser!.DisplayName;
         Email = _currentUser.Email;
+        Role = _currentUser.Role;
         CurrentUserHasChanged = false;
     }
     public bool CanDiscardChangesButton()
