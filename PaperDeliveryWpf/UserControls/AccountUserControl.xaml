@@ -33,31 +33,26 @@
         <!-- Frame on left and right -->
         <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Width="24"></StackPanel>
         <StackPanel DockPanel.Dock="Right" Orientation="Vertical" Width="24">
-            <Button Content="X"
-                    Cursor="Hand"
-                    BorderThickness="0"
+            <Button Style="{StaticResource CloseButtonStyle}"
                     Visibility="{Binding IsVisibleCloseAccountButton, Converter={StaticResource boolToVisibility}}"
                     Command="{Binding CloseAccountButtonCommand}">
-
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Background" Value="#FFDDDDDD"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="DarkGray"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Border Width="18" Height="18" CornerRadius="9" Background="{TemplateBinding Background}">
-                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
-
+                <!-- This look content is provided by Microsoft Image Gallery.-->
+                <Viewbox Width="16" Height="16" Cursor="">
+                    <Rectangle Width="16" Height="16">
+                        <Rectangle.Fill>
+                            <DrawingBrush>
+                                <DrawingBrush.Drawing>
+                                    <DrawingGroup>
+                                        <DrawingGroup.Children>
+                                            <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                            <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1M9.4141,8L13.9571,12.543 12.5431,13.957 8.0001,9.414 3.4571,13.957 2.0431,12.543 6.5861,8 2.0431,3.457 3.4571,2.043 8.0001,6.586 12.5431,2.043 13.9571,3.457z" />
+                                        </DrawingGroup.Children>
+                                    </DrawingGroup>
+                                </DrawingBrush.Drawing>
+                            </DrawingBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Viewbox>
             </Button>
         </StackPanel>
 

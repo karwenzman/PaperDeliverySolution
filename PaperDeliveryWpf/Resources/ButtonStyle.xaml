@@ -1,14 +1,36 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <!-- This style is used for all common buttons -->
     <Style TargetType="Button">
         <Style.Resources>
             <Style TargetType="Border">
                 <Setter Property="CornerRadius" Value="4" />
             </Style>
         </Style.Resources>
+        <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Padding" Value="20 5 20 5" />
         <Setter Property="Margin" Value="5" />
     </Style>
 
+    <!-- This style is used for circled close buttons -->
+    <Style x:Key="CloseButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="#FFDDDDDD" />
+        <Setter Property="BorderThickness" Value="0" />
+        
+        <Style.Resources>
+            <Style TargetType="Border">
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Height" Value="20" />
+                <Setter Property="Width" Value="20" />
+            </Style>
+            <Style TargetType="ContentPresenter">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+            </Style>
+        </Style.Resources>
+
+    </Style>
+    
 </ResourceDictionary>
