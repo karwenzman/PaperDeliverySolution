@@ -36,7 +36,7 @@
             <Button Style="{StaticResource CloseButtonStyle}"
                     Visibility="{Binding IsVisibleCloseAccountButton, Converter={StaticResource boolToVisibility}}"
                     Command="{Binding CloseAccountButtonCommand}">
-                <!-- This content is provided by Microsoft Image Gallery.-->
+                <!-- This content is provided by Microsoft Image Gallery -->
                 <!--<Viewbox Width="16" Height="16" Cursor="">
                     <Rectangle Width="16" Height="16">
                         <Rectangle.Fill>
@@ -54,6 +54,7 @@
                     </Rectangle>
                 </Viewbox>-->
 
+                <!-- This content is provided by Microsoft Image Gallery -->
                 <Viewbox Width="16" Height="16">
                     <Rectangle Width="16" Height="16">
                         <Rectangle.Fill>

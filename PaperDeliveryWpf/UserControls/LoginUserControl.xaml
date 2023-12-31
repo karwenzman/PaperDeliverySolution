@@ -34,6 +34,7 @@
                 </Grid.RowDefinitions>
                 <!-- UserName components -->
                 <Label Grid.Column="1" Grid.Row="0">
+                    <!-- This content is provided by Microsoft Image Gallery -->
                     <Viewbox Width="16" Height="16">
                         <Rectangle Width="16" Height="16">
                             <Rectangle.Fill>
@@ -64,6 +65,7 @@
 
                 <!-- Password components; replaced the DataErrors functionality by SecureString functionality -->
                 <Label Grid.Column="1" Grid.Row="1">
+                    <!-- This content is provided by Microsoft Image Gallery -->
                     <Viewbox Width="16" Height="16">
                         <Rectangle Width="16" Height="16">
                             <Rectangle.Fill>
