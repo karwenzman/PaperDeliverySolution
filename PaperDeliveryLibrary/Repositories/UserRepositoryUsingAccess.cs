@@ -36,7 +36,7 @@ public class UserRepositoryUsingAccess : IUserRepository
 
         // Validate parameters.
         ArgumentNullException.ThrowIfNullOrWhiteSpace(networkCredential.UserName, nameof(networkCredential.UserName));
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(networkCredential.Password, nameof(networkCredential.Password));
+        ArgumentNullException.ThrowIfNullOrEmpty(networkCredential.Password, nameof(networkCredential.Password));
         ArgumentNullException.ThrowIfNull(_databaseOptions, nameof(DatabaseOptionsUsingAccess));
 
         // Setup connection strings.
