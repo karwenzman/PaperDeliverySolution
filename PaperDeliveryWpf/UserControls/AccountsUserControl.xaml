@@ -18,17 +18,12 @@
         <Label DockPanel.Dock="Top" Content="User Account Database" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Margin="20" />
 
         <!-- Footer -->
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 20 0 0">
-            <!--<Button Content="Add UserAccount" 
-                    Command="{Binding ChangePasswordButtonCommand}" />
-            <Button Content="Remove UserAccount"
-                    Command="{Binding SaveChangesButtonCommand}" />-->
-        </StackPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 20 0 0" />
 
         <!-- Frame to the right -->
         <StackPanel DockPanel.Dock="Right" Orientation="Vertical" Width="24">
             <Button Style="{StaticResource CloseButtonStyle}"
-                    Command="{Binding CloseAccountsButtonCommand}">
+                    Command="{Binding CloseButtonCommand}">
                 <!-- This content is provided by Microsoft Image Gallery -->
                 <Viewbox Width="16" Height="16">
                     <Rectangle Width="16" Height="16">
@@ -69,23 +64,24 @@
                       HorizontalAlignment="Center"
                       Padding="10"
                       GridLinesVisibility="Horizontal"
+                      SelectedItem="{Binding SelectedUserAccount}"
                       ItemsSource="{Binding UserAccounts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
                     <DataGridTextColumn Header="UserName" Binding="{Binding UserName}" />
                     <DataGridTextColumn Header="Role" Binding="{Binding Role}" />
-                    <DataGridCheckBoxColumn Header="IsActiv" Binding="{Binding IsActive}" />
+                    <DataGridCheckBoxColumn Header="IsActive" Binding="{Binding IsActive}" />
                 </DataGrid.Columns>
             </DataGrid>
             
             <!-- Shall I put the buttons here? -->
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 20 0 0">
                 <Button Content="Add" 
-                    Command="{Binding ChangePasswordButtonCommand}" />
+                    Command="{Binding AddButtonCommand}" />
                 <Button Content="Find"
-                    Command="{Binding SaveChangesButtonCommand}" />
+                    Command="{Binding FindButtonCommand}" />
                 <Button Content="Delete"
-                    Command="{Binding SaveChangesButtonCommand}" />
+                    Command="{Binding DeleteButtonCommand}" />
             </StackPanel>
         </StackPanel>
 

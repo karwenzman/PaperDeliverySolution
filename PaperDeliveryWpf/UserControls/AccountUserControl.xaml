@@ -35,7 +35,7 @@
         <StackPanel DockPanel.Dock="Right" Orientation="Vertical" Width="24">
             <Button Style="{StaticResource CloseButtonStyle}"
                     Visibility="{Binding IsVisibleCloseAccountButton, Converter={StaticResource boolToVisibility}}"
-                    Command="{Binding CloseAccountButtonCommand}">
+                    Command="{Binding CloseButtonCommand}">
                 <!-- This content is provided by Microsoft Image Gallery -->
                 <!--<Viewbox Width="16" Height="16" Cursor="">
                     <Rectangle Width="16" Height="16">

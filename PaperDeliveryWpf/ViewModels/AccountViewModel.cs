@@ -67,7 +67,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
     }
 
     [Required(ErrorMessage = "Enter your user role!")]
-    [AllowedValues(["guest", "user", "admin"], ErrorMessage = "Select a valid role - guest, user or admin")]
+    [AllowedValues(["guest", "user", "admin"], ErrorMessage = "Select a valid role (guest, user or admin)")]
     public string? Role
     {
         get => _role;
@@ -151,7 +151,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
 
     #region ***** RelayCommand *****
     [RelayCommand]
-    public void CloseAccountButton()
+    public void CloseButton()
     {
         WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl }));
     }
