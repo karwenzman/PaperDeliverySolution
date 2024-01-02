@@ -16,6 +16,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel, IRecip
 {
     private UserModel? _currentAccount;
 
+    #region ***** UI properties *****
     private string? _displayName;
     private string? _email;
     private string? _role;
@@ -91,11 +92,6 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel, IRecip
     }
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(SaveChangesButtonCommand))]
-    [NotifyCanExecuteChangedFor(nameof(DiscardChangesButtonCommand))]
-    private bool _currentAccountHasChanged;
-
-    [ObservableProperty]
     private bool _isActive;
 
     [ObservableProperty]
@@ -109,6 +105,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel, IRecip
 
     [ObservableProperty]
     private int _id;
+    #endregion ***** UI properties *****
 
     #region ***** UI controls *****
     [ObservableProperty] private bool _isVisibleCloseButton;
@@ -125,8 +122,12 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel, IRecip
     [ObservableProperty] private bool _isEnabledRole;
     [ObservableProperty] private bool _isEnabledLastModified;
     [ObservableProperty] private bool _isEnabledLastLogin;
-
     #endregion ***** End of UI controls *****
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SaveChangesButtonCommand))]
+    [NotifyCanExecuteChangedFor(nameof(DiscardChangesButtonCommand))]
+    private bool _currentAccountHasChanged;
 
     private readonly ILogger<AccountViewModel> _logger;
     private readonly IUserRepository _userRepository;
@@ -139,7 +140,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel, IRecip
 
         if (IsUserInRole("user"))
         {
-            AssignCurrentUserToLocalProperties();
+            AssignCurrentAccountToLocalProperties();
             SetViewToDefault();
 
             CurrentAccountHasChanged = false;
@@ -197,7 +198,8 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel, IRecip
             {
                 message = "Update successful.\nThe changes have been saved to your account.";
                 _currentAccount = _userRepository.GetByUserName(GetUserName());
-                AssignCurrentUserToLocalProperties();
+                CheckCurrentAccountIsNull();
+                AssignCurrentAccountToLocalProperties();
             }
             else
             {
@@ -243,7 +245,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel, IRecip
     /// If the current user is null the error is logged and an exception is thrown.
     /// </summary>
     /// <exception cref="ArgumentException"></exception>
-    private void CheckCurrentUserIsNull()
+    private void CheckCurrentAccountIsNull()
     {
         if (_currentAccount == null)
         {
@@ -255,7 +257,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel, IRecip
     /// <summary>
     /// Assigns to values of the current user to the oberservable properties used in the view.
     /// </summary>
-    private void AssignCurrentUserToLocalProperties()
+    private void AssignCurrentAccountToLocalProperties()
     {
         Id = _currentAccount!.Id;
         IsActive = _currentAccount!.IsActive;
@@ -339,21 +341,18 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel, IRecip
     public void Receive(ValueChangedMessage<AccountMessage> message)
     {
         _currentAccount = message.Value.SelectedUser;
-        CheckCurrentUserIsNull();
-        AssignCurrentUserToLocalProperties();
+        CheckCurrentAccountIsNull();
+        AssignCurrentAccountToLocalProperties();
 
         switch (message.Value.SetAccountUserControl)
         {
             case SetAccountUserControl.Default:
-                // This is never called by AccountsViewModel, but set all the controls anyway.
                 SetViewToDefault();
                 break;
             case SetAccountUserControl.AccountManagerAddItem:
-                // This is called, if in AccountsUserControl the AddButton event was raised.
                 SetViewToAccountManagerAddItem();
                 break;
             case SetAccountUserControl.AccountManagerSelectedItem:
-                // This is called, if in AccountsUserControl the SelectionChanged event was raised.
                 SetViewToAccountManagerSelectedItem();
                 break;
             default:
