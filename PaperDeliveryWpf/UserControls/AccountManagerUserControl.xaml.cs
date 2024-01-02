@@ -2,9 +2,9 @@
 
 namespace PaperDeliveryWpf.UserControls;
 
-public partial class AccountsUserControl : UserControl
+public partial class AccountManagerUserControl : UserControl
 {
-    public AccountsUserControl()
+    public AccountManagerUserControl()
     {
         InitializeComponent();
     }

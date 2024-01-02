@@ -14,7 +14,7 @@ using System.Windows;
 
 namespace PaperDeliveryWpf.ViewModels;
 
-public partial class AccountsViewModel : ViewModelBase, IAccountsViewModel
+public partial class AccountManagerViewModel : ViewModelBase, IAccountManagerViewModel
 {
 
     private string? _displayName;
@@ -134,10 +134,10 @@ public partial class AccountsViewModel : ViewModelBase, IAccountsViewModel
 
 
 
-    private readonly ILogger<AccountsViewModel> _logger;
+    private readonly ILogger<AccountManagerViewModel> _logger;
     private readonly IUserRepository _userRepository;
 
-    public AccountsViewModel(ILogger<AccountsViewModel> logger, IUserRepository userRepository)
+    public AccountManagerViewModel(ILogger<AccountManagerViewModel> logger, IUserRepository userRepository)
     {
         _logger = logger;
         _userRepository = userRepository;
@@ -150,12 +150,12 @@ public partial class AccountsViewModel : ViewModelBase, IAccountsViewModel
 
             UserAccounts = _userRepository.GetAllRecords();
 
-            _logger.LogInformation("* Loading {class}", nameof(AccountsViewModel));
+            _logger.LogInformation("* Loading {class}", nameof(AccountManagerViewModel));
         }
         else
         {
-            _logger.LogError("** Access denied on page {class} by {name}!", nameof(AccountsViewModel), GetUserName());
-            throw new ArgumentException($"Access denied on page {nameof(AccountsViewModel)} by {GetUserName()}!");
+            _logger.LogError("** Access denied on page {class} by {name}!", nameof(AccountManagerViewModel), GetUserName());
+            throw new ArgumentException($"Access denied on page {nameof(AccountManagerViewModel)} by {GetUserName()}!");
         }
     }
 
@@ -191,7 +191,7 @@ public partial class AccountsViewModel : ViewModelBase, IAccountsViewModel
     [RelayCommand]
     public static void CloseButton()
     {
-        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl }));
+        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = LoadViewModel.HomeUserControl }));
     }
 
     [RelayCommand(CanExecute = nameof(CanResetPasswordButton))]
@@ -248,8 +248,8 @@ public partial class AccountsViewModel : ViewModelBase, IAccountsViewModel
         }
         else
         {
-            _logger.LogError("** No valid user account is loaded while accessing {class} by {name}!", nameof(AccountsViewModel), GetUserName());
-            throw new ArgumentException($"No valid user account is loaded while accessing class {nameof(AccountsViewModel)} by {GetUserName()}!");
+            _logger.LogError("** No valid user account is loaded while accessing {class} by {name}!", nameof(AccountManagerViewModel), GetUserName());
+            throw new ArgumentException($"No valid user account is loaded while accessing class {nameof(AccountManagerViewModel)} by {GetUserName()}!");
         }
 
         CurrentUserHasChanged = false;
@@ -277,8 +277,8 @@ public partial class AccountsViewModel : ViewModelBase, IAccountsViewModel
     {
         if (CurrentUser == null)
         {
-            _logger.LogError("** No valid user account is loaded while accessing {class} by {name}!", nameof(AccountsViewModel), GetUserName());
-            throw new ArgumentException($"No valid user account is loaded while accessing class {nameof(AccountsViewModel)} by {GetUserName()}!");
+            _logger.LogError("** No valid user account is loaded while accessing {class} by {name}!", nameof(AccountManagerViewModel), GetUserName());
+            throw new ArgumentException($"No valid user account is loaded while accessing class {nameof(AccountManagerViewModel)} by {GetUserName()}!");
         }
     }
 

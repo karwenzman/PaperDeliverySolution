@@ -1,9 +1,9 @@
 ﻿namespace PaperDeliveryLibrary.Enums;
 
 /// <summary>
-/// This <see cref="Enum"/> is used to enable the parent view to host all its child views.
+/// This <see cref="Enum"/> is used to enable the parent ViewModel to host all its child ViewModels.
 /// </summary>
-public enum ActivateVisibility
+public enum LoadViewModel
 {
     ErrorUserControl,
     LoginUserControl,

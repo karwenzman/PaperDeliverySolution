@@ -20,40 +20,27 @@
         <!-- Footer -->
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 20 0 0">
             <Button Content="Reset Password" 
-                    Visibility="{Binding IsVisibleAdminControl, Converter={StaticResource boolToVisibility}}"
+                    Visibility="{Binding IsVisibleResetPasswordButton, Converter={StaticResource boolToVisibility}}"
                     Command="{Binding ResetPasswordButtonCommand}" />
             <Button Content="Change Password" 
+                    Visibility="{Binding IsVisibleChangePasswordButton, Converter={StaticResource boolToVisibility}}"
                     Command="{Binding ChangePasswordButtonCommand}" />
             <Button Content="Save Changes"
+                    Visibility="{Binding IsVisibleSaveChangesButton, Converter={StaticResource boolToVisibility}}"
                     Command="{Binding SaveChangesButtonCommand}" />
             <Button Content="Discard Changes" 
+                    Visibility="{Binding IsVisibleDiscardChangesButton, Converter={StaticResource boolToVisibility}}"
                     Command="{Binding DiscardChangesButtonCommand}" />
         </StackPanel>
 
-        <!-- Frame on left and right -->
+        <!-- Frame on the left -->
         <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Width="24"></StackPanel>
+
+        <!-- Frame on the right -->
         <StackPanel DockPanel.Dock="Right" Orientation="Vertical" Width="24">
             <Button Style="{StaticResource CloseButtonStyle}"
-                    Visibility="{Binding IsVisibleCloseAccountButton, Converter={StaticResource boolToVisibility}}"
+                    Visibility="{Binding IsVisibleCloseButton, Converter={StaticResource boolToVisibility}}"
                     Command="{Binding CloseButtonCommand}">
-                <!-- This content is provided by Microsoft Image Gallery -->
-                <!--<Viewbox Width="16" Height="16" Cursor="">
-                    <Rectangle Width="16" Height="16">
-                        <Rectangle.Fill>
-                            <DrawingBrush>
-                                <DrawingBrush.Drawing>
-                                    <DrawingGroup>
-                                        <DrawingGroup.Children>
-                                            <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
-                                            <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1M9.4141,8L13.9571,12.543 12.5431,13.957 8.0001,9.414 3.4571,13.957 2.0431,12.543 6.5861,8 2.0431,3.457 3.4571,2.043 8.0001,6.586 12.5431,2.043 13.9571,3.457z" />
-                                        </DrawingGroup.Children>
-                                    </DrawingGroup>
-                                </DrawingBrush.Drawing>
-                            </DrawingBrush>
-                        </Rectangle.Fill>
-                    </Rectangle>
-                </Viewbox>-->
-
                 <!-- This content is provided by Microsoft Image Gallery -->
                 <Viewbox Width="16" Height="16">
                     <Rectangle Width="16" Height="16">
@@ -103,48 +90,48 @@
             <!-- UserName components -->
             <Label Grid.Row="0" Grid.Column="1" Content="User Name" />
             <TextBox Grid.Row="1" Grid.Column="1"
-                     IsEnabled="False"
+                     IsEnabled="{Binding IsEnabledUserName}"
                      MinWidth="200"
                      Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
             <!-- DisplayName components -->
             <Label Grid.Row="2" Grid.Column="1" Content="Display Name" />
             <TextBox Grid.Row="3" Grid.Column="1"
-                     IsEnabled="True"
+                     IsEnabled="{Binding IsEnabledDisplayName}"
                      MinWidth="200"
                      Text="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
             <!-- Email components -->
             <Label Grid.Row="4" Grid.Column="1" Content="Email" />
             <TextBox Grid.Row="5" Grid.Column="1"
-                     IsEnabled="True"
+                     IsEnabled="{Binding IsEnabledEmail}"
                      MinWidth="200"
                      Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
             <!-- IsActive components -->
             <Label Grid.Row="6" Grid.Column="1" Content="IsActive" />
             <CheckBox Grid.Row="7" Grid.Column="1" 
-                      IsEnabled="{Binding IsEnabledAdminControl}"
+                      IsEnabled="{Binding IsEnabledIsActive}"
                       IsChecked="{Binding IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <!-- ID components -->
             <Label Grid.Row="0" Grid.Column="3" Content="User ID" />
             <TextBox Grid.Row="1" Grid.Column="3"
-                     IsEnabled="False"
+                     IsEnabled="{Binding IsEnabledUserId}"
                      MinWidth="200"
                      Text="{Binding Id, Mode=TwoWay}" />
             <!-- Role components -->
             <Label Grid.Row="2" Grid.Column="3" Content="Role" />
             <TextBox Grid.Row="3" Grid.Column="3"
-                     IsEnabled="{Binding IsEnabledAdminControl}"
+                     IsEnabled="{Binding IsEnabledRole}"
                      MinWidth="200"
                      Text="{Binding Role, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
             <!-- LastModified components -->
             <Label Grid.Row="4" Grid.Column="3" Content="Last Modified" />
             <TextBox Grid.Row="5" Grid.Column="3"
-                     IsEnabled="False"
+                     IsEnabled="{Binding IsEnabledLastModified}"
                      MinWidth="200"
                      Text="{Binding LastModified, Mode=TwoWay}" />
             <!-- LastLogin components -->
             <Label Grid.Row="6" Grid.Column="3" Content="Last Login" />
             <TextBox Grid.Row="7" Grid.Column="3"
-                     IsEnabled="False"
+                     IsEnabled="{Binding IsEnabledLastLogin}"
                      MinWidth="200"
                      Text="{Binding LastLogin, Mode=TwoWay}" />
         </Grid>

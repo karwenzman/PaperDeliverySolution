@@ -21,8 +21,8 @@
     <DataTemplate DataType="{x:Type viewmodels:AccountViewModel}">
         <usercontrols:AccountUserControl />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type viewmodels:AccountsViewModel}">
-        <usercontrols:AccountsUserControl />
+    <DataTemplate DataType="{x:Type viewmodels:AccountManagerViewModel}">
+        <usercontrols:AccountManagerUserControl />
     </DataTemplate>
     
 </ResourceDictionary>

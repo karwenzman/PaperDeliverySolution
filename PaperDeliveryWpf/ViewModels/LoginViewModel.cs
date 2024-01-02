@@ -61,12 +61,12 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
             CreateThreadPrincipal(_currentUser.UserName, GetUserRoles(_currentUser.Role), "access database");
             _userRepository.UpdateLastLogin(_currentUser);
 
-            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl }));
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = LoadViewModel.HomeUserControl }));
             _logger.LogInformation("** User {user} has logged in.", _currentUser.UserName);
         }
         else
         {
-            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.ErrorUserControl }));
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = LoadViewModel.ErrorUserControl }));
         }
     }
     public bool CanLoginButton()
@@ -92,7 +92,7 @@ public partial class LoginViewModel : ViewModelBase, ILoginViewModel
     [RelayCommand]
     public static void CancelButton()
     {
-        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.StartUserControl }));
+        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = LoadViewModel.StartUserControl }));
     }
     #endregion ***** End Of RelayCommand *****
 }

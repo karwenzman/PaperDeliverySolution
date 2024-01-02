@@ -133,7 +133,7 @@
                 
                 <!-- *** The ShellViewModel is hosting the logic, which UserControl shall be loaded *** -->
                 <StackPanel Grid.Column="1">
-                    <ContentControl Content="{Binding CurrentView,  ValidatesOnNotifyDataErrors=False}" />
+                    <ContentControl Content="{Binding CurrentViewModel,  ValidatesOnNotifyDataErrors=False}" />
                 </StackPanel>
             </Grid>
         </ScrollViewer>

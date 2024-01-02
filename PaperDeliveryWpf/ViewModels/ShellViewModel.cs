@@ -22,7 +22,7 @@ public partial class ShellViewModel : ViewModelBase,
     IRecipient<ValueChangedMessage<ShellMessage>>
 {
     [ObservableProperty]
-    private object? _currentView = new();
+    private object? _currentViewModel = new();
 
     [ObservableProperty]
     private UserModel? _currentUser = new();
@@ -66,7 +66,7 @@ public partial class ShellViewModel : ViewModelBase,
         ApplicationHomeDirectory = _options.Value.ApplicationHomeDirectory;
         ApplicationVersion = GetApplicationVersion();
 
-        ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.LoginUserControl });
+        ManageUserControls(new ShellMessage { SetToActive = LoadViewModel.LoginUserControl });
 
         StopCommand = new CommandBinding(ApplicationCommands.Stop, Stop, CanStop);
 
@@ -106,13 +106,13 @@ public partial class ShellViewModel : ViewModelBase,
     [RelayCommand]
     public void LoginMenuItem()
     {
-        ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.LoginUserControl });
+        ManageUserControls(new ShellMessage { SetToActive = LoadViewModel.LoginUserControl });
     }
 
     [RelayCommand]
     public void LogoutMenuItem()
     {
-        ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.LogoutUserControl });
+        ManageUserControls(new ShellMessage { SetToActive = LoadViewModel.LogoutUserControl });
     }
 
     [RelayCommand]
@@ -120,7 +120,7 @@ public partial class ShellViewModel : ViewModelBase,
     {
         try
         {
-            ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.AccountUserControl });
+            ManageUserControls(new ShellMessage { SetToActive = LoadViewModel.AccountUserControl });
         }
         catch (Exception ex)
         {
@@ -135,7 +135,7 @@ public partial class ShellViewModel : ViewModelBase,
                 MessageBoxImage.Error,
                 MessageBoxResult.No);
 
-            ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl });
+            ManageUserControls(new ShellMessage { SetToActive = LoadViewModel.HomeUserControl });
         }
     }
 
@@ -144,7 +144,7 @@ public partial class ShellViewModel : ViewModelBase,
     {
         try
         {
-            ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.AccountsUserControl });
+            ManageUserControls(new ShellMessage { SetToActive = LoadViewModel.AccountsUserControl });
         }
         catch (Exception ex)
         {
@@ -159,52 +159,52 @@ public partial class ShellViewModel : ViewModelBase,
                 MessageBoxImage.Error,
                 MessageBoxResult.No);
 
-            ManageUserControls(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl });
+            ManageUserControls(new ShellMessage { SetToActive = LoadViewModel.HomeUserControl });
         }
     }
     #endregion ***** End OF RelayCommand *****
 
     private void ManageUserControls(ShellMessage message)
     {
-        IsActiveLoginMenuItem = message.SetToActive == ActivateVisibility.StartUserControl || message.SetToActive == ActivateVisibility.ErrorUserControl;
+        IsActiveLoginMenuItem = message.SetToActive == LoadViewModel.StartUserControl || message.SetToActive == LoadViewModel.ErrorUserControl;
         IsActiveLogoutMenuItem = IsUserAuthenticated();
         IsActiveUserMenuItem = IsUserAuthenticated() && IsUserInRole("user");
         IsActiveAdminMenuItem = IsUserAuthenticated() && IsUserInRole("admin");
 
         switch (message.SetToActive)
         {
-            case ActivateVisibility.ErrorUserControl:
+            case LoadViewModel.ErrorUserControl:
                 CurrentUser = new();
-                CurrentView = App.AppHost!.Services.GetRequiredService<IErrorViewModel>();
+                CurrentViewModel = App.AppHost!.Services.GetRequiredService<IErrorViewModel>();
                 break;
-            case ActivateVisibility.LoginUserControl:
+            case LoadViewModel.LoginUserControl:
                 CurrentUser = new();
-                CurrentView = App.AppHost!.Services.GetRequiredService<ILoginViewModel>();
+                CurrentViewModel = App.AppHost!.Services.GetRequiredService<ILoginViewModel>();
                 break;
-            case ActivateVisibility.LogoutUserControl:
-                CurrentView = App.AppHost!.Services.GetRequiredService<ILogoutViewModel>();
+            case LoadViewModel.LogoutUserControl:
+                CurrentViewModel = App.AppHost!.Services.GetRequiredService<ILogoutViewModel>();
                 break;
-            case ActivateVisibility.HomeUserControl:
+            case LoadViewModel.HomeUserControl:
                 CurrentUser = _userRepository.GetByUserName(GetUserName());
-                CurrentView = App.AppHost!.Services.GetRequiredService<IHomeViewModel>();
+                CurrentViewModel = App.AppHost!.Services.GetRequiredService<IHomeViewModel>();
                 break;
-            case ActivateVisibility.StartUserControl:
+            case LoadViewModel.StartUserControl:
                 CurrentUser = new();
-                CurrentView = App.AppHost!.Services.GetRequiredService<IStartViewModel>();
+                CurrentViewModel = App.AppHost!.Services.GetRequiredService<IStartViewModel>();
                 break;
-            case ActivateVisibility.AccountUserControl:
+            case LoadViewModel.AccountUserControl:
                 IsActiveLoginMenuItem = false;
                 IsActiveLogoutMenuItem = false;
                 IsActiveUserMenuItem = false;
                 IsActiveAdminMenuItem = false;
-                CurrentView = App.AppHost!.Services.GetRequiredService<IAccountViewModel>();
+                CurrentViewModel = App.AppHost!.Services.GetRequiredService<IAccountViewModel>();
                 break;
-            case ActivateVisibility.AccountsUserControl:
+            case LoadViewModel.AccountsUserControl:
                 IsActiveLoginMenuItem = false;
                 IsActiveLogoutMenuItem = false;
                 IsActiveUserMenuItem = false;
                 IsActiveAdminMenuItem = false;
-                CurrentView = App.AppHost!.Services.GetRequiredService<IAccountsViewModel>();
+                CurrentViewModel = App.AppHost!.Services.GetRequiredService<IAccountManagerViewModel>();
                 break;
         }
     }
@@ -227,7 +227,7 @@ public partial class ShellViewModel : ViewModelBase,
     /// <summary>
     /// This method is listening to the <see cref="WeakReferenceMessenger"/>.
     /// </summary>
-    /// <param name="message">This parameter contains the information, which view is the <see cref="CurrentView"/>.</param>
+    /// <param name="message">This parameter contains the information, which view is the <see cref="CurrentViewModel"/>.</param>
     public void Receive(ValueChangedMessage<ShellMessage> message)
     {
         ManageUserControls(message.Value);

@@ -12,9 +12,9 @@ using System.Windows;
 
 namespace PaperDeliveryWpf.ViewModels;
 
-public partial class AccountViewModel : ViewModelBase, IAccountViewModel
+public partial class AccountViewModel : ViewModelBase, IAccountViewModel, IRecipient<ValueChangedMessage<AccountMessage>>
 {
-    private UserModel? _currentUser;
+    private UserModel? _currentAccount;
 
     private string? _displayName;
     private string? _email;
@@ -32,13 +32,13 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
                 DiscardChangesButtonCommand.NotifyCanExecuteChanged();
             }
 
-            if (_displayName == _currentUser!.DisplayName)
+            if (_displayName == _currentAccount!.DisplayName)
             {
-                CurrentUserHasChanged = false;
+                CurrentAccountHasChanged = false;
             }
             else
             {
-                CurrentUserHasChanged = true;
+                CurrentAccountHasChanged = true;
             }
         }
     }
@@ -55,13 +55,13 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
                 DiscardChangesButtonCommand.NotifyCanExecuteChanged();
             }
 
-            if (_email == _currentUser!.Email)
+            if (_email == _currentAccount!.Email)
             {
-                CurrentUserHasChanged = false;
+                CurrentAccountHasChanged = false;
             }
             else
             {
-                CurrentUserHasChanged = true;
+                CurrentAccountHasChanged = true;
             }
         }
     }
@@ -79,13 +79,13 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
                 DiscardChangesButtonCommand.NotifyCanExecuteChanged();
             }
 
-            if (_role == _currentUser!.Role)
+            if (_role == _currentAccount!.Role)
             {
-                CurrentUserHasChanged = false;
+                CurrentAccountHasChanged = false;
             }
             else
             {
-                CurrentUserHasChanged = true;
+                CurrentAccountHasChanged = true;
             }
         }
     }
@@ -93,19 +93,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveChangesButtonCommand))]
     [NotifyCanExecuteChangedFor(nameof(DiscardChangesButtonCommand))]
-    private bool _currentUserHasChanged;
-
-    [ObservableProperty]
-    private bool _isVisibleCloseAccountButton;
-
-    [ObservableProperty]
-    private bool _isVisibleAdminControl;
-
-    [ObservableProperty]
-    private bool _isEnabledAdminControl;
-
-    [ObservableProperty]
-    private string? _password;
+    private bool _currentAccountHasChanged;
 
     [ObservableProperty]
     private bool _isActive;
@@ -122,6 +110,24 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
     [ObservableProperty]
     private int _id;
 
+    #region ***** UI controls *****
+    [ObservableProperty] private bool _isVisibleCloseButton;
+    [ObservableProperty] private bool _isVisibleResetPasswordButton;
+    [ObservableProperty] private bool _isVisibleChangePasswordButton;
+    [ObservableProperty] private bool _isVisibleSaveChangesButton;
+    [ObservableProperty] private bool _isVisibleDiscardChangesButton;
+
+    [ObservableProperty] private bool _isEnabledUserName;
+    [ObservableProperty] private bool _isEnabledDisplayName;
+    [ObservableProperty] private bool _isEnabledEmail;
+    [ObservableProperty] private bool _isEnabledIsActive;
+    [ObservableProperty] private bool _isEnabledUserId;
+    [ObservableProperty] private bool _isEnabledRole;
+    [ObservableProperty] private bool _isEnabledLastModified;
+    [ObservableProperty] private bool _isEnabledLastLogin;
+
+    #endregion ***** End of UI controls *****
+
     private readonly ILogger<AccountViewModel> _logger;
     private readonly IUserRepository _userRepository;
 
@@ -129,16 +135,14 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
     {
         _logger = logger;
         _userRepository = userRepository;
-        _currentUser = _userRepository.GetByUserName(GetUserName());
+        _currentAccount = _userRepository.GetByUserName(GetUserName());
 
         if (IsUserInRole("user"))
         {
-            CheckUserAccountAndAssignToLocalProperties();
+            AssignCurrentUserToLocalProperties();
+            SetViewToDefault();
 
-            IsEnabledAdminControl = IsUserInRole("admin");
-            IsVisibleAdminControl = IsUserInRole("admin");
-            IsVisibleCloseAccountButton = true;
-            CurrentUserHasChanged = false;
+            CurrentAccountHasChanged = false;
 
             _logger.LogInformation("* Loading {class}", nameof(AccountViewModel));
         }
@@ -153,7 +157,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
     [RelayCommand]
     public void CloseButton()
     {
-        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = ActivateVisibility.HomeUserControl }));
+        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = LoadViewModel.HomeUserControl }));
     }
 
     [RelayCommand(CanExecute = nameof(CanResetPasswordButton))]
@@ -181,19 +185,19 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
     [RelayCommand(CanExecute = nameof(CanSaveChangesButton))]
     public void SaveChangesButton()
     {
-        if (_currentUser != null)
+        if (_currentAccount != null)
         {
             string message;
             string caption = nameof(SaveChangesButton);
 
             // Providing just the accessable members. Change might be necessary. 
-            _currentUser.Email = Email;
-            _currentUser.DisplayName = DisplayName!;
-            if (_userRepository.UpdateAccount(_currentUser))
+            _currentAccount.Email = Email;
+            _currentAccount.DisplayName = DisplayName!;
+            if (_userRepository.UpdateAccount(_currentAccount))
             {
                 message = "Update successful.\nThe changes have been saved to your account.";
-                _currentUser = _userRepository.GetByUserName(GetUserName());
-                CheckUserAccountAndAssignToLocalProperties();
+                _currentAccount = _userRepository.GetByUserName(GetUserName());
+                AssignCurrentUserToLocalProperties();
             }
             else
             {
@@ -214,48 +218,148 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel
             throw new ArgumentException($"No valid user account is loaded while accessing class {nameof(AccountViewModel)} by {GetUserName()}!");
         }
 
-        CurrentUserHasChanged = false;
+        CurrentAccountHasChanged = false;
     }
     public bool CanSaveChangesButton()
     {
-        return CurrentUserHasChanged && !HasErrors;
+        return CurrentAccountHasChanged && !HasErrors;
     }
 
     [RelayCommand(CanExecute = nameof(CanDiscardChangesButton))]
     public void DiscardChangesButton()
     {
-        DisplayName = _currentUser!.DisplayName;
-        Email = _currentUser.Email;
-        Role = _currentUser.Role;
-        CurrentUserHasChanged = false;
+        DisplayName = _currentAccount!.DisplayName;
+        Email = _currentAccount.Email;
+        Role = _currentAccount.Role;
+        CurrentAccountHasChanged = false;
     }
     public bool CanDiscardChangesButton()
     {
-        return CurrentUserHasChanged;
+        return CurrentAccountHasChanged;
     }
     #endregion ***** End OF RelayCommand *****
 
-    private void CheckUserAccount()
+    /// <summary>
+    /// If the current user is null the error is logged and an exception is thrown.
+    /// </summary>
+    /// <exception cref="ArgumentException"></exception>
+    private void CheckCurrentUserIsNull()
     {
-        if (_currentUser == null)
+        if (_currentAccount == null)
         {
             _logger.LogError("** No valid user account is loaded while accessing {class} by {name}!", nameof(AccountViewModel), GetUserName());
             throw new ArgumentException($"No valid user account is loaded while accessing class {nameof(AccountViewModel)} by {GetUserName()}!");
         }
     }
 
-    private void CheckUserAccountAndAssignToLocalProperties()
+    /// <summary>
+    /// Assigns to values of the current user to the oberservable properties used in the view.
+    /// </summary>
+    private void AssignCurrentUserToLocalProperties()
     {
-        CheckUserAccount();
+        Id = _currentAccount!.Id;
+        IsActive = _currentAccount!.IsActive;
+        UserName = _currentAccount!.UserName;
+        DisplayName = _currentAccount!.DisplayName;
+        Role = _currentAccount!.Role;
+        Email = _currentAccount!.Email;
+        LastLogin = _currentAccount!.LastLogin;
+        LastModified = _currentAccount!.LastModified;
+    }
 
-        Id = _currentUser!.Id;
-        IsActive = _currentUser!.IsActive;
-        UserName = _currentUser!.UserName;
-        DisplayName = _currentUser!.DisplayName;
-        Role = _currentUser!.Role;
-        Password = _currentUser!.Password;
-        Email = _currentUser!.Email;
-        LastLogin = _currentUser!.LastLogin;
-        LastModified = _currentUser!.LastModified;
+    /// <summary>
+    /// This setting is used, if an user opens <see cref="AccountViewModel"/>.
+    /// </summary>
+    private void SetViewToDefault()
+    {
+        IsVisibleCloseButton = true;
+        IsVisibleResetPasswordButton = false;
+        IsVisibleChangePasswordButton = true;
+        IsVisibleSaveChangesButton = true;
+        IsVisibleDiscardChangesButton = true;
+
+        IsEnabledUserName = false;
+        IsEnabledDisplayName = true;
+        IsEnabledEmail = true;
+        IsEnabledIsActive = false;
+        IsEnabledUserId = false;
+        IsEnabledRole = false;
+        IsEnabledLastModified = false;
+        IsEnabledLastLogin = false;
+    }
+
+    /// <summary>
+    /// This setting is used, if an admin opens <see cref="AccountManagerViewModel"/>
+    /// and selects an item from the data grid.
+    /// </summary>
+    private void SetViewToAccountManagerSelectedItem()
+    {
+        IsVisibleCloseButton = false;
+        IsVisibleResetPasswordButton = true;
+        IsVisibleChangePasswordButton = false;
+        IsVisibleSaveChangesButton = true;
+        IsVisibleDiscardChangesButton = true;
+
+        IsEnabledUserName = false;
+        IsEnabledDisplayName = true;
+        IsEnabledEmail = true;
+        IsEnabledIsActive = true;
+        IsEnabledUserId = false;
+        IsEnabledRole = true;
+        IsEnabledLastModified = false;
+        IsEnabledLastLogin = false;
+    }
+
+    /// <summary>
+    /// This setting is used, if an admin opens <see cref="AccountManagerViewModel"/>
+    /// and clicks on the add button.
+    /// </summary>
+    private void SetViewToAccountManagerAddItem()
+    {
+        IsVisibleCloseButton = false;
+        IsVisibleResetPasswordButton = false;
+        IsVisibleChangePasswordButton = false;
+        IsVisibleSaveChangesButton = true;
+        IsVisibleDiscardChangesButton = true;
+
+        IsEnabledUserName = true;
+        IsEnabledDisplayName = true;
+        IsEnabledEmail = true;
+        IsEnabledIsActive = false;
+        IsEnabledUserId = false;
+        IsEnabledRole = true;
+        IsEnabledLastModified = false;
+        IsEnabledLastLogin = false;
+    }
+
+    /// <summary>
+    /// This method is executed, if this instances receives a messages from <see cref="AccountManagerViewModel"/>.
+    /// </summary>
+    /// <param name="message"></param>
+    public void Receive(ValueChangedMessage<AccountMessage> message)
+    {
+        _currentAccount = message.Value.SelectedUser;
+        CheckCurrentUserIsNull();
+        AssignCurrentUserToLocalProperties();
+
+        switch (message.Value.SetAccountUserControl)
+        {
+            case SetAccountUserControl.Default:
+                // This is never called by AccountsViewModel, but set all the controls anyway.
+                SetViewToDefault();
+                break;
+            case SetAccountUserControl.AccountManagerAddItem:
+                // This is called, if in AccountsUserControl the AddButton event was raised.
+                SetViewToAccountManagerAddItem();
+                break;
+            case SetAccountUserControl.AccountManagerSelectedItem:
+                // This is called, if in AccountsUserControl the SelectionChanged event was raised.
+                SetViewToAccountManagerSelectedItem();
+                break;
+            default:
+                // Can never take place.
+                // kind of error message or so ???
+                break;
+        }
     }
 }
