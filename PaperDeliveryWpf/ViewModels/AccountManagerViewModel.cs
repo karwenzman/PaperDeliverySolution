@@ -64,7 +64,7 @@ public partial class AccountManagerViewModel : ViewModelBase, IAccountManagerVie
 
     partial void OnCurrentAccountChanged(UserModel? value)
     {
-        // TODO - After receiving a message from AccountViewModel the value = Null ???
+        // TODO (Issue #9) - After receiving a message from AccountViewModel value == Null ???
         if (value != null)
         {
             // This _oldAccountIndex is used in the Receive() method to set the value and update the data grid.
@@ -107,7 +107,7 @@ public partial class AccountManagerViewModel : ViewModelBase, IAccountManagerVie
     #endregion ***** End Of RelayCommand *****
 
     /// <summary>
-    /// This method is executed, if this instances receives a messages from <see cref="AccountViewModel"/>.
+    /// This method is executed, if this instance receives a message from <see cref="AccountViewModel"/>.
     /// </summary>
     /// <param name="message"></param>
     public void Receive(ValueChangedMessage<AccountManagerMessage> message)
