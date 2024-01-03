@@ -145,6 +145,8 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel, IRecip
 
             CurrentAccountHasChanged = false;
 
+            WeakReferenceMessenger.Default.RegisterAll(this);
+
             _logger.LogInformation("* Loading {class}", nameof(AccountViewModel));
         }
         else
@@ -191,19 +193,21 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel, IRecip
             string message;
             string caption = nameof(SaveChangesButton);
 
-            // Providing just the accessable members. Change might be necessary. 
             _currentAccount.Email = Email;
             _currentAccount.DisplayName = DisplayName!;
+            _currentAccount.Role = Role!;
+            _currentAccount.IsActive = IsActive!;
             if (_userRepository.UpdateAccount(_currentAccount))
             {
-                message = "Update successful.\nThe changes have been saved to your account.";
-                _currentAccount = _userRepository.GetByUserName(GetUserName());
+                message = "Update successful.\nThe changes have been saved.";
+                _currentAccount = _userRepository.GetByUserName(_currentAccount.UserName);
                 CheckCurrentAccountIsNull();
                 AssignCurrentAccountToLocalProperties();
+                WeakReferenceMessenger.Default.Send(new ValueChangedMessage<AccountManagerMessage>(new AccountManagerMessage { UpdatedAccount = _currentAccount }));
             }
             else
             {
-                message = "Update failed.\nThe changes have not been saved to your account.";
+                message = "Update failed.\nThe changes have not been saved.";
             }
 
             // TODO - MessageBoxes should not be handled by the ViewModel.
@@ -233,6 +237,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel, IRecip
         DisplayName = _currentAccount!.DisplayName;
         Email = _currentAccount.Email;
         Role = _currentAccount.Role;
+        IsActive = _currentAccount.IsActive;
         CurrentAccountHasChanged = false;
     }
     public bool CanDiscardChangesButton()
@@ -335,12 +340,12 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel, IRecip
     }
 
     /// <summary>
-    /// This method is executed, if this instances receives a messages from <see cref="AccountManagerViewModel"/>.
+    /// This method is executed, if this instances receives a messages from <see cref="AccountViewModel"/>.
     /// </summary>
     /// <param name="message"></param>
     public void Receive(ValueChangedMessage<AccountMessage> message)
     {
-        _currentAccount = message.Value.SelectedUser;
+        _currentAccount = message.Value.SelectedAccount;
         CheckCurrentAccountIsNull();
         AssignCurrentAccountToLocalProperties();
 

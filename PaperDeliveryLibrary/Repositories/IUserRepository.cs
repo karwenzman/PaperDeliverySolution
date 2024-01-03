@@ -60,7 +60,7 @@ namespace PaperDeliveryWpf.Repositories
         /// <br></br>-DisplayName
         /// <br></br>-Role
         /// <br></br>-Email
-        /// <br></br>-LastModified
+        /// <br></br>-LastModified (will be set via code)
         /// <br></br>-IsActive
         /// </summary>
         /// <param name="user">An updated user account.</param>
@@ -73,7 +73,7 @@ namespace PaperDeliveryWpf.Repositories
         /// This is the only method that updates the user's 'LastLogin' property.
         /// <para></para>
         /// These properties are updated:
-        /// <br></br>-LastLogin
+        /// <br></br>-LastLogin (will be set via code)
         /// </summary>
         /// <param name="user">An updated user account.</param>
         /// <returns>true, if database access was successful</returns>
@@ -86,7 +86,7 @@ namespace PaperDeliveryWpf.Repositories
         /// <para></para>
         /// These properties are updated:
         /// <br></br>-Password
-        /// <br></br>-LastModified
+        /// <br></br>-LastModified (will be set via code)
         /// </summary>
         /// <param name="user">An updated user account.</param>
         /// <returns>true, if database access was successful</returns>
@@ -95,11 +95,9 @@ namespace PaperDeliveryWpf.Repositories
         /// <summary>
         /// This method is setting a user account to 'IsActive'.
         /// <para></para>
-        /// This is the only method that updates the user's 'IsActive' property.
-        /// <para></para>
         /// These properties are updated:
-        /// <br></br>-IsActive
-        /// <br></br>-LastModified
+        /// <br></br>-IsActive (will be set via code)
+        /// <br></br>-LastModified (will be set via code)
         /// </summary>
         /// <param name="user">A new user account.</param>
         /// <returns>true, if database access was successful</returns>

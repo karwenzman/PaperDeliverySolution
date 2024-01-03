@@ -49,10 +49,10 @@
         <!-- Frame to the left -->
         <StackPanel DockPanel.Dock="Left" Orientation="Vertical" Width="24"></StackPanel>
 
-        <!-- UserAccounts section -->
+        <!-- AccountManager section -->
         <StackPanel DockPanel.Dock="Left" Orientation="Vertical">
             <Border CornerRadius="10" BorderThickness="1" BorderBrush="Black" Margin="5 0 5 0">
-                <DataGrid Name="dataGrid" 
+                <DataGrid Name="AccountManagerDataGrid" 
                       Background="Transparent"
                       IsReadOnly="True"
                       BorderThickness="0"
@@ -62,11 +62,14 @@
                       HorizontalAlignment="Center"
                       Padding="10"
                       GridLinesVisibility="Horizontal"
-                      SelectedItem="{Binding SelectedUserAccount}"
-                      ItemsSource="{Binding UserAccounts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                          SelectedCellsChanged="AccountManagerDataGrid_SelectedCellsChanged"
+                          SelectedIndex="{Binding CurrentAccountIndex}"
+                      SelectedItem="{Binding CurrentAccount}"
+                      ItemsSource="{Binding Accounts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" Binding="{Binding Id}" />
                         <DataGridTextColumn Header="UserName" Binding="{Binding UserName}" />
+                        <DataGridTextColumn Header="DisplayName" Binding="{Binding DisplayName}" />
                         <DataGridTextColumn Header="Role" Binding="{Binding Role}" />
                         <DataGridCheckBoxColumn Header="IsActive" Binding="{Binding IsActive}" />
                     </DataGrid.Columns>
@@ -83,9 +86,10 @@
             </StackPanel>
         </StackPanel>
 
-        <!-- UserAccount section -->
+        <!-- Account section -->
         <Border DockPanel.Dock="Left" CornerRadius="10" BorderThickness="1" BorderBrush="Black" Margin="5 0 5 0">
-            <local:AccountUserControl />
+            <!--<local:AccountUserControl />-->
+            <ContentControl Content="{Binding AccountViewModel, ValidatesOnNotifyDataErrors=False}" />
         </Border>
     </DockPanel>
 </UserControl>

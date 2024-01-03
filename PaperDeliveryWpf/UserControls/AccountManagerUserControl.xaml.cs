@@ -8,4 +8,9 @@ public partial class AccountManagerUserControl : UserControl
     {
         InitializeComponent();
     }
+
+    private void AccountManagerDataGrid_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
+    {
+        AccountManagerDataGrid.Focus();
+    }
 }

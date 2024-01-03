@@ -11,13 +11,7 @@ namespace PaperDeliveryLibrary.Messages;
 /// </summary>
 public class AccountMessage
 {
-    public UserModel? SelectedUser { get; private set; }
+    public UserModel? SelectedAccount { get; set; }
 
-    public SetAccountUserControl SetAccountUserControl { get; private set; }
-
-    public AccountMessage(UserModel? selectedUser, SetAccountUserControl setAccountUserControl)
-    {
-        SelectedUser = selectedUser;
-        SetAccountUserControl = setAccountUserControl;
-    }
+    public SetAccountUserControl SetAccountUserControl { get; set; }
 }
