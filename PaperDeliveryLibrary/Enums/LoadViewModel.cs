@@ -11,5 +11,5 @@ public enum LoadViewModel
     HomeUserControl,
     StartUserControl,
     AccountUserControl,
-    AccountsUserControl,
+    AccountManagerUserControl,
 }

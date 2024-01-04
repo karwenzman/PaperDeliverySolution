@@ -112,7 +112,7 @@
                 </MenuItem>
                 <MenuItem Header="Admin" Background="Black" Foreground="White"
                       Visibility="{Binding IsActiveAdminMenuItem, Converter={StaticResource boolToVisibility}}">
-                    <MenuItem Header="Account Manager" Command="{Binding AccountsMenuItemCommand}"></MenuItem>
+                    <MenuItem Header="Account Manager" Command="{Binding AccountManagerMenuItemCommand}"></MenuItem>
                     <MenuItem Header="Do something"></MenuItem>                
                 </MenuItem>
                 <MenuItem Header="{Binding CurrentUser.DisplayName}" Background="Black" Foreground="White"

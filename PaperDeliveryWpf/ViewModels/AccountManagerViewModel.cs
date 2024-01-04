@@ -43,7 +43,7 @@ public partial class AccountManagerViewModel : ViewModelBase, IAccountManagerVie
             CurrentAccount = Accounts[CurrentAccountIndex];
             AccountViewModel = App.AppHost!.Services.GetRequiredService<IAccountViewModel>();
 
-            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<AccountMessage>(new AccountMessage { SelectedAccount = CurrentAccount, SetAccountUserControl = SetAccountUserControl.AccountManagerSelectedItem }));
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<IAccountMessage>(new AccountMessage { Account = CurrentAccount, SetAccountUserControl = SetAccountUserControl.AccountManagerSelectedItem }));
             WeakReferenceMessenger.Default.RegisterAll(this);
 
             //WeakReferenceMessenger.Default.Register<AccountManagerMessage>(this, (r, m) =>
@@ -69,7 +69,7 @@ public partial class AccountManagerViewModel : ViewModelBase, IAccountManagerVie
         {
             // This _oldAccountIndex is used in the Receive() method to set the value and update the data grid.
             _oldAccountIndex = CurrentAccountIndex;
-            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<AccountMessage>(new AccountMessage { SelectedAccount = value, SetAccountUserControl = SetAccountUserControl.AccountManagerSelectedItem }));
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<AccountMessage>(new AccountMessage { Account = value, SetAccountUserControl = SetAccountUserControl.AccountManagerSelectedItem }));
             Debug.WriteLine($"Passed OnCurrentAccountChanged: {value.DisplayName}");
         }
         else

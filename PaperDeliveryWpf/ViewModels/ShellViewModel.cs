@@ -140,16 +140,16 @@ public partial class ShellViewModel : ViewModelBase,
     }
 
     [RelayCommand]
-    public void AccountsMenuItem()
+    public void AccountManagerMenuItem()
     {
         try
         {
-            ManageUserControls(new ShellMessage { SetToActive = LoadViewModel.AccountsUserControl });
+            ManageUserControls(new ShellMessage { SetToActive = LoadViewModel.AccountManagerUserControl });
         }
         catch (Exception ex)
         {
             string message = ex.Message;
-            string caption = nameof(AccountsMenuItem);
+            string caption = nameof(AccountManagerMenuItem);
 
             // TODO - MessageBoxes should not be handled by the ViewModel.
             MessageBoxResult messageBoxResult = MessageBox.Show(
@@ -197,9 +197,11 @@ public partial class ShellViewModel : ViewModelBase,
                 IsActiveLogoutMenuItem = false;
                 IsActiveUserMenuItem = false;
                 IsActiveAdminMenuItem = false;
+                CurrentUser = _userRepository.GetByUserName(GetUserName());
                 CurrentViewModel = App.AppHost!.Services.GetRequiredService<IAccountViewModel>();
+                WeakReferenceMessenger.Default.Send(new ValueChangedMessage<AccountMessage>(new AccountMessage { Account = _userRepository.GetByUserName(GetUserName()), SetAccountUserControl = SetAccountUserControl.Default }));
                 break;
-            case LoadViewModel.AccountsUserControl:
+            case LoadViewModel.AccountManagerUserControl:
                 IsActiveLoginMenuItem = false;
                 IsActiveLogoutMenuItem = false;
                 IsActiveUserMenuItem = false;

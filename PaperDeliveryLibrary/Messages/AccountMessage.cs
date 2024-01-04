@@ -9,9 +9,9 @@ namespace PaperDeliveryLibrary.Messages;
 /// This class is passing on information about the selected user account. 
 /// And information how the UI controls have to be set.
 /// </summary>
-public class AccountMessage
+public class AccountMessage : IAccountMessage
 {
-    public UserModel? SelectedAccount { get; set; }
+    public UserModel? Account { get; set; }
 
     public SetAccountUserControl SetAccountUserControl { get; set; }
 }
