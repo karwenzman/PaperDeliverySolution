@@ -8,6 +8,7 @@ using PaperDeliveryLibrary.Messages;
 using PaperDeliveryLibrary.Models;
 using PaperDeliveryWpf.Repositories;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Windows;
 
 namespace PaperDeliveryWpf.ViewModels;
@@ -16,6 +17,7 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel,
     IRecipient<ValueChangedMessage<AccountMessage>>
 {
     private UserModel? _currentAccount;
+    private SetAccountUserControl _currentUiSetting;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(SaveChangesButtonCommand))]
@@ -136,8 +138,8 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel,
 
         if (IsUserInRole("user"))
         {
-            WeakReferenceMessenger.Default.RegisterAll(this);
             _logger.LogInformation("* Loading {class}", nameof(AccountViewModel));
+            WeakReferenceMessenger.Default.RegisterAll(this);
         }
         else
         {
@@ -157,6 +159,8 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel,
     /// <param name="message"></param>
     public void Receive(ValueChangedMessage<AccountMessage> message)
     {
+        Debug.WriteLine($"Passed Receive: {nameof(AccountMessage)}");
+
         if (message.Value.Account == null)
         {
             _logger.LogError("** No valid user account is received while accessing page {class} by {name}!", nameof(AccountViewModel), GetUserName());
@@ -165,9 +169,11 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel,
         else
         {
             _currentAccount = message.Value.Account;
+            _currentUiSetting = message.Value.SetAccountUserControl;
+
             AssignAccountToLocalProperties(_currentAccount);
 
-            switch (message.Value.SetAccountUserControl)
+            switch (_currentUiSetting)
             {
                 case SetAccountUserControl.Default:
                     SetViewToDefault();
@@ -214,6 +220,8 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel,
     [RelayCommand(CanExecute = nameof(CanSaveChangesButton))]
     public void SaveChangesButton()
     {
+        Debug.WriteLine($"Passed SaveChangesButton: {nameof(AccountMessage)}");
+
         string message;
         string caption = nameof(SaveChangesButton);
 
@@ -230,8 +238,27 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel,
         if (_userRepository.UpdateAccount(_currentAccount!))
         {
             message = "Update successful.\n\nThe changes have been saved.";
-            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = LoadViewModel.AccountUserControl }));
-            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<AccountManagerMessage>(new AccountManagerMessage { UpdatedAccount = _currentAccount }));
+
+            switch (_currentUiSetting)
+            {
+                case SetAccountUserControl.Default:
+                    WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = LoadViewModel.AccountUserControl }));
+                    break;
+                case SetAccountUserControl.AccountManagerAddItem:
+                    Debug.WriteLine($"Passed SaveChangesButton when trying to add a new account");
+                    break;
+                case SetAccountUserControl.AccountManagerSelectedItem:
+                    if (_currentAccount.UserName == GetUserName())
+                    {
+                        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = LoadViewModel.AccountManagerUserControl }));
+                    }
+                    else
+                    {
+                        WeakReferenceMessenger.Default.Send(new ValueChangedMessage<AccountManagerMessage>(new AccountManagerMessage { Account = _currentAccount }));
+                    }
+                    break;
+            }
+
         }
         else
         {

@@ -63,7 +63,6 @@
                       Padding="10"
                       GridLinesVisibility="Horizontal"
                       SelectedCellsChanged="AccountManagerDataGrid_SelectedCellsChanged"
-                      SelectedIndex="{Binding CurrentAccountIndex}"
                       SelectedItem="{Binding CurrentAccount}"
                       ItemsSource="{Binding Accounts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <DataGrid.Columns>

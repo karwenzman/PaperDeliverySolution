@@ -10,6 +10,6 @@ namespace PaperDeliveryLibrary.Messages;
 public class AccountManagerMessage
 {
     public bool IsRequestingReload { get; set; } = true;
-    public UserModel? UpdatedAccount { get; set; }
+    public UserModel? Account { get; set; }
 
 }

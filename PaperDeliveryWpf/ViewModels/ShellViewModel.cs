@@ -206,7 +206,9 @@ public partial class ShellViewModel : ViewModelBase,
                 IsActiveLogoutMenuItem = false;
                 IsActiveUserMenuItem = false;
                 IsActiveAdminMenuItem = false;
+                CurrentUser = _userRepository.GetByUserName(GetUserName());
                 CurrentViewModel = App.AppHost!.Services.GetRequiredService<IAccountManagerViewModel>();
+                WeakReferenceMessenger.Default.Send(new ValueChangedMessage<AccountManagerMessage>(new AccountManagerMessage { Account = _userRepository.GetByUserName(GetUserName()) }));
                 break;
         }
     }
