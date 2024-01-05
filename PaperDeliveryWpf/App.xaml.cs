@@ -81,8 +81,8 @@ namespace PaperDeliveryWpf
                 // TODO Issue #2 - Where is the app, if the exception is thrown? It does not stop the app.
                 //throw new Exception();
                 //var mainWindow = AppHost.Services.GetRequiredService<ChangePasswordView>();
-                var mainWindow = AppHost.Services.GetRequiredService<ShellView>();
-                mainWindow.Show();
+                var shellWindow = AppHost.Services.GetRequiredService<ShellView>();
+                shellWindow.Show();
             }
             catch (Exception ex)
             {

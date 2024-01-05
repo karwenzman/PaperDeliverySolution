@@ -2,11 +2,13 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PaperDeliveryLibrary.Enums;
 using PaperDeliveryLibrary.Messages;
 using PaperDeliveryLibrary.Models;
 using PaperDeliveryWpf.Repositories;
+using PaperDeliveryWpf.Views;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Windows;
@@ -209,12 +211,30 @@ public partial class AccountViewModel : ViewModelBase, IAccountViewModel,
     [RelayCommand(CanExecute = nameof(CanChangePasswordButton))]
     public void ChangePasswordButton()
     {
+        var dialogWindow = App.AppHost!.Services.GetRequiredService<ChangePasswordView>();
+        var isdialogWindowCanceled = dialogWindow.ShowDialog();
 
+        if (isdialogWindowCanceled == true)
+        {
+            // The 'ChangePasswordView' was closed without changing the password.
+            // See code behind file 'CloseButton_Click'.
+        }
+        else
+        {
+            // The user has changed the password. The user needs to login, again.
+            WeakReferenceMessenger.Default.Send(new ValueChangedMessage<ShellMessage>(new ShellMessage { SetToActive = LoadViewModel.LoginUserControl }));
+        }
     }
     public bool CanChangePasswordButton()
     {
-        // Only true, if an admin opens AccountsView and selects an UserAccount.
-        return false;
+        if (_currentUiSetting == SetAccountUserControl.Default)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     [RelayCommand(CanExecute = nameof(CanSaveChangesButton))]

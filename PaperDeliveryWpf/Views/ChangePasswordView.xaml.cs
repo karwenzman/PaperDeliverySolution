@@ -33,6 +33,7 @@ public partial class ChangePasswordView : Window
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
+        DialogResult = true;
         Close();
     }
 

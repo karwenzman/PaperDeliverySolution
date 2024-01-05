@@ -178,6 +178,11 @@ public partial class ShellViewModel : ViewModelBase,
                 CurrentViewModel = App.AppHost!.Services.GetRequiredService<IErrorViewModel>();
                 break;
             case LoadViewModel.LoginUserControl:
+                IsActiveLoginMenuItem = false;
+                IsActiveLogoutMenuItem = false;
+                IsActiveUserMenuItem = false;
+                IsActiveAdminMenuItem = false;
+                DisposeThreadPrincipal();
                 CurrentUser = new();
                 CurrentViewModel = App.AppHost!.Services.GetRequiredService<ILoginViewModel>();
                 break;
