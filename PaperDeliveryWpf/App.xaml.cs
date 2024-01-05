@@ -50,9 +50,11 @@ namespace PaperDeliveryWpf
                     //services.AddSingleton<IUserRepository, UserRepositoryFake>();
                     services.AddSingleton<IUserRepository, UserRepositoryUsingAccess>();
 
-                    // Adds Windows and its ViewModel.
+                    // Adds Windows and its ViewModels.
                     services.AddSingleton<ShellView>();
                     services.AddSingleton<IShellViewModel, ShellViewModel>();
+                    services.AddTransient<ChangePasswordView>();
+                    services.AddTransient<IChangePasswordViewModel, ChangePasswordViewModel>();
 
                     // Adds UserControl's ViewModels.
                     services.AddTransient<ILoginViewModel, LoginViewModel>();
@@ -78,6 +80,7 @@ namespace PaperDeliveryWpf
             {
                 // TODO Issue #2 - Where is the app, if the exception is thrown? It does not stop the app.
                 //throw new Exception();
+                //var mainWindow = AppHost.Services.GetRequiredService<ChangePasswordView>();
                 var mainWindow = AppHost.Services.GetRequiredService<ShellView>();
                 mainWindow.Show();
             }

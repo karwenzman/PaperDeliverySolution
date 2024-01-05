@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\BildschirmHintergrund.jpg" />
     <None Remove="Images\Client_Kreisanzeiger.png" />
     <None Remove="Images\UiLogin.png" />
     <None Remove="Images\UiUniqueKey.png" />
@@ -21,6 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Images\BildschirmHintergrund.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\Client_Kreisanzeiger.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
