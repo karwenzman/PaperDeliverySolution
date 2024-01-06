@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <Content Include="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\BildschirmHintergrund.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
